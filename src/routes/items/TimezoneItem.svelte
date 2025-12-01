@@ -52,7 +52,9 @@
 	});
 </script>
 
-<span class="**:overflow-hidden! overflow-hidden! min-h-6 flex min-w-0! w-full flex-row items-center gap-2 **:text-nowrap">
+<span
+	class="flex min-h-6 w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:overflow-hidden! **:text-nowrap"
+>
 	<span class="flex flex-row gap-0">
 		<span class={!reverse && countdown.days > 0 ? '' : 'text-neutral-500'}>
 			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:

@@ -13,7 +13,7 @@
 		helpModal = $bindable(false),
 		changelogModal = $bindable(false),
 		currentLocale,
-		clicked = $bindable(false),
+		clicked = $bindable(false)
 	} = $props();
 
 	let ready = $state(false);
@@ -36,7 +36,7 @@
 </script>
 
 {#if !clicked}
-	<div class="h-10! w-full flex shrink-0 grow-0"></div>
+	<div class="flex h-10! w-full shrink-0 grow-0"></div>
 {/if}
 
 {#key ready || clicked}

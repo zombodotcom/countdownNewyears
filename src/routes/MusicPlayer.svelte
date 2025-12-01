@@ -15,12 +15,10 @@
 			{m.noMusicPlayerAvailable({}, { locale: locale as LanguageType })}
 		</div>
 	{:else if switchedToHandel}
-		<div>
-
-		</div>
+		<div></div>
 	{:else}
 		<iframe
-			class="w-full h-full"
+			class="h-full w-full"
 			src={link}
 			title="YouTube video player"
 			frameborder="0"

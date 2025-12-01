@@ -15,19 +15,21 @@
 	);
 </script>
 
-<div class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 rounded-4xl bg-black/20 p-5 overflow-scroll! **:overflow-scroll">
-    <h2 class="w-full text-center text-2xl font-medium shrink-0">
-        {m.followingCities({}, { locale: locale as LanguageType })}
-    </h2>
-    {#if timezones.length > 0}
-        <div class="flex min-h-0 grow flex-col flex-nowrap gap-0">
-            {#each timezones as timezone, i (i)}
-                <TimezoneItem {timezone} {target} {now} />
-            {/each}
-        </div>
-    {:else}
-        <div class="flex w-full grow flex-col items-center justify-center text-center">
-            {m.allCitiesAreAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
-        </div>
-    {/if}
+<div
+	class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 overflow-scroll! rounded-4xl bg-black/20 p-5 **:overflow-scroll"
+>
+	<h2 class="w-full shrink-0 text-center text-2xl font-medium">
+		{m.followingCities({}, { locale: locale as LanguageType })}
+	</h2>
+	{#if timezones.length > 0}
+		<div class="flex min-h-0 grow flex-col flex-nowrap gap-0">
+			{#each timezones as timezone, i (i)}
+				<TimezoneItem {timezone} {target} {now} />
+			{/each}
+		</div>
+	{:else}
+		<div class="flex w-full grow flex-col items-center justify-center text-center">
+			{m.allCitiesAreAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
+		</div>
+	{/if}
 </div>

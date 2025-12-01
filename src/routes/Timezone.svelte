@@ -60,10 +60,12 @@
 	});
 </script>
 
-<div class="flex grow flex-col rounded-4xl bg-black/20 p-5 max-h-full">
+<div class="flex max-h-full grow flex-col rounded-4xl bg-black/20 p-5">
 	<h2 class="text-2xl font-medium">
 		{m.timezoneMap({}, { locale: locale as LanguageType })}
 	</h2>
 
-	<canvas id={value} class="w-full h-full grow border-2 border-white rounded-4xl">Canvas element not supported!</canvas>
+	<canvas id={value} class="h-full w-full grow rounded-4xl border-2 border-white"
+		>Canvas element not supported!</canvas
+	>
 </div>

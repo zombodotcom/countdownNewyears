@@ -8,7 +8,7 @@ export const load = async (event) => {
 export const actions = {
 	settings: async (event) => {
 		const formData = await event.request.formData();
-		
+
 		if (
 			!formData.has('bg') ||
 			(!formData.has('playlist') && formData.get('hasplaylist')?.toString() === 'on')

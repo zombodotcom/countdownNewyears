@@ -271,6 +271,4 @@ export const makeCountdown = (target: Date, now: Date): CountdownType => {
 };
 
 //for canvas
-export const timezonePointList = [
-
-];
+export const timezonePointList = [];

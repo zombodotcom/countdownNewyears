@@ -91,8 +91,7 @@
 				context.moveTo(xStart, yStart);
 
 				let msGoalX =
-					xStart +
-					Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
+					xStart + Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 				let msGoalY =
 					yStart + Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
@@ -160,11 +159,9 @@
 			context.beginPath();
 
 			let secondsX =
-				xStart +
-				Math.cos((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
+				xStart + Math.cos((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 			let secondsY =
-				yStart +
-				Math.sin((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
+				yStart + Math.sin((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
 			context.moveTo(xStart, yStart);
 
@@ -190,10 +187,10 @@
 	});
 </script>
 
-<div class="grow rounded-4xl bg-black/20 p-5 overflow-hidden flex flex-col">
+<div class="flex grow flex-col overflow-hidden rounded-4xl bg-black/20 p-5">
 	<h2 class="text-2xl font-medium">{m.clock({}, { locale: locale as LanguageType })}</h2>
 
-	<div class="relative z-24 w-full h-full grow">
-		<canvas id={value} class="absolute z-25 w-full h-full">Canvas not supported!</canvas>
+	<div class="relative z-24 h-full w-full grow">
+		<canvas id={value} class="absolute z-25 h-full w-full">Canvas not supported!</canvas>
 	</div>
 </div>

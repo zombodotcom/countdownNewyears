@@ -34,11 +34,11 @@
 	//let target = $state(new Date(2025, 11, 1, 0, 0, 0, 0)); //DEBUG
 
 	const updateLocale = () => {
-		if(data.languages.length == 0) {
-			currentLocale = "en";
+		if (data.languages.length == 0) {
+			currentLocale = 'en';
 			return;
 		}
-		if(currentLocaleIndex > data.languages.length) currentLocaleIndex = 0;
+		if (currentLocaleIndex > data.languages.length) currentLocaleIndex = 0;
 
 		currentLocaleIndex++;
 		if (currentLocaleIndex === data.languages.length) currentLocaleIndex = 0;
@@ -62,7 +62,7 @@
 </script>
 
 <div
-	class="relative flex overflow-hidden **:overflow-hidden h-screen max-h-screen min-h-screen w-full grow flex-col gap-0"
+	class="relative flex h-screen max-h-screen min-h-screen w-full grow flex-col gap-0 overflow-hidden **:overflow-hidden"
 >
 	<div class="flex w-full grow flex-col gap-6">
 		<div class="flex grow-5 flex-row gap-6 p-5 pb-0!">

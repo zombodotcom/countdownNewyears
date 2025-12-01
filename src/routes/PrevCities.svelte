@@ -17,7 +17,9 @@
 	);
 </script>
 
-<div class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 rounded-4xl bg-black/20 p-5 overflow-scroll! **:overflow-scroll">
+<div
+	class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 overflow-scroll! rounded-4xl bg-black/20 p-5 **:overflow-scroll"
+>
 	<h2
 		class="w-full text-center {locale == 'de' || locale == 'cs'
 			? 'text-xl'

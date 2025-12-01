@@ -81,7 +81,7 @@
 			</span>
 		</div>
 
-		<div class="h-full flex flex-col gap-0 overflow-hidden text-[4rem] leading-12 text-neutral-500">
+		<div class="flex h-full flex-col gap-0 overflow-hidden text-[4rem] leading-12 text-neutral-500">
 			<span class="flex flex-col overflow-hidden">
 				:{Math.abs(countdown.milliseconds).toFixed().padStart(3, '0')}
 				<span class="ps-4 text-left {locale == 'hu' ? 'text-base' : 'text-xl'} font-light">

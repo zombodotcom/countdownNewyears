@@ -6,9 +6,7 @@
 </script>
 
 <Modal bind:showModal={feedbackModal}>
-	<div
-		class="flex w-full grow flex-col gap-2 text-white"
-	>
+	<div class="flex w-full grow flex-col gap-2 text-white">
 		<h2 class="text-xl font-medium">Send feedback</h2>
 
 		<p>
@@ -27,5 +25,5 @@
 				feedbackModal = false;
 			}}
 		/>
-		</div>
+	</div>
 </Modal>
