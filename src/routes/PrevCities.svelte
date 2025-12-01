@@ -4,7 +4,7 @@
 	import { timezoneList } from '$lib';
 	import TimezoneItem from './items/TimezoneItem.svelte';
 
-	let { locale, now, target } = $props();
+	let { locale, now, target, clicked } = $props();
 
 	let timezones = $state(
 		timezoneList
@@ -17,7 +17,7 @@
 	);
 </script>
 
-<div class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 rounded-4xl bg-black/20 p-5">
+<div class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 rounded-4xl bg-black/20 p-5 overflow-scroll! **:overflow-scroll">
 	<h2
 		class="w-full text-center {locale == 'de' || locale == 'cs'
 			? 'text-xl'
@@ -26,7 +26,7 @@
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex max-h-[calc(100vh-172px)] grow flex-col flex-nowrap gap-2 overflow-scroll">
+		<div class="flex min-h-0 grow flex-col flex-nowrap gap-0">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} reverse={true} />
 			{/each}

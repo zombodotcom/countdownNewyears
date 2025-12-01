@@ -77,7 +77,7 @@
 
 			context.lineWidth = 3;
 
-			context.arc(xStart, yStart, minSize / 2 - 5, 0, 2 * Math.PI);
+			context.arc(xStart, yStart, minSize / 2 - 3, 0, 2 * Math.PI);
 
 			context.stroke();
 			context.closePath();
@@ -88,25 +88,13 @@
 				context.strokeStyle = `#006000`;
 				context.beginPath();
 
-				if (minSizeAxis == 'x') {
-					context.moveTo(xStart, yStart);
-				} else {
-					context.moveTo(yStart, xStart);
-				}
+				context.moveTo(xStart, yStart);
 
 				let msGoalX =
-					minSize / 2 +
-					(maxSize - minSize) / 2 +
-					Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
+					xStart +
+					Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 				let msGoalY =
-					minSize / 2 + Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
-
-				if (minSizeAxis == 'x') {
-					let temp = 0;
-					temp = msGoalX;
-					msGoalX = msGoalY;
-					msGoalY = temp;
-				}
+					yStart + Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
 				context.lineTo(msGoalX, msGoalY);
 
@@ -120,8 +108,7 @@
 			context.beginPath();
 
 			let hoursX =
-				minSize / 2 +
-				(maxSize - minSize) / 2 +
+				xStart +
 				Math.cos(
 					((now.getTime() - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) /
 						(12 * 60 * 60 * 1000) -
@@ -129,9 +116,9 @@
 						Math.PI *
 						2
 				) *
-					(minSize / 2 - 5);
+					(minSize / 2 - 3);
 			let hoursY =
-				minSize / 2 +
+				yStart +
 				Math.sin(
 					((now.getTime() - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) /
 						(12 * 60 * 60 * 1000) -
@@ -139,15 +126,11 @@
 						Math.PI *
 						2
 				) *
-					(minSize / 2 - 5);
+					(minSize / 2 - 3);
 
-			if (minSizeAxis == 'x') {
-				context.moveTo(xStart, yStart);
-				context.lineTo(hoursY, hoursX);
-			} else {
-				context.moveTo(yStart, xStart);
-				context.lineTo(hoursX, hoursY);
-			}
+			context.moveTo(xStart, yStart);
+
+			context.lineTo(hoursX, hoursY);
 
 			context.stroke();
 			context.closePath();
@@ -158,20 +141,15 @@
 			context.beginPath();
 
 			let minutesX =
-				minSize / 2 +
-				(maxSize - minSize) / 2 +
-				Math.cos((now.getTime() / (60 * 60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
+				xStart +
+				Math.cos((now.getTime() / (60 * 60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 			let minutesY =
-				minSize / 2 +
-				Math.sin((now.getTime() / (60 * 60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
+				yStart +
+				Math.sin((now.getTime() / (60 * 60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
-			if (minSizeAxis == 'x') {
-				context.moveTo(xStart, yStart);
-				context.lineTo(minutesY, minutesX);
-			} else {
-				context.moveTo(yStart, xStart);
-				context.lineTo(minutesX, minutesY);
-			}
+			context.moveTo(xStart, yStart);
+
+			context.lineTo(minutesX, minutesY);
 
 			context.stroke();
 			context.closePath();
@@ -182,19 +160,15 @@
 			context.beginPath();
 
 			let secondsX =
-				maxSize / 2 +
-				Math.cos((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
+				xStart +
+				Math.cos((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 			let secondsY =
-				minSize / 2 +
-				Math.sin((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 5);
+				yStart +
+				Math.sin((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
-			if (minSizeAxis == 'x') {
-				context.moveTo(xStart, yStart);
-				context.lineTo(secondsY, secondsX);
-			} else {
-				context.moveTo(yStart, xStart);
-				context.lineTo(secondsX, secondsY);
-			}
+			context.moveTo(xStart, yStart);
+
+			context.lineTo(secondsX, secondsY);
 
 			context.stroke();
 			context.closePath();
@@ -216,12 +190,10 @@
 	});
 </script>
 
-<div class="flex w-full grow flex-col rounded-4xl bg-black/20 p-5">
+<div class="grow rounded-4xl bg-black/20 p-5 overflow-hidden flex flex-col">
 	<h2 class="text-2xl font-medium">{m.clock({}, { locale: locale as LanguageType })}</h2>
 
-	<div class="relative z-24 flex w-full grow flex-col opacity-100">
-		<canvas id={value} class="absolute z-25 h-full w-full opacity-100"
-			>Canvas element not supported!</canvas
-		>
+	<div class="relative z-24 w-full h-full grow">
+		<canvas id={value} class="absolute z-25 w-full h-full">Canvas not supported!</canvas>
 	</div>
 </div>

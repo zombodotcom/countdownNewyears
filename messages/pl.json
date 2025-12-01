@@ -31,5 +31,7 @@
 	"noCitiesHaveGoneIntoTheNewYearYet": "Żadne miasta jeszcze nie weszły w Nowy Rok",
 	"allCitiesAreAlreadyInTheNewYear": "Wszystkie miasta są już w Nowym Roku",
 	"merryChristmasAndAHappyNewYearExclamation": "Wesołych Świąt i Szczęśliwego Nowego Roku!",
-	"languageName": "Polski"
+	"languageName": "Polski",
+	"noMusicPlayerAvailable": "Brak dostępnego odtwarzacza muzyki",
+	"playingHandelsMusicForRoyalFireworks": "Odtwarzanie muzyki Händla na królewskie fajerwerki"
 }

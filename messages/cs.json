@@ -31,5 +31,7 @@
 	"noCitiesHaveGoneIntoTheNewYearYet": "Žádná města ještě nevstoupila do Nového roku",
 	"allCitiesAreAlreadyInTheNewYear": "Všechna města jsou již v Novém roce",
 	"merryChristmasAndAHappyNewYearExclamation": "Veselé Vánoce a šťastný Nový rok!",
-	"languageName": "Čeština"
+	"languageName": "Čeština",
+	"noMusicPlayerAvailable": "Hudební přehrávač není k dispozici",
+	"playingHandelsMusicForRoyalFireworks": "Přehrává se Händelova hudba pro královské ohňostroje"
 }

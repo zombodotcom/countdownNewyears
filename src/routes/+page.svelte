@@ -34,9 +34,15 @@
 	//let target = $state(new Date(2025, 11, 1, 0, 0, 0, 0)); //DEBUG
 
 	const updateLocale = () => {
+		if(data.languages.length == 0) {
+			currentLocale = "en";
+			return;
+		}
+		if(currentLocaleIndex > data.languages.length) currentLocaleIndex = 0;
+
 		currentLocaleIndex++;
-		if (currentLocaleIndex === locales.length) currentLocaleIndex = 0;
-		currentLocale = locales[currentLocaleIndex];
+		if (currentLocaleIndex === data.languages.length) currentLocaleIndex = 0;
+		currentLocale = data.languages[currentLocaleIndex];
 	};
 
 	onMount(() => {
@@ -44,48 +50,66 @@
 		interval = setInterval(() => {
 			now = new Date();
 		}, 5);
+
+		updateLocale();
 	});
 	onDestroy(() => {
 		clearInterval(localeInterval);
 		clearInterval(interval);
 	});
+
+	let clicked = $state(false);
 </script>
 
-<div class="flex h-full w-full grow flex-col gap-6 overflow-hidden">
-	<div class="flex grow-5 flex-row gap-6 p-5 pb-0!">
-		<PrevCities {target} {now} locale={currentLocale} />
+<div
+	class="relative flex overflow-hidden **:overflow-hidden h-screen max-h-screen min-h-screen w-full grow flex-col gap-0"
+>
+	<div class="flex w-full grow flex-col gap-6">
+		<div class="flex grow-5 flex-row gap-6 p-5 pb-0!">
+			{#key clicked}
+				<PrevCities {target} {now} locale={currentLocale} {clicked} />
+			{/key}
 
-		<div class="flex grow flex-col items-center justify-center gap-6 overflow-hidden">
-			<Countdown {now} {target} locale={currentLocale} isNewYear={now > target} />
+			<div class="flex grow flex-col items-center justify-center gap-6 overflow-hidden">
+				<Countdown {now} {target} locale={currentLocale} isNewYear={now > target} />
 
-			<div class="flex w-full grow flex-row items-center justify-center gap-6 *:h-full">
-				<Timezone locale={currentLocale} />
+				<div class="flex w-full grow flex-row gap-6 overflow-hidden">
+					{#key clicked}
+						<Timezone locale={currentLocale} />
+					{/key}
 
-				<div class="flex h-full grow flex-col items-center justify-center gap-6">
-					<AnalogClock locale={currentLocale} {now} ms={data.millisecond} />
+					<div class="flex max-w-1/4 min-w-1/4 grow flex-col gap-6 overflow-hidden">
+						{#key clicked}
+							<AnalogClock locale={currentLocale} {now} ms={data.millisecond} />
+						{/key}
 
-					<MusicPlayer
-						link={data.playlist}
-						locale={currentLocale}
-						switchedToHandel={now > target}
-					/>
+						<MusicPlayer
+							link={data.playlist}
+							locale={currentLocale}
+							switchedToHandel={now > target}
+						/>
+					</div>
 				</div>
 			</div>
+
+			{#key clicked}
+				<NextCities {target} {now} locale={currentLocale} {clicked} />
+			{/key}
 		</div>
 
-		<NextCities {target} {now} locale={currentLocale} />
+		<JourneyBar locale={currentLocale} />
 	</div>
-	<JourneyBar locale={currentLocale} />
-</div>
 
-<BottomBar
-	{currentLocale}
-	bind:settingsModal
-	bind:feedbackModal
-	bind:authorModal
-	bind:helpModal
-	bind:changelogModal
-/>
+	<BottomBar
+		{currentLocale}
+		bind:settingsModal
+		bind:feedbackModal
+		bind:authorModal
+		bind:helpModal
+		bind:changelogModal
+		bind:clicked
+	/>
+</div>
 
 <SettingsModal bind:settingsModal {data} />
 

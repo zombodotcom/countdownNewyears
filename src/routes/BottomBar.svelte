@@ -12,11 +12,11 @@
 		authorModal = $bindable(false),
 		helpModal = $bindable(false),
 		changelogModal = $bindable(false),
-		currentLocale
+		currentLocale,
+		clicked = $bindable(false),
 	} = $props();
 
 	let ready = $state(false);
-	let clicked = $state(false);
 
 	const clickHandler = (e: MouseEvent) => {
 		if (document.getElementById('bottom')?.contains(document.elementFromPoint(e.pageX, e.pageY))) {
@@ -36,7 +36,7 @@
 </script>
 
 {#if !clicked}
-	<div class="h-10! w-full"></div>
+	<div class="h-10! w-full flex shrink-0 grow-0"></div>
 {/if}
 
 {#key ready || clicked}

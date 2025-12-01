@@ -26,10 +26,10 @@
 			onclick={(e) => {
 				if (!clickable?.contains(e.target as Node)) dialog?.close();
 			}}
-			class="min-h-screen w-screen max-w-screen min-w-screen
+			class="min-h-screen h-screen max-h-screen w-screen max-w-screen min-w-screen
 		backdrop:bg-gray-500/50"
 		>
-			<div class="flex min-h-screen w-full grow flex-col items-center justify-center">
+			<div class="flex w-full grow flex-col items-center justify-center h-screen">
 				<div
 					bind:this={clickable}
 					class="

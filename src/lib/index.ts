@@ -269,3 +269,8 @@ export const makeCountdown = (target: Date, now: Date): CountdownType => {
 		total: target.getTime() - now.getTime()
 	};
 };
+
+//for canvas
+export const timezonePointList = [
+
+];

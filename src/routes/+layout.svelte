@@ -16,11 +16,11 @@
 </svelte:head>
 
 <div
-	class="relative m-0 flex h-full w-full grow flex-col overflow-x-hidden overflow-y-hidden p-0 text-white"
+	class="relative m-0 flex h-full w-full grow flex-col p-0 text-white"
 >
 	<div class="absolute z-1 h-full w-full" style="background-color: {data.background}"></div>
 	<Snowflakes />
-	<div class="z-10 flex w-full grow flex-col overflow-x-hidden overflow-y-hidden">
+	<div class="z-10 flex w-full grow flex-col">
 		{@render children?.()}
 	</div>
 </div>

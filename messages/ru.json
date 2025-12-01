@@ -31,5 +31,7 @@
 	"noCitiesHaveGoneIntoTheNewYearYet": "Еще нет городов, вошедших в Новый год",
 	"allCitiesAreAlreadyInTheNewYear": "Все города уже в Новом году",
 	"merryChristmasAndAHappyNewYearExclamation": "С Рождеством и с Новым годом!",
-	"languageName": "Русский"
+	"languageName": "Русский",
+	"noMusicPlayerAvailable": "Музыкальный плеер недоступен",
+	"playingHandelsMusicForRoyalFireworks": "Воспроизведение музыки Генделя для королевского фейерверка"
 }

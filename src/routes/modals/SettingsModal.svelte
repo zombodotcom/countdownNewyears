@@ -7,19 +7,23 @@
 
 	let { settingsModal = $bindable(false), data } = $props();
 
-	let hasPlaylist = $state(true);
+	let hasPlaylist = $state(data.playlist.length > 0);
 </script>
 
 <Modal bind:showModal={settingsModal}>
 	<div class="flex w-full flex-col gap-2">
-		<form class="flex grow flex-col gap-2" use:enhance method="post" action="/?/settings">
+		<form class="flex grow flex-col gap-2" use:enhance={async () => {
+			return async ({update}) => {
+				await update({ reset: false, invalidateAll: true });
+			};
+		}} method="post" action="/?/settings">
 			<div class="grid w-full grid-cols-2 gap-2 text-white *:flex *:grow *:flex-col *:gap-2">
 				<div>
 					<h2 class="text-xl font-medium">Settings</h2>
 
 					<h2 class="text-lg">Color settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input type="color" name="bg" required />
+						<input type="color" name="bg" required value={data.background} />
 						<label for="bg">Background color</label>
 					</span>
 
@@ -34,19 +38,20 @@
 							name="playlist"
 							class="rounded-lg bg-white p-2 text-gray-700"
 							placeholder="Enter link here..."
+							value={data.playlist}
 							required
 						/>
 					{/if}
 
 					<h2 class="text-lg">Clock settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input type="checkbox" class="checkbox" name="millisecond" />
+						<input type="checkbox" class="checkbox" name="millisecond" checked={data.milliseconds == "true"} />
 						<label for="millisecond">Millisecond hand on clock</label>
 					</span>
 
 					<h2 class="text-lg">Bottom bar Settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input type="checkbox" class="checkbox" name="journey" />
+						<input type="checkbox" class="checkbox" name="journey" checked={data.journey == "true"} />
 						<label for="journey">Events on bottom bar enabled</label>
 					</span>
 				</div>
@@ -55,7 +60,7 @@
 					<h2 class="text-lg">Language settings</h2>
 					{#each locales as locale}
 						<span class="flex w-full flex-row gap-2">
-							<input type="checkbox" class="checkbox" name={'lang-' + locale} />
+							<input type="checkbox" class="checkbox" name={'lang-' + locale} checked={data.languages.findIndex((v: string) => v == locale) !== -1}  />
 							<label for={'lang-' + locale}>{m.languageName({}, { locale })}</label>
 						</span>
 					{/each}
