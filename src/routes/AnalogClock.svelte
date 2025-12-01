@@ -70,14 +70,14 @@
 			if (minSizeAxis == 'x') {
 				context.arc(
 					minSize / 2,
-					minSize / 2 + (maxSize - minSize) / 2,
+					maxSize / 2,
 					minSize / 2 - 5,
 					0,
 					2 * Math.PI
 				);
 			} else {
 				context.arc(
-					minSize / 2 + (maxSize - minSize) / 2,
+					maxSize / 2,
 					minSize / 2,
 					minSize / 2 - 5,
 					0,
@@ -179,7 +179,7 @@
 			context.lineWidth = 10;
 			context.strokeStyle = `#ffffff`;
 
-			context.arc(minSize / 2 + (maxSize - minSize) / 2, minSize / 2, 10, 0, 2 * Math.PI);
+			context.arc(maxSize / 2, minSize / 2, 10, 0, 2 * Math.PI);
 
 			context.fill();
 			context.closePath();

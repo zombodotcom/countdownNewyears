@@ -5,7 +5,7 @@
 	let { locale } = $props();
 </script>
 
-<div class="flex h-full w-full grow flex-col rounded-4xl bg-black/20 p-5">
+<div class="flex w-full grow flex-col rounded-4xl bg-black/20 p-5">
 	<h2 class="text-2xl font-medium">
 		{m.timezoneMap({}, { locale: locale as LanguageType })}
 	</h2>

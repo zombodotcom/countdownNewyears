@@ -31,8 +31,8 @@
 
 	let interval: NodeJS.Timeout | undefined = $state(undefined);
 	let now = $state(new Date());
-	//let target = $state(new Date(2026, 0, 1, 0, 0, 0, 0));
-	let target = $state(new Date(2025, 11, 1, 0, 0, 0, 0)); //DEBUG
+	let target = $state(new Date(2026, 0, 1, 0, 0, 0, 0));
+	//let target = $state(new Date(2025, 11, 1, 0, 0, 0, 0)); //DEBUG
 
 	const updateLocale = () => {
 		currentLocaleIndex++;
@@ -52,14 +52,15 @@
 	});
 </script>
 
-<div class="flex h-full w-full grow flex-col gap-6 *:overflow-x-hidden! *:overflow-y-scroll!">
+<div class="flex w-full grow flex-col gap-6 h-full overflow-hidden">
 	<div class="flex grow-5 flex-row gap-6 p-5 pb-0!">
 		<PrevCities {target} {now} locale={currentLocale} />
 
 		<div class="flex grow flex-col items-center justify-center gap-6 overflow-hidden">
 			<Countdown {now} {target} locale={currentLocale} isNewYear={now > target} />
 
-			<div class="flex w-full grow-2 flex-row items-center justify-center gap-6">
+
+			<div class="flex w-full grow flex-row items-center justify-center gap-6 *:h-full">
 				<Timezone locale={currentLocale} />
 
 				<div class="flex h-full grow flex-col items-center justify-center gap-6">
@@ -76,7 +77,7 @@
 
 		<NextCities {target} {now} locale={currentLocale} />
 	</div>
-	<JourneyBar locale={currentLocale}/>
+	<JourneyBar locale={currentLocale} />
 </div>
 
 <BottomBar
@@ -88,7 +89,7 @@
 	bind:changelogModal
 />
 
-<SettingsModal  bind:settingsModal />
+<SettingsModal bind:settingsModal />
 
 <FeedbackModal bind:feedbackModal />
 

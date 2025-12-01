@@ -12,13 +12,13 @@
 </script>
 
 <div
-	class="flex h-full w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 overflow-scroll rounded-4xl bg-black/20 p-5"
+	class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col gap-4 rounded-4xl bg-black/20 p-5"
 >
 	<h2 class="w-full text-center {locale == "de" || locale == "cs" ? "text-xl" : "text-2xl"} font-medium leading-8">
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-	<div class="flex grow flex-col gap-2 overflow-x-hidden! overflow-y-scroll!">
+	<div class="flex grow flex-col gap-2">
 		{#each timezones as timezone, i (i)}
 			<TimezoneItem {timezone} {target} {now} reverse={true}/>
 		{/each}

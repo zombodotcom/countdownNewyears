@@ -11,17 +11,15 @@
 	}));
 </script>
 
-<div class="gap-4 flex flex-col grow h-full min-w-1/5 w-1/5 max-w-1/5 rounded-4xl bg-black/20 p-5">
+<div class="gap-4 flex flex-col grow min-w-1/5 w-1/5 max-w-1/5 rounded-4xl bg-black/20 p-5">
     <h2 class="text-2xl font-medium text-center w-full">{m.followingCities({}, { locale: locale as LanguageType})}</h2>
 	{#if timezones.length > 0}
-	<div class="grow flex flex-col gap-2 overflow-x-hidden! overflow-y-scroll! max-w-full">
-		{#each timezones as timezone, i (i)}
-			<TimezoneItem {timezone} {target} {now}/>
-		{/each}
+	<div class="grow flex flex-col gap-2">
+		
 	</div>
 	{:else}
-	<div class="flex flex-col grow w-full justify-center items-center">
-		{m.allCitiesAreInTheNewYear({}, { locale: locale as LanguageType })}
+	<div class="flex flex-col grow justify-center items-center w-full">
+		{m.allCitiesAreAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</div>
 	{/if}
 </div>

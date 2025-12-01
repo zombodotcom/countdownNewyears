@@ -126,6 +126,6 @@
 	})
 </script>
 
-<canvas id={value} class="absolute z-9 h-full w-full opacity-70">
+<canvas id={value} class="absolute z-9 h-screen w-screen opacity-70">
 	Canvas element not supported!
 </canvas>
