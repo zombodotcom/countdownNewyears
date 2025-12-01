@@ -18,13 +18,13 @@
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-	<div class="flex grow flex-col gap-2">
+	<div class="flex grow flex-col gap-2 flex-nowrap max-h-[calc(100vh-172px)] overflow-scroll">
 		{#each timezones as timezone, i (i)}
 			<TimezoneItem {timezone} {target} {now} reverse={true}/>
 		{/each}
 	</div>
 	{:else}
-	<div class="flex flex-col grow w-full justify-center items-center">
+	<div class="flex flex-col grow w-full justify-center items-center text-center">
 		{m.noCitiesHaveGoneIntoTheNewYearYet({}, { locale: locale as LanguageType })}
 	</div>
 	{/if}

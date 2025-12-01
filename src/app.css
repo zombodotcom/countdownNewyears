@@ -23,4 +23,8 @@
 	.button-dialog {
 		@apply w-full rounded-full border-2 border-white bg-gray-900 p-2 font-medium text-white hover:border-gray-900 hover:bg-white hover:text-gray-900;
 	}
+
+	.checkbox {
+		@apply accent-gray-900 text-white rounded-4xl hover:accent-gray-700;
+	};
 }

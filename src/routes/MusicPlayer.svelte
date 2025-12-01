@@ -5,7 +5,7 @@
 	let { link, locale, switchedToHandel } = $props();
 </script>
 
-<div class="flex h-fit w-full flex-col gap-2 rounded-4xl bg-black/20 p-5 grow">
+<div class="flex h-fit w-full flex-col gap-2 rounded-4xl bg-black/20 p-5">
 	<h2
 		class="w-full overflow-x-scroll overflow-y-hidden text-2xl font-medium text-nowrap text-ellipsis whitespace-nowrap"
 	>

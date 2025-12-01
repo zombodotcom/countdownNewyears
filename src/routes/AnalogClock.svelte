@@ -4,7 +4,7 @@
 	import type { LanguageType } from '$lib/types';
 	import { onDestroy, onMount } from 'svelte';
 
-	let { locale, now } = $props();
+	let { locale, now, ms } = $props();
 
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let context: CanvasRenderingContext2D | undefined = $state();
@@ -68,25 +68,31 @@
 			context.lineWidth = 3;
 
 			if (minSizeAxis == 'x') {
-				context.arc(
-					minSize / 2,
-					maxSize / 2,
-					minSize / 2 - 5,
-					0,
-					2 * Math.PI
-				);
+				context.arc(minSize / 2, maxSize / 2, minSize / 2 - 5, 0, 2 * Math.PI);
 			} else {
-				context.arc(
-					maxSize / 2,
-					minSize / 2,
-					minSize / 2 - 5,
-					0,
-					2 * Math.PI
-				);
+				context.arc(maxSize / 2, minSize / 2, minSize / 2 - 5, 0, 2 * Math.PI);
 			}
 
 			context.stroke();
 			context.closePath();
+
+			if (ms) {
+				//milliseconds hand (green)
+				context.lineWidth = 2;
+				context.strokeStyle = `#006000`;
+				context.beginPath();
+
+				context.moveTo(minSize / 2 + (maxSize - minSize) / 2, minSize / 2);
+				context.lineTo(
+					minSize / 2 +
+						(maxSize - minSize) / 2 +
+						Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5),
+					minSize / 2 + Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5)
+				);
+
+				context.stroke();
+				context.closePath();
+			}
 
 			//hand hours
 			context.lineWidth = 10;
@@ -100,7 +106,7 @@
 					Math.cos(
 						((now.getTime() -
 							new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) /
-							(24 * 60 * 60 * 1000) -
+							(12 * 60 * 60 * 1000) -
 							0.25) *
 							Math.PI *
 							2
@@ -110,7 +116,7 @@
 					Math.sin(
 						((now.getTime() -
 							new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) /
-							(24 * 60 * 60 * 1000) -
+							(12 * 60 * 60 * 1000) -
 							0.25) *
 							Math.PI *
 							2
@@ -122,7 +128,7 @@
 			context.closePath();
 
 			//hand minutes
-			context.lineWidth = 5;
+			context.lineWidth = 7;
 			context.strokeStyle = `#dddddd`;
 			context.beginPath();
 
@@ -139,7 +145,7 @@
 			context.closePath();
 
 			//hand seconds (red)
-			context.lineWidth = 3;
+			context.lineWidth = 4;
 			context.strokeStyle = `#800000`;
 			context.beginPath();
 
@@ -154,25 +160,6 @@
 
 			context.stroke();
 			context.closePath();
-
-			//TODO setting
-			/*
-			//milliseconds hand (green)
-			context.lineWidth = 2;
-			context.strokeStyle = `#008000`;
-			context.beginPath();
-
-			context.moveTo(minSize / 2 + (maxSize - minSize) / 2, minSize / 2);
-			context.lineTo(
-				(minSize / 2 + (maxSize - minSize) / 2) +
-					(Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5)),
-				(minSize / 2) +
-					(Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 5))
-			);
-
-			context.stroke();
-			context.closePath();
-			*/
 
 			context.beginPath();
 

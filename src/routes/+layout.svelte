@@ -5,7 +5,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import Snowflakes from './Snowflakes.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -16,7 +16,7 @@
 </svelte:head>
 
 <div class="text-white relative flex w-full grow flex-col overflow-x-hidden overflow-y-hidden h-full m-0 p-0">
-	<div class="w-full h-full absolute z-1 bg-red-950"></div>
+	<div class="w-full h-full absolute z-1" style="background-color: {data.background}"></div>
 	<Snowflakes />
 	<div class="z-10 flex w-full grow flex-col overflow-x-hidden overflow-y-hidden">
 		{@render children?.()}

@@ -1,8 +1,5 @@
 <script lang="ts">
 	import BottomBar from './BottomBar.svelte';
-	import Modal from './Modal.svelte';
-	import { m } from '$lib/paraglide/messages';
-	import Button from './items/Button.svelte';
 	import Countdown from './Countdown.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { locales } from '$lib/paraglide/runtime';
@@ -18,6 +15,8 @@
 	import FeedbackModal from './modals/FeedbackModal.svelte';
 	import ChangelogModal from './modals/ChangelogModal.svelte';
 	import SettingsModal from './modals/SettingsModal.svelte';
+
+	let { data } = $props();
 
 	let settingsModal = $state(false);
 	let feedbackModal = $state(false);
@@ -64,10 +63,10 @@
 				<Timezone locale={currentLocale} />
 
 				<div class="flex h-full grow flex-col items-center justify-center gap-6">
-					<AnalogClock locale={currentLocale} {now} />
+					<AnalogClock locale={currentLocale} {now} ms={data.millisecond} />
 
 					<MusicPlayer
-						link={'https://www.youtube-nocookie.com/embed/videoseries?si=nnVK9IsAMkVeEzF5&amp;list=PL5d1YE_8Im7MNADxq70-5zrxpCdOJkICX'}
+						link={data.playlist}
 						locale={currentLocale}
 						switchedToHandel={now > target}
 					/>
@@ -89,7 +88,7 @@
 	bind:changelogModal
 />
 
-<SettingsModal bind:settingsModal />
+<SettingsModal bind:settingsModal {data} />
 
 <FeedbackModal bind:feedbackModal />
 

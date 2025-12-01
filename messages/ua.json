@@ -30,5 +30,6 @@
     "clock": "Годинник",
 	"noCitiesHaveGoneIntoTheNewYearYet": "Ще немає міст, які увійшли в Новий рік",	
 	"allCitiesAreAlreadyInTheNewYear": "Всі міста вже у Новому році",
-	"merryChristmasAndAHappyNewYearExclamation": "З Різдвом та з Новим роком!"
+	"merryChristmasAndAHappyNewYearExclamation": "З Різдвом та з Новим роком!",
+	"languageName": "Українська"
 }
