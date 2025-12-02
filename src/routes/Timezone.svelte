@@ -3,6 +3,7 @@
 	import type { LanguageType } from '$lib/types';
 	import { onDestroy, onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { timezonePointList } from '$lib';
 
 	let { locale } = $props();
 
@@ -31,7 +32,7 @@
 		});
 
 		canvas = document.getElementById(value) as HTMLCanvasElement;
-		let context = canvas.getContext('2d') as CanvasRenderingContext2D;
+		context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 		sizeX = Math.round(canvas.getBoundingClientRect().width);
 		sizeY = Math.round(canvas.getBoundingClientRect().height);
@@ -47,11 +48,24 @@
 			if (context != null) {
 				context.canvas.width = sizeX;
 				context.canvas.height = sizeY;
+				context.strokeStyle = `#ffffff`;
+				context.fillStyle = '#ffffff';
+				context.globalAlpha = 1;
+				context.lineWidth = 2;
 			}
 		}).observe(canvas);
 
 		interval = setInterval(() => {
-			context.drawImage(backgroundImage as HTMLImageElement, 0, 0, sizeX, sizeY);
+			context?.drawImage(backgroundImage as HTMLImageElement, 0, 0, sizeX, sizeY);
+
+			for(let pointList of timezonePointList) {
+				context?.beginPath();
+				context?.moveTo((sizeX*(pointList[0].x-2))/100, (sizeY*(pointList[0].y-2))/100);
+				for(let point of pointList) {
+					context?.lineTo((sizeX*(point.x-2))/100, ((point.y-2)*sizeY)/100);
+				}
+				context?.stroke();
+			}1
 		}, 40);
 	});
 

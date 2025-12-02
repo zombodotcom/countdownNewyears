@@ -1,5 +1,5 @@
 import { m } from './paraglide/messages';
-import type { CountdownType, LanguageType, TimezoneType } from './types';
+import type { CountdownType, LanguageType, PointType, TimezoneType } from './types';
 
 export const writeDays = (days: number, locale: string) => {
 	if (days == 0) return m.day0({}, { locale: locale as LanguageType });
@@ -270,5 +270,108 @@ export const makeCountdown = (target: Date, now: Date): CountdownType => {
 	};
 };
 
+export const makeTimezonePoint = (x: number, y: number): PointType => {
+	return { x: x, y: y }
+};
+
 //for canvas
-export const timezonePointList = [];
+export const timezonePointList = [
+	[
+		makeTimezonePoint(4, 0),
+		makeTimezonePoint(4, 60),
+		makeTimezonePoint(8, 60),
+		makeTimezonePoint(4, 100),
+	],
+	[
+		makeTimezonePoint(2*100/24, 0),
+		makeTimezonePoint(2*100/24, 100),
+	],
+	[
+		makeTimezonePoint(3*100/24, 0),
+		makeTimezonePoint(3*100/24, 100),
+	],
+	[
+		makeTimezonePoint(4*100/24, 0),
+		makeTimezonePoint(4*100/24, 100),
+	],
+	[
+		makeTimezonePoint(5*100/24, 0),
+		makeTimezonePoint(5*100/24, 100),
+	],
+	[
+		makeTimezonePoint(6*100/24, 0),
+		makeTimezonePoint(6*100/24, 100),
+	],
+	[
+		makeTimezonePoint(7*100/24, 0),
+		makeTimezonePoint(7*100/24, 100),
+	],
+	[
+		makeTimezonePoint(8*100/24, 0),
+		makeTimezonePoint(8*100/24, 100),
+	],
+	[
+		makeTimezonePoint(9*100/24, 0),
+		makeTimezonePoint(9*100/24, 100),
+	],
+	[
+		makeTimezonePoint(10*100/24, 0),
+		makeTimezonePoint(10*100/24, 100),
+	],
+	[
+		makeTimezonePoint(11*100/24, 0),
+		makeTimezonePoint(11*100/24, 100),
+	],
+	[
+		makeTimezonePoint(12*100/24, 0),
+		makeTimezonePoint(12*100/24, 100),
+	],
+	[
+		makeTimezonePoint(13*100/24, 0),
+		makeTimezonePoint(13*100/24, 100),
+	],
+	[
+		makeTimezonePoint(14*100/24, 0),
+		makeTimezonePoint(14*100/24, 100),
+	],
+	[
+		makeTimezonePoint(15*100/24, 0),
+		makeTimezonePoint(15*100/24, 100),
+	],
+	[
+		makeTimezonePoint(16*100/24, 0),
+		makeTimezonePoint(16*100/24, 100),
+	],
+	[
+		makeTimezonePoint(17*100/24, 0),
+		makeTimezonePoint(17*100/24, 100),
+	],
+	[
+		makeTimezonePoint(18*100/24, 0),
+		makeTimezonePoint(18*100/24, 100),
+	],
+	[
+		makeTimezonePoint(19*100/24, 0),
+		makeTimezonePoint(19*100/24, 100),
+	],
+	[
+		makeTimezonePoint(20*100/24, 0),
+		makeTimezonePoint(20*100/24, 100),
+	],
+	[
+		makeTimezonePoint(21*100/24, 0),
+		makeTimezonePoint(21*100/24, 100),
+	],
+	[
+		makeTimezonePoint(22*100/24, 0),
+		makeTimezonePoint(22*100/24, 100),
+	],
+	[
+		makeTimezonePoint(23*100/24, 0),
+		makeTimezonePoint(23*100/24, 100),
+	],
+	[
+		makeTimezonePoint(24*100/24, 0),
+		makeTimezonePoint(24*100/24, 100),
+	],
+];

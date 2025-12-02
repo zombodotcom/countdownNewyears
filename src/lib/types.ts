@@ -14,3 +14,8 @@ export type CountdownType = {
 	milliseconds: number;
 	total: number;
 };
+
+export type PointType = {
+	x: number;
+	y: number;
+};

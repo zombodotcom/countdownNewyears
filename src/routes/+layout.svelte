@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/snowflake-line.svg';
 	import 'remixicon/fonts/remixicon.css';
 	import { m } from '$lib/paraglide/messages';
 	import Snowflakes from './Snowflakes.svelte';
