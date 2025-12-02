@@ -58,14 +58,15 @@
 		interval = setInterval(() => {
 			context?.drawImage(backgroundImage as HTMLImageElement, 0, 0, sizeX, sizeY);
 
-			for(let pointList of timezonePointList) {
+			for (let pointList of timezonePointList) {
 				context?.beginPath();
-				context?.moveTo((sizeX*(pointList[0].x-2))/100, (sizeY*(pointList[0].y-2))/100);
-				for(let point of pointList) {
-					context?.lineTo((sizeX*(point.x-2))/100, ((point.y-2)*sizeY)/100);
+				context?.moveTo((sizeX * (pointList[0].x - 2)) / 100, (sizeY * (pointList[0].y - 2)) / 100);
+				for (let point of pointList) {
+					context?.lineTo((sizeX * (point.x - 2)) / 100, ((point.y - 2) * sizeY) / 100);
 				}
 				context?.stroke();
-			}1
+			}
+			1;
 		}, 40);
 	});
 

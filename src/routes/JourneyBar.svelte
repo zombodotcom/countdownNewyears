@@ -24,7 +24,7 @@
 	//release with just train effect, ask others for ideas?
 
 	const eventIntervalFunction = () => {
-		if(!context) throw error(500);
+		if (!context) throw error(500);
 
 		context.strokeStyle = `#ffffff`;
 		context.fillStyle = '#ffffff';
@@ -35,33 +35,33 @@
 
 		let x = 0;
 		let wagons = [];
-		let amount = Math.trunc(5+Math.random()*5);
+		let amount = Math.trunc(5 + Math.random() * 5);
 
-		for(let w = 0; w < amount; w++) {
-			wagons.push(Math.trunc(Math.random()*3));
+		for (let w = 0; w < amount; w++) {
+			wagons.push(Math.trunc(Math.random() * 3));
 		}
 
 		//all 275x75 px
 		let i = setInterval(() => {
 			context?.clearRect(0, 0, sizeX, sizeY);
-			context?.drawImage(loco as HTMLImageElement, x, sizeY-75);
+			context?.drawImage(loco as HTMLImageElement, x, sizeY - 75);
 
-			for(let w = 0; w < amount; w++) {
-				switch(wagons[w]) {
-					case(0):
-						context?.drawImage(w1 as HTMLImageElement, x-((w+1)*275), sizeY-75);
+			for (let w = 0; w < amount; w++) {
+				switch (wagons[w]) {
+					case 0:
+						context?.drawImage(w1 as HTMLImageElement, x - (w + 1) * 275, sizeY - 75);
 						break;
-					case(1):
-						context?.drawImage(w2 as HTMLImageElement, x-((w+1)*275), sizeY-75);
+					case 1:
+						context?.drawImage(w2 as HTMLImageElement, x - (w + 1) * 275, sizeY - 75);
 						break;
-					case(2):
-						context?.drawImage(w3 as HTMLImageElement, x-((w+1)*275), sizeY-75);
+					case 2:
+						context?.drawImage(w3 as HTMLImageElement, x - (w + 1) * 275, sizeY - 75);
 						break;
 				}
 			}
 
 			x += 15;
-			if ((x-200-(amount*275)) > sizeX) {
+			if (x - 200 - amount * 275 > sizeX) {
 				clearInterval(i);
 				eventValue = 0;
 				setTimeout(eventIntervalFunction, 30000);
@@ -82,7 +82,7 @@
 		w2.src = '/journey/wagon2.png';
 		w3 = new Image();
 		w3.src = '/journey/wagon3.png';
-		
+
 		await Promise.all([
 			new Promise((resolve) => {
 				loco?.addEventListener('load', (r) => {
