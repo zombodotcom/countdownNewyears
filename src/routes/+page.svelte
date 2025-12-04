@@ -63,22 +63,28 @@
 		class="relative flex h-screen max-h-screen min-h-screen w-full grow flex-col gap-0 overflow-hidden **:overflow-hidden"
 	>
 		<div class="flex w-full grow flex-col max-lg:gap-2 lg:gap-6">
-			<div class="flex grow-5 flex-row max-lg:gap-2 lg:gap-6 p-5 pb-0!">
+			<div class="flex grow-5 flex-row p-5 pb-0! max-lg:gap-2 lg:gap-6">
 				{#key clicked}
 					<span class="flex w-1/5 max-w-1/5 min-w-1/5 grow flex-col max-2xl:hidden">
 						<PrevCities {target} {now} locale={currentLocale} />
 					</span>
 				{/key}
 
-				<div class="flex grow flex-col items-center justify-center  max-lg:gap-2 lg:gap-6 overflow-hidden">
+				<div
+					class="flex grow flex-col items-center justify-center overflow-hidden max-lg:gap-2 lg:gap-6"
+				>
 					<Countdown {now} {target} locale={currentLocale} isDone={now > target} />
 
-					<div class="flex w-full grow max-lg:flex-col lg:flex-row max-lg:gap-2 lg:gap-6 overflow-hidden">
+					<div
+						class="flex w-full grow overflow-hidden max-lg:flex-col max-lg:gap-2 lg:flex-row lg:gap-6"
+					>
 						{#key clicked}
 							<Timezone locale={currentLocale} {target} {now} />
 						{/key}
 
-						<div class="flex max-lg:w-full lg:max-w-1/4 lg:min-w-1/4 grow flex-col  max-lg:gap-2 lg:gap-6 overflow-hidden">
+						<div
+							class="flex grow flex-col overflow-hidden max-lg:w-full max-lg:gap-2 lg:max-w-1/4 lg:min-w-1/4 lg:gap-6"
+						>
 							{#key clicked}
 								<AnalogClock locale={currentLocale} {now} ms={data.millisecond} />
 							{/key}

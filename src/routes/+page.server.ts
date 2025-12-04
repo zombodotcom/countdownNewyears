@@ -8,7 +8,7 @@ export const load = async (event) => {
 export const actions = {
 	settings: async (event) => {
 		const formData = await event.request.formData();
-	
+
 		const customTime = formData.get('hastime')?.toString() === 'on';
 
 		if (
@@ -40,14 +40,13 @@ export const actions = {
 			path: '/'
 		});
 
-		let time = "";
-		if(customTime) {
-			time = new Date(formData.get("time")?.toString() as string).toLocaleString();
-		}
-		else {
-			time = new Date(new Date().getFullYear()+1, 0, 1, 0, 0, 0, 0).toLocaleString();
+		let time = '';
+		if (customTime) {
+			time = new Date(formData.get('time')?.toString() as string).toLocaleString();
+		} else {
+			time = new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0).toLocaleString();
 		}
 
 		event.cookies.set('time', time, { path: '/' });
-	},
+	}
 };

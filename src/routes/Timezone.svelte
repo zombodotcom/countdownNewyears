@@ -49,7 +49,7 @@
 				context.canvas.height = sizeY;
 				context.strokeStyle = `#ffffff`;
 				context.fillStyle = '#80808080';
-				context.font = "normal 20px serif";
+				context.font = 'normal 20px serif';
 				context.globalAlpha = 1;
 				context.lineWidth = 2;
 			}
@@ -75,17 +75,17 @@
 				context?.stroke();
 
 				let countdown = makeCountdown(
-					new Date(target.getTime() - (timezoneList[i].hour + now.getTimezoneOffset() / 60) * 3600000),
-					now,
+					new Date(
+						target.getTime() - (timezoneList[i].hour + now.getTimezoneOffset() / 60) * 3600000
+					),
+					now
 				);
 
-				if(countdown.total < 0) {
+				if (countdown.total < 0) {
 					(context as CanvasRenderingContext2D).fillStyle = '#00800080';
-				}
-				else if(countdown.hours === 0 && countdown.days === 0) {
+				} else if (countdown.hours === 0 && countdown.days === 0) {
 					(context as CanvasRenderingContext2D).fillStyle = '#80800080';
-				}
-				else {
+				} else {
 					(context as CanvasRenderingContext2D).fillStyle = '#80808080';
 				}
 

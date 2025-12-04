@@ -33,7 +33,9 @@
 				<div
 					bind:this={clickable}
 					class="
-				{cssClass ? cssClass : 'bg-gray-500!'} mt-5 mb-5 max-lg:max-w-9/10 max-lg:w-9/10 lg:max-w-1/3 rounded-lg p-5 text-left
+				{cssClass
+						? cssClass
+						: 'bg-gray-500!'} mt-5 mb-5 rounded-lg p-5 text-left max-lg:w-9/10 max-lg:max-w-9/10 lg:max-w-1/3
 			"
 				>
 					{@render children?.()}

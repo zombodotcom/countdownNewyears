@@ -306,7 +306,7 @@ export const timezonePointList = [
 		makeTimezonePoint(8, 46),
 		makeTimezonePoint(2, 46),
 		makeTimezonePoint(2, 15),
-		makeTimezonePoint(2, 0),
+		makeTimezonePoint(2, 0)
 	],
 	//-11
 	[
@@ -329,7 +329,7 @@ export const timezonePointList = [
 		makeTimezonePoint(10, 52),
 		makeTimezonePoint(8, 46),
 		makeTimezonePoint(2, 46),
-		makeTimezonePoint(2, 0),
+		makeTimezonePoint(2, 0)
 	],
 	//-10
 	[
@@ -352,7 +352,7 @@ export const timezonePointList = [
 		makeTimezonePoint(4, 17),
 		makeTimezonePoint(4, 12),
 		makeTimezonePoint(6, 10),
-		makeTimezonePoint(6, 0),
+		makeTimezonePoint(6, 0)
 	],
 	[], //-9.5
 	//-9
@@ -372,7 +372,7 @@ export const timezonePointList = [
 		makeTimezonePoint(14, 11),
 		makeTimezonePoint(14, 0),
 		makeTimezonePoint(10, 0),
-		makeTimezonePoint(10, 11),
+		makeTimezonePoint(10, 11)
 	],
 	//-8
 	[
@@ -392,7 +392,7 @@ export const timezonePointList = [
 		makeTimezonePoint(13, 16),
 		makeTimezonePoint(18, 25),
 		makeTimezonePoint(18, 100),
-		makeTimezonePoint(14, 100),
+		makeTimezonePoint(14, 100)
 	],
 	//-7
 	[
@@ -408,7 +408,7 @@ export const timezonePointList = [
 		makeTimezonePoint(20, 35),
 		makeTimezonePoint(20, 39),
 		makeTimezonePoint(22, 41),
-		makeTimezonePoint(22, 100),
+		makeTimezonePoint(22, 100)
 	],
 	//-6
 	[
@@ -420,14 +420,14 @@ export const timezonePointList = [
 		makeTimezonePoint(22, 41),
 		makeTimezonePoint(22, 100),
 		makeTimezonePoint(26, 100),
-		makeTimezonePoint(26, 0),
+		makeTimezonePoint(26, 0)
 	],
 	//-5
 	[
 		makeTimezonePoint(26, 0),
 		makeTimezonePoint(26, 100),
 		makeTimezonePoint(30, 100),
-		makeTimezonePoint(30, 0),
+		makeTimezonePoint(30, 0)
 	],
 	//-4
 	[
@@ -441,7 +441,7 @@ export const timezonePointList = [
 		makeTimezonePoint(30, 5),
 		makeTimezonePoint(34, 3),
 		makeTimezonePoint(34, 0),
-		makeTimezonePoint(30, 0),
+		makeTimezonePoint(30, 0)
 	],
 	[], //-3.5
 	//-3
@@ -466,7 +466,7 @@ export const timezonePointList = [
 		makeTimezonePoint(34, 0),
 		makeTimezonePoint(38, 0),
 		makeTimezonePoint(38, 3),
-		makeTimezonePoint(34, 3),
+		makeTimezonePoint(34, 3)
 	],
 	//-2
 	[
@@ -484,7 +484,7 @@ export const timezonePointList = [
 		makeTimezonePoint(30, 5),
 		makeTimezonePoint(34, 3),
 		makeTimezonePoint(38, 3),
-		makeTimezonePoint(38, 0),
+		makeTimezonePoint(38, 0)
 	],
 	//-1
 	[
@@ -494,7 +494,7 @@ export const timezonePointList = [
 		makeTimezonePoint(42, 100),
 		makeTimezonePoint(42, 12),
 		makeTimezonePoint(44, 10),
-		makeTimezonePoint(46, 5),
+		makeTimezonePoint(46, 5)
 	],
 	//0
 	[
@@ -508,7 +508,7 @@ export const timezonePointList = [
 		makeTimezonePoint(48, 30),
 		makeTimezonePoint(48, 23),
 		makeTimezonePoint(50, 22),
-		makeTimezonePoint(50, 0),
+		makeTimezonePoint(50, 0)
 	],
 	//1
 	[
@@ -532,7 +532,7 @@ export const timezonePointList = [
 		makeTimezonePoint(46, 39),
 		makeTimezonePoint(48, 38),
 		makeTimezonePoint(50, 40),
-		makeTimezonePoint(50, 100),
+		makeTimezonePoint(50, 100)
 	],
 	//2
 	[
@@ -555,7 +555,7 @@ export const timezonePointList = [
 		makeTimezonePoint(54 + 1, 63),
 		makeTimezonePoint(56 + 1, 63),
 		makeTimezonePoint(56 + 1, 38),
-		makeTimezonePoint(54 + 1, 38),
+		makeTimezonePoint(54 + 1, 38)
 	],
 	//3
 	[
@@ -573,7 +573,7 @@ export const timezonePointList = [
 		makeTimezonePoint(63, 28),
 		makeTimezonePoint(66, 28),
 
-		makeTimezonePoint(70, 0),
+		makeTimezonePoint(70, 0)
 	],
 	[], //3.14
 	//3.5 (Iran)
@@ -584,7 +584,7 @@ export const timezonePointList = [
 		makeTimezonePoint(68, 33),
 		makeTimezonePoint(69, 37),
 		makeTimezonePoint(67, 37),
-		makeTimezonePoint(66, 37),
+		makeTimezonePoint(66, 37)
 	],
 	[], //4
 	[], //4.5
@@ -603,7 +603,7 @@ export const timezonePointList = [
 		makeTimezonePoint(68, 29),
 		makeTimezonePoint(68, 33),
 		makeTimezonePoint(69, 37),
-		makeTimezonePoint(66, 37),
+		makeTimezonePoint(66, 37)
 	],
 	//5.5 (India)
 	[
@@ -612,7 +612,7 @@ export const timezonePointList = [
 		makeTimezonePoint(76, 34),
 		makeTimezonePoint(76, 38),
 		makeTimezonePoint(72, 48),
-		makeTimezonePoint(71, 45),
+		makeTimezonePoint(71, 45)
 	],
 	[], //5.75
 	//6
@@ -668,8 +668,7 @@ export const timezonePointList = [
 		makeTimezonePoint(72, 34),
 		makeTimezonePoint(76, 34),
 		makeTimezonePoint(76, 38),
-		makeTimezonePoint(76, 100),
-		
+		makeTimezonePoint(76, 100)
 	],
 	//8
 	[
@@ -699,7 +698,7 @@ export const timezonePointList = [
 		makeTimezonePoint(76, 38),
 		makeTimezonePoint(80, 40),
 		makeTimezonePoint(82, 42),
-		makeTimezonePoint(82, 100),
+		makeTimezonePoint(82, 100)
 	],
 	[], //8.75
 	//9
@@ -723,7 +722,7 @@ export const timezonePointList = [
 		makeTimezonePoint(86, 40),
 		makeTimezonePoint(86, 100),
 		makeTimezonePoint(90, 100),
-		makeTimezonePoint(90, 0),
+		makeTimezonePoint(90, 0)
 	],
 	[], //9.5
 	//10
@@ -731,15 +730,15 @@ export const timezonePointList = [
 		makeTimezonePoint(90, 100),
 		makeTimezonePoint(90, 0),
 		makeTimezonePoint(94, 0),
-		makeTimezonePoint(94, 100),
+		makeTimezonePoint(94, 100)
 	],
-	[],	//10.5
+	[], //10.5
 	//11
 	[
 		makeTimezonePoint(94, 100),
 		makeTimezonePoint(94, 0),
 		makeTimezonePoint(98, 0),
-		makeTimezonePoint(98, 100),
+		makeTimezonePoint(98, 100)
 	],
 	//12
 	[
@@ -758,7 +757,7 @@ export const timezonePointList = [
 		makeTimezonePoint(2, 15),
 		makeTimezonePoint(2, 10),
 		makeTimezonePoint(0, 8),
-		makeTimezonePoint(0, 100),
+		makeTimezonePoint(0, 100)
 	],
 	//13
 	[
@@ -766,7 +765,7 @@ export const timezonePointList = [
 		makeTimezonePoint(6, 52.5),
 		makeTimezonePoint(6, 46),
 		makeTimezonePoint(2, 46),
-		makeTimezonePoint(2, 54),
+		makeTimezonePoint(2, 54)
 	],
 	[], //13.75
 	//14
@@ -776,14 +775,18 @@ export const timezonePointList = [
 		makeTimezonePoint(10, 52),
 		makeTimezonePoint(8, 54),
 		makeTimezonePoint(7, 52),
-		makeTimezonePoint(6, 52.5),
-	],
+		makeTimezonePoint(6, 52.5)
+	]
 ].reverse(); //we do same with timezoneList
 
 export const dateToString = (d: Date): string => {
-	return new Date(d.getTime() - d.getTimezoneOffset() * 60 * 1000).toISOString().split(':').splice(0, 2).join(':');
+	return new Date(d.getTime() - d.getTimezoneOffset() * 60 * 1000)
+		.toISOString()
+		.split(':')
+		.splice(0, 2)
+		.join(':');
 };
 
-if(timezoneList.length !== timezonePointList.length) {
+if (timezoneList.length !== timezonePointList.length) {
 	throw error(500, `Assertion failed ${timezoneList.length} ${timezonePointList.length}`);
 }

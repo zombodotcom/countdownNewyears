@@ -24,27 +24,34 @@
 			method="post"
 			action="/?/settings"
 		>
-			<div class="grid w-full max-lg:grid-cols-1 lg:grid-cols-2 gap-2 text-white *:flex *:grow *:flex-col *:gap-2">
+			<div
+				class="grid w-full gap-2 text-white *:flex *:grow *:flex-col *:gap-2 max-lg:grid-cols-1 lg:grid-cols-2"
+			>
 				<div>
 					<h2 class="text-xl font-medium">Settings</h2>
 
 					<h2 class="text-lg">Time settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input type="checkbox" class="checkbox" name="hastime" bind:checked={hasDifferentTime} />
+						<input
+							type="checkbox"
+							class="checkbox"
+							name="hastime"
+							bind:checked={hasDifferentTime}
+						/>
 						<label for="hastime">Set custom countdown</label>
 					</span>
 					{#if hasDifferentTime}
-					<span class="flex w-full flex-col gap-2">
-						<input
-							type="datetime-local"
-							name="time"
-							min={dateToString(new Date())}
-							required
-							value={dateToString(data.countdown as Date)}
-							step={0}
-						/>
-						<label for="time" class="italic">Countdown target date and time</label>
-					</span>
+						<span class="flex w-full flex-col gap-2">
+							<input
+								type="datetime-local"
+								name="time"
+								min={dateToString(new Date())}
+								required
+								value={dateToString(data.countdown as Date)}
+								step={0}
+							/>
+							<label for="time" class="italic">Countdown target date and time</label>
+						</span>
 					{/if}
 
 					<h2 class="text-lg">Color settings</h2>

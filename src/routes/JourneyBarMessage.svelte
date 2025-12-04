@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="flex w-full grow flex-row items-center justify-center font-great max-lg:text-2xl max-lg:leading-8 lg:text-6xl lg:leading-20 text-center text-nowrap"
+	class="flex w-full grow flex-row items-center justify-center text-center font-great text-nowrap max-lg:text-2xl max-lg:leading-8 lg:text-6xl lg:leading-20"
 	transition:fade|global={{ duration: 250 }}
 >
 	{m.merryChristmasAndAHappyNewYearExclamation({}, { locale: locale as LanguageType })}

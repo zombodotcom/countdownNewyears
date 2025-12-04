@@ -60,8 +60,8 @@
 	<!-- 38 = ~9.5rem  (40 = 10rem) -->
 	<div
 		class="m-0! flex flex-row items-center justify-center gap-0 p-0! font-bold
-		max-lg:leading-12 lg:leading-18 xl:leading-24 2xl:leading-30
-		max-lg:text-4xl lg:text-[6rem] xl:text-[8rem] 2xl:text-[10rem]"
+		max-lg:text-4xl max-lg:leading-12 lg:text-[6rem] lg:leading-18
+		xl:text-[8rem] xl:leading-24 2xl:text-[10rem] 2xl:leading-30"
 	>
 		<div
 			class="flex flex-col gap-0 {countdown.days > 0 ? '' : 'text-neutral-500'}  {isDone
@@ -118,16 +118,14 @@
 
 		<div
 			class="flex h-full flex-col gap-0 overflow-hidden
-				max-lg:text-xl lg:text-[2rem] xl:text-[3rem] 2xl:text-[4rem]
-				max-xl:leading-8 xl:leading-10 2xl:leading-12
-			{isDone
-				? 'text-amber-400'
-				: 'text-neutral-500'} "
+				max-xl:leading-8 max-lg:text-xl lg:text-[2rem] xl:text-[3rem]
+				xl:leading-10 2xl:text-[4rem] 2xl:leading-12
+			{isDone ? 'text-amber-400' : 'text-neutral-500'} "
 		>
 			<span class="flex flex-col overflow-hidden">
 				:{Math.abs(countdown.milliseconds).toFixed().padStart(3, '0')}
 				<span
-					class="max-lg:ps-2 lg:ps-4 text-left {locale == 'hu'
+					class="text-left max-lg:ps-2 lg:ps-4 {locale == 'hu'
 						? 'max-lg:text-xs lg:text-sm 2xl:text-base'
 						: 'max-lg:text-xs lg:text-sm xl:text-base 2xl:text-xl'} font-light"
 				>

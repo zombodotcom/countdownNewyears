@@ -144,7 +144,7 @@
 </script>
 
 <div
-	class="relative flex max-lg:min-h-10 lg:min-h-20 w-full grow flex-row items-center justify-center gap-2 rounded-t-4xl bg-black/20 p-5"
+	class="relative flex w-full grow flex-row items-center justify-center gap-2 rounded-t-4xl bg-black/20 p-5 max-lg:min-h-10 lg:min-h-20"
 >
 	{#key eventValue}
 		{#if eventValue == 0}

@@ -16,7 +16,9 @@
 </script>
 
 <div class="flex w-full flex-col gap-2 rounded-4xl bg-black/20 p-5">
-	<h2 class="w-full max-lg:text-base lg:text-2xl font-medium text-nowrap text-ellipsis whitespace-nowrap">
+	<h2
+		class="w-full font-medium text-nowrap text-ellipsis whitespace-nowrap max-lg:text-base lg:text-2xl"
+	>
 		{m.musicPlayer({}, { locale: locale as LanguageType })}
 	</h2>
 
@@ -47,7 +49,8 @@
 							handelVolume = 1;
 						}}
 						class="rounded-2xl border-2 border-white p-2 text-center hover:border-neutral-500! hover:text-neutral-500!"
-					>100%</button>
+						>100%</button
+					>
 				</div>
 			</div>
 		</div>

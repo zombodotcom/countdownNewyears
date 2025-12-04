@@ -14,7 +14,11 @@ export const load = async (event) => {
 		event.cookies.set('journey', 'true', { path: '/' });
 
 		event.cookies.set('set', 'true', { path: '/' });
-		event.cookies.set('time', new Date(new Date().getFullYear()+1, 0, 1, 0, 0, 0, 0).toISOString(), { path: '/' });
+		event.cookies.set(
+			'time',
+			new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0).toISOString(),
+			{ path: '/' }
+		);
 	}
 
 	return {
@@ -23,6 +27,6 @@ export const load = async (event) => {
 		playlist: event.cookies.get('playlist') as string,
 		millisecond: (event.cookies.get('millisecond') as string) === 'true',
 		journey: (event.cookies.get('journey') as string) === 'true',
-		countdown: new Date(event.cookies.get('time') as string),
+		countdown: new Date(event.cookies.get('time') as string)
 	};
 };
