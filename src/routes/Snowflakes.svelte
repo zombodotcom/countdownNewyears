@@ -102,7 +102,10 @@
 
 				value.rotation += value.rotationSpeed;
 
-				if (value.x >= (context?.canvas.width??0) + 12 || value.y >= (context?.canvas.height??0) + 12) {
+				if (
+					value.x >= (context?.canvas.width ?? 0) + 12 ||
+					value.y >= (context?.canvas.height ?? 0) + 12
+				) {
 					snowflakes.delete(value.id);
 					return;
 				} else {
