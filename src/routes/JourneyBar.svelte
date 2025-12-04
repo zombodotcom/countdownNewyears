@@ -71,7 +71,7 @@
 	};
 
 	onMount(async () => {
-		if(!journey) return;
+		if (!journey) return;
 
 		if (!browser) return;
 

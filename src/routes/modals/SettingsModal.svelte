@@ -78,23 +78,13 @@
 
 					<h2 class="text-lg">Clock settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input
-							type="checkbox"
-							class="checkbox"
-							name="millisecond"
-							checked={data.millisecond}
-						/>
+						<input type="checkbox" class="checkbox" name="millisecond" checked={data.millisecond} />
 						<label for="millisecond">Millisecond hand on clock</label>
 					</span>
 
 					<h2 class="text-lg">Bottom bar Settings</h2>
 					<span class="flex w-full flex-row gap-2">
-						<input
-							type="checkbox"
-							class="checkbox"
-							name="journey"
-							checked={data.journey}
-						/>
+						<input type="checkbox" class="checkbox" name="journey" checked={data.journey} />
 						<label for="journey">Events on bottom bar enabled</label>
 					</span>
 				</div>
