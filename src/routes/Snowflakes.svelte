@@ -37,13 +37,13 @@
 		snowflakeImage.src = '/snowflake-line.png';
 
 		await new Promise((resolve) => {
-			snowflakeImage?.addEventListener('load', (r) => {
+			snowflakeImage?.addEventListener('load', () => {
 				resolve(0);
 			});
 		});
 
 		canvas = document.getElementById(value) as HTMLCanvasElement;
-		let context = canvas.getContext('2d') as CanvasRenderingContext2D;
+		context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 		sizeX = canvas.getBoundingClientRect().width;
 		sizeY = canvas.getBoundingClientRect().height;
@@ -93,7 +93,7 @@
 		interval2 = setInterval(() => {
 			context?.clearRect(0, 0, sizeX, sizeY);
 
-			snowflakes.forEach((value, key: number, map) => {
+			snowflakes.forEach((value) => {
 				value.x += value.xSpeed;
 				value.y += 3;
 
@@ -102,21 +102,21 @@
 
 				value.rotation += value.rotationSpeed;
 
-				if (value.x >= context.canvas.width + 12 || value.y >= context.canvas.height + 12) {
+				if (value.x >= (context?.canvas.width??0) + 12 || value.y >= (context?.canvas.height??0) + 12) {
 					snowflakes.delete(value.id);
 					return;
 				} else {
 					snowflakes.set(value.id, value);
 
-					context.globalAlpha = value.opacity;
-					context.save();
-					context.translate(value.x - 12, value.y - 12);
-					context.rotate((Math.PI / 180) * value.rotation);
-					context.drawImage(snowflakeImage as HTMLImageElement, -12, -12, 24, 24);
-					context.restore();
+					(context as CanvasRenderingContext2D).globalAlpha = value.opacity;
+					context?.save();
+					context?.translate(value.x - 12, value.y - 12);
+					context?.rotate((Math.PI / 180) * value.rotation);
+					context?.drawImage(snowflakeImage as HTMLImageElement, -12, -12, 24, 24);
+					context?.restore();
 				}
 			});
-			context.globalAlpha = 1;
+			(context as CanvasRenderingContext2D).globalAlpha = 1;
 		}, 50);
 	});
 

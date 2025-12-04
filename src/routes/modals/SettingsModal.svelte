@@ -101,7 +101,7 @@
 
 				<div>
 					<h2 class="text-lg">Language settings</h2>
-					{#each locales as locale}
+					{#each locales as locale (locale)}
 						<span class="flex w-full flex-row gap-2">
 							<input
 								type="checkbox"

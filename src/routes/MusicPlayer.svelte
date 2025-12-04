@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages';
 	import type { LanguageType } from '$lib/types';
-	import { onMount } from 'svelte';
 
 	let { link, locale, switchedToHandel } = $props();
 

@@ -23,7 +23,7 @@
 		if (!browser) return;
 
 		canvas = document.getElementById(value) as HTMLCanvasElement;
-		let context = canvas.getContext('2d') as CanvasRenderingContext2D;
+		context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 		sizeX = Math.round(canvas.getBoundingClientRect().width);
 		sizeY = Math.round(canvas.getBoundingClientRect().height);
@@ -71,40 +71,40 @@
 			//background
 
 			context?.clearRect(0, 0, sizeX, sizeY);
-			context.strokeStyle = `#ffffff`;
+			(context as CanvasRenderingContext2D).strokeStyle = `#ffffff`;
 
-			context.beginPath();
+			context?.beginPath();
 
-			context.lineWidth = 3;
+			(context as CanvasRenderingContext2D).lineWidth = 3;
 
-			context.arc(xStart, yStart, minSize / 2 - 3, 0, 2 * Math.PI);
+			context?.arc(xStart, yStart, minSize / 2 - 3, 0, 2 * Math.PI);
 
-			context.stroke();
-			context.closePath();
+			context?.stroke();
+			context?.closePath();
 
 			if (ms) {
 				//milliseconds hand (green)
-				context.lineWidth = 2;
-				context.strokeStyle = `#006000`;
-				context.beginPath();
+				(context as CanvasRenderingContext2D).lineWidth = 2;
+				(context as CanvasRenderingContext2D).strokeStyle = `#006000`;
+				context?.beginPath();
 
-				context.moveTo(xStart, yStart);
+				context?.moveTo(xStart, yStart);
 
 				let msGoalX =
 					xStart + Math.cos((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 				let msGoalY =
 					yStart + Math.sin((now.getTime() / 1000 - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
-				context.lineTo(msGoalX, msGoalY);
+				context?.lineTo(msGoalX, msGoalY);
 
-				context.stroke();
-				context.closePath();
+				context?.stroke();
+				context?.closePath();
 			}
 
 			//hand hours
-			context.lineWidth = 10;
-			context.strokeStyle = `#dddddd`;
-			context.beginPath();
+			(context as CanvasRenderingContext2D).lineWidth = 10;
+			(context as CanvasRenderingContext2D).strokeStyle = `#dddddd`;
+			context?.beginPath();
 
 			let hoursX =
 				xStart +
@@ -127,17 +127,17 @@
 				) *
 					(minSize / 2 - 3);
 
-			context.moveTo(xStart, yStart);
+			context?.moveTo(xStart, yStart);
 
-			context.lineTo(hoursX, hoursY);
+			context?.lineTo(hoursX, hoursY);
 
-			context.stroke();
-			context.closePath();
+			context?.stroke();
+			context?.closePath();
 
 			//hand minutes
-			context.lineWidth = 7;
-			context.strokeStyle = `#dddddd`;
-			context.beginPath();
+			(context as CanvasRenderingContext2D).lineWidth = 7;
+			(context as CanvasRenderingContext2D).strokeStyle = `#dddddd`;
+			context?.beginPath();
 
 			let minutesX =
 				xStart +
@@ -146,39 +146,39 @@
 				yStart +
 				Math.sin((now.getTime() / (60 * 60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
-			context.moveTo(xStart, yStart);
+			context?.moveTo(xStart, yStart);
 
-			context.lineTo(minutesX, minutesY);
+			context?.lineTo(minutesX, minutesY);
 
-			context.stroke();
-			context.closePath();
+			context?.stroke();
+			context?.closePath();
 
 			//hand seconds (red)
-			context.lineWidth = 4;
-			context.strokeStyle = `#800000`;
-			context.beginPath();
+			(context as CanvasRenderingContext2D).lineWidth = 4;
+			(context as CanvasRenderingContext2D).strokeStyle = `#800000`;
+			context?.beginPath();
 
 			let secondsX =
 				xStart + Math.cos((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 			let secondsY =
 				yStart + Math.sin((now.getTime() / (60 * 1000) - 0.25) * Math.PI * 2) * (minSize / 2 - 3);
 
-			context.moveTo(xStart, yStart);
+			context?.moveTo(xStart, yStart);
 
-			context.lineTo(secondsX, secondsY);
+			context?.lineTo(secondsX, secondsY);
 
-			context.stroke();
-			context.closePath();
+			context?.stroke();
+			context?.closePath();
 
-			context.beginPath();
+			context?.beginPath();
 
-			context.lineWidth = 10;
-			context.strokeStyle = `#ffffff`;
+			(context as CanvasRenderingContext2D).lineWidth = 10;
+			(context as CanvasRenderingContext2D).strokeStyle = `#ffffff`;
 
-			context.arc(xStart, yStart, 10, 0, 2 * Math.PI);
+			context?.arc(xStart, yStart, 10, 0, 2 * Math.PI);
 
-			context.fill();
-			context.closePath();
+			context?.fill();
+			context?.closePath();
 		}, 40);
 	});
 

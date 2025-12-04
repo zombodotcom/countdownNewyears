@@ -25,7 +25,7 @@
 		backgroundImage.src = '/Blue_Marble_2002.png';
 
 		await new Promise((resolve) => {
-			backgroundImage?.addEventListener('load', (r) => {
+			backgroundImage?.addEventListener('load', () => {
 				resolve(0);
 			});
 		});
@@ -93,7 +93,6 @@
 
 				i++;
 			}
-			1;
 		}, 40);
 	});
 

@@ -85,22 +85,22 @@
 
 		await Promise.all([
 			new Promise((resolve) => {
-				loco?.addEventListener('load', (r) => {
+				loco?.addEventListener('load', () => {
 					resolve(0);
 				});
 			}),
 			new Promise((resolve) => {
-				w1?.addEventListener('load', (r) => {
+				w1?.addEventListener('load', () => {
 					resolve(0);
 				});
 			}),
 			new Promise((resolve) => {
-				w2?.addEventListener('load', (r) => {
+				w2?.addEventListener('load', () => {
 					resolve(0);
 				});
 			}),
 			new Promise((resolve) => {
-				w3?.addEventListener('load', (r) => {
+				w3?.addEventListener('load', () => {
 					resolve(0);
 				});
 			})
