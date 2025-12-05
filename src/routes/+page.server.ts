@@ -42,9 +42,9 @@ export const actions = {
 
 		let time = '';
 		if (customTime) {
-			time = new Date(formData.get('time')?.toString() as string).toLocaleString();
+			time = new Date(formData.get('time')?.toString() as string).toISOString();
 		} else {
-			time = new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0).toLocaleString();
+			time = new Date(new Date().getUTCFullYear() + 1, 0, 1, 0, 0, 0, 0).toISOString();
 		}
 
 		event.cookies.set('time', time, { path: '/' });

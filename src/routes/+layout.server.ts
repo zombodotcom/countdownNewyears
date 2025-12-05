@@ -16,7 +16,7 @@ export const load = async (event) => {
 		event.cookies.set('set', 'true', { path: '/' });
 		event.cookies.set(
 			'time',
-			new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0).toISOString(),
+			new Date(new Date().getUTCFullYear() + 1, 0, 1, 0, 0, 0, 0).toISOString(),
 			{ path: '/' }
 		);
 	}
