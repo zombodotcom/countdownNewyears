@@ -1,13 +1,17 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "festies",
-  "main": "src/index.js",
-  "compatibility_date": "2025-12-06",
-  "workers_dev": false,
-  "route": {
-    "pattern": "festies.martinbykov.eu/*",
-    "zone_name": "festies.martinbykov.eu"
-  },
-  "env": {},
-  "keep_vars": true,
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "festies",
+	"main": "src/index.js",
+	"compatibility_date": "2025-12-06",
+	"workers_dev": false,
+	"route": {
+		"pattern": "festies.martinbykov.eu/*",
+		"zone_name": "festies.martinbykov.eu"
+	},
+	"env": {},
+	"keep_vars": true,
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".svelte-kit/cloudflare",
+	}
 }
