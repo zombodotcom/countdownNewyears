@@ -3,6 +3,9 @@
 	"name": "festies",
 	"main": "src/index.js",
 	"compatibility_date": "2025-12-06",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"workers_dev": false,
 	"route": {
 		"pattern": "festies.martinbykov.eu/*",
@@ -13,5 +16,5 @@
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare",
-	}
+	},
 }
