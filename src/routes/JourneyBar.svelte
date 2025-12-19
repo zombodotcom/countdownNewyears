@@ -30,7 +30,7 @@
 		context.globalAlpha = 1;
 		context.lineWidth = 3;
 
-		eventValue = Math.trunc(Math.random()*effects.length);
+		eventValue = Math.trunc(Math.random() * effects.length);
 
 		await effects[eventValue].predraw();
 		await effects[eventValue].draw(context);

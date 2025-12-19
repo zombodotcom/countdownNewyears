@@ -1,22 +1,14 @@
-import { type JBEffect, JB_TRAIN_SPEED } from "$lib/effect";
+import { type JBEffect, JB_TRAIN_SPEED } from '$lib/effect';
 
 //this just draws the station and the dispatcher, a train of our choice then passes over it
 export class StationEffect implements JBEffect {
 	x: number = 0;
-	
-	constructor() {
 
-	}
+	constructor() {}
 
-	async loadImages() {
+	async loadImages() {}
 
-	}
+	async predraw() {}
 
-	async predraw() {
-
-	}
-
-	async draw() {
-
-	}
+	async draw() {}
 }

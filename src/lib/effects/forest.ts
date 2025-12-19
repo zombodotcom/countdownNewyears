@@ -1,20 +1,12 @@
-import { type JBEffect, JB_TRAIN_SPEED } from "$lib/effect";
+import { type JBEffect, JB_TRAIN_SPEED } from '$lib/effect';
 
 //this just draws a forest
 export class ForestEffect implements JBEffect {
-	constructor() {
+	constructor() {}
 
-	}
+	async loadImages() {}
 
-	async loadImages() {
+	async predraw() {}
 
-	}
-
-	async predraw() {
-
-	}
-
-	async draw() {
-
-	}
+	async draw() {}
 }

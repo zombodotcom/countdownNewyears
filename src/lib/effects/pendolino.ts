@@ -1,4 +1,4 @@
-import { type JBEffect, JB_TRAIN_SPEED } from "$lib/effect";
+import { type JBEffect, JB_TRAIN_SPEED } from '$lib/effect';
 
 const PENDOLINO_WAGONS_AMOUNT = 5; //middle, standard wagons
 
@@ -13,7 +13,7 @@ export class PendolinoEffect implements JBEffect {
 		this.end.src = '/journey/680end.png';
 		this.mid = new Image();
 		this.mid.src = '/journey/680middle.png';
-		this.endMirrored = document.createElement("canvas");
+		this.endMirrored = document.createElement('canvas');
 	}
 
 	async loadImages() {
@@ -27,24 +27,24 @@ export class PendolinoEffect implements JBEffect {
 				this.mid?.addEventListener('load', () => {
 					resolve(0);
 				});
-			}),
+			})
 		]);
 
 		//make flipped version of image
 		this.endMirrored.width = this.end.width;
-		this.endMirrored.height = this.end.height
-		const context = this.endMirrored.getContext("2d");
+		this.endMirrored.height = this.end.height;
+		const context = this.endMirrored.getContext('2d');
 
 		context?.translate(this.end.width, 0);
 		context?.scale(-1, 1);
 		context?.drawImage(this.end, 0, 0);
 		context?.setTransform(1, 0, 0, 1, 0, 0);
 
-		console.log(this.endMirrored.toDataURL("image/png"));
+		console.log(this.endMirrored.toDataURL('image/png'));
 	}
 
 	//predraw does nothing
-	async predraw() { }
+	async predraw() {}
 
 	async draw(context: CanvasRenderingContext2D) {
 		this.x = -300;
@@ -59,13 +59,18 @@ export class PendolinoEffect implements JBEffect {
 
 				//middle wagons
 				for (let i = 0; i < PENDOLINO_WAGONS_AMOUNT; i++) {
-					context?.drawImage(this.mid as HTMLImageElement, this.x - (i + 1) * 275, context.canvas.height - 75);
+					context?.drawImage(
+						this.mid as HTMLImageElement,
+						this.x - (i + 1) * 275,
+						context.canvas.height - 75
+					);
 				}
 
-				//last wagon (front turned around)	
+				//last wagon (front turned around)
 				context?.drawImage(
 					this.endMirrored,
-					this.x - (PENDOLINO_WAGONS_AMOUNT) * 275 - 300, context.canvas.height - 75
+					this.x - PENDOLINO_WAGONS_AMOUNT * 275 - 300,
+					context.canvas.height - 75
 				);
 
 				this.x += JB_TRAIN_SPEED;
@@ -77,6 +82,5 @@ export class PendolinoEffect implements JBEffect {
 				}
 			}, 40);
 		});
-
 	}
-};
+}

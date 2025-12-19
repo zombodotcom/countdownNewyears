@@ -1,19 +1,11 @@
-import { type JBEffect } from "$lib/effect";
+import { type JBEffect } from '$lib/effect';
 
 export class VillageEffect implements JBEffect {
-	constructor() {
+	constructor() {}
 
-	}
+	async loadImages() {}
 
-	async loadImages() {
+	async predraw() {}
 
-	}
-
-	async predraw() {
-
-	}
-
-	async draw() {
-
-	}
+	async draw() {}
 }

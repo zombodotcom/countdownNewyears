@@ -1,4 +1,4 @@
-import { type JBEffect, JB_TRAIN_SPEED } from "$lib/effect";
+import { type JBEffect, JB_TRAIN_SPEED } from '$lib/effect';
 
 export class PKPEffect implements JBEffect {
 	loco: HTMLImageElement;
@@ -64,13 +64,25 @@ export class PKPEffect implements JBEffect {
 				for (let w = 0; w < this.wagons.length; w++) {
 					switch (this.wagons[w]) {
 						case 0:
-							context?.drawImage(this.w1 as HTMLImageElement, this.x - (w + 1) * 275, context.canvas.height - 75);
+							context?.drawImage(
+								this.w1 as HTMLImageElement,
+								this.x - (w + 1) * 275,
+								context.canvas.height - 75
+							);
 							break;
 						case 1:
-							context?.drawImage(this.w2 as HTMLImageElement, this.x - (w + 1) * 275, context.canvas.height - 75);
+							context?.drawImage(
+								this.w2 as HTMLImageElement,
+								this.x - (w + 1) * 275,
+								context.canvas.height - 75
+							);
 							break;
 						case 2:
-							context?.drawImage(this.w3 as HTMLImageElement, this.x - (w + 1) * 275, context.canvas.height - 75);
+							context?.drawImage(
+								this.w3 as HTMLImageElement,
+								this.x - (w + 1) * 275,
+								context.canvas.height - 75
+							);
 							break;
 					}
 				}
@@ -84,6 +96,5 @@ export class PKPEffect implements JBEffect {
 				}
 			}, 40);
 		});
-
 	}
-};
+}
