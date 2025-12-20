@@ -8,7 +8,7 @@
 	],
 	"workers_dev": false,
 	"route": {
-		"pattern": "*.martinbykov.eu/*",
+		"pattern": "festies.martinbykov.eu/*",
 		"zone_name": "martinbykov.eu",
 	},
 	"env": {},
