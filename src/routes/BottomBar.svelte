@@ -42,7 +42,7 @@
 {#key ready || clicked}
 	<div
 		class="
-    absolute bottom-0 z-50 flex w-full flex-row items-center gap-2 border-t-2 border-gray-800 bg-gray-500 p-2 text-gray-800 max-lg:h-15! max-lg:text-3xl lg:h-10! lg:text-2xl max-lg:leading-8
+    absolute bottom-0 z-50 flex w-full flex-row items-center gap-2 border-t-2 border-gray-800 bg-gray-500 p-2 text-gray-800 max-lg:h-15! max-lg:text-3xl max-lg:leading-8 lg:h-10! lg:text-2xl
     {!clicked ? 'opacity-100' : 'opacity-0'}
     "
 		transition:fly={{ duration: 250, opacity: 0, x: 0, y: 100 }}

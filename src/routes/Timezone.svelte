@@ -102,12 +102,14 @@
 </script>
 
 <div class="flex max-h-full grow flex-col gap-2 rounded-4xl bg-black/20 max-lg:p-2 lg:p-5">
-	<div class="flex w-full items-center max-lg:gap-0 lg:gap-2 max-lg:flex-col lg:flex-row">
+	<div class="flex w-full items-center max-lg:flex-col max-lg:gap-0 lg:flex-row lg:gap-2">
 		<h2 class="font-medium text-nowrap max-lg:text-sm lg:text-2xl">
 			{m.timezoneMap({}, { locale: locale as LanguageType })}
 		</h2>
 		<div class="grow max-lg:hidden"></div>
-		<p class="text-center text-sm max-lg:text-xs leading-4 max-lg:w-full max-w-full text-ellipsis max-lg:text-nowrap lg:text-left">
+		<p
+			class="max-w-full text-center text-sm leading-4 text-ellipsis max-lg:w-full max-lg:text-xs max-lg:text-nowrap lg:text-left"
+		>
 			{m.thisMapIsOnlyAnApproximationDueToTheComplexityOfTimezones(
 				{},
 				{ locale: locale as LanguageType }

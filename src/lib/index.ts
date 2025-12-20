@@ -788,7 +788,9 @@ if (timezoneList.length !== timezonePointList.length) {
 }
 
 export const asyncDelay = (time: number) => {
-	return new Promise((resolve) => setTimeout(() => {
-		resolve(0);
-	}, time));
-}
+	return new Promise((resolve) =>
+		setTimeout(() => {
+			resolve(0);
+		}, time)
+	);
+};

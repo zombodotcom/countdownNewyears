@@ -1,4 +1,11 @@
-import { type JBEffect, JB_EFFECT_PENDOLINO_WAGONS_AMOUNT, JB_EFFECT_LONG_LOCO_LENGTH, JB_TRAIN_SPEED, JB_EFFECT_WAGON_HEIGHT, JB_EFFECT_WAGON_LENGTH } from '$lib/effect';
+import {
+	type JBEffect,
+	JB_EFFECT_PENDOLINO_WAGONS_AMOUNT,
+	JB_EFFECT_LONG_LOCO_LENGTH,
+	JB_TRAIN_SPEED,
+	JB_EFFECT_WAGON_HEIGHT,
+	JB_EFFECT_WAGON_LENGTH
+} from '$lib/effect';
 
 export class PendolinoEffect implements JBEffect {
 	end: HTMLImageElement;
@@ -42,13 +49,17 @@ export class PendolinoEffect implements JBEffect {
 	}
 
 	//predraw does nothing
-	async predraw() { }
+	async predraw() {}
 
 	async draw(context: CanvasRenderingContext2D) {
 		const returning = Boolean(Math.round(Math.random()));
 
 		if (!returning) this.x = -JB_EFFECT_LONG_LOCO_LENGTH;
-		else this.x = context.canvas.width + JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH + JB_EFFECT_LONG_LOCO_LENGTH;
+		else
+			this.x =
+				context.canvas.width +
+				JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH +
+				JB_EFFECT_LONG_LOCO_LENGTH;
 
 		return new Promise((resolve) => {
 			//middle wagons JB_EFFECT_WAGON_LENGTHx75 px, end 300x75px
@@ -56,7 +67,11 @@ export class PendolinoEffect implements JBEffect {
 				context?.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
 				//driver's wagon
-				context?.drawImage(this.end as HTMLImageElement, this.x, context.canvas.height - JB_EFFECT_WAGON_HEIGHT);
+				context?.drawImage(
+					this.end as HTMLImageElement,
+					this.x,
+					context.canvas.height - JB_EFFECT_WAGON_HEIGHT
+				);
 
 				//middle wagons
 				for (let i = 0; i < JB_EFFECT_PENDOLINO_WAGONS_AMOUNT; i++) {
@@ -70,7 +85,9 @@ export class PendolinoEffect implements JBEffect {
 				//last wagon (front turned around)
 				context?.drawImage(
 					this.endMirrored,
-					this.x - JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH - JB_EFFECT_LONG_LOCO_LENGTH,
+					this.x -
+						JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH -
+						JB_EFFECT_LONG_LOCO_LENGTH,
 					context.canvas.height - JB_EFFECT_WAGON_HEIGHT
 				);
 
@@ -79,7 +96,11 @@ export class PendolinoEffect implements JBEffect {
 
 				//once all pass
 				if (
-					(!returning && this.x - JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH - JB_EFFECT_LONG_LOCO_LENGTH*2 > context.canvas.width) ||
+					(!returning &&
+						this.x -
+							JB_EFFECT_PENDOLINO_WAGONS_AMOUNT * JB_EFFECT_WAGON_LENGTH -
+							JB_EFFECT_LONG_LOCO_LENGTH * 2 >
+							context.canvas.width) ||
 					(returning && this.x + JB_EFFECT_LONG_LOCO_LENGTH < 0)
 				) {
 					clearInterval(interval);

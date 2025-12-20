@@ -1,11 +1,11 @@
 import { type JBEffect } from '$lib/effect';
-import { asyncDelay } from "$lib";
+import { asyncDelay } from '$lib';
 
 export const JB_FOREST_WINTER_STAGES = [
 	'/journey/tree.png',
 	'/journey/wintertree1.png',
 	'/journey/wintertree2.png',
-	'/journey/wintertree3.png',
+	'/journey/wintertree3.png'
 ];
 
 export const JB_FOREST_TREE_AMOUNT = 1000;
@@ -29,11 +29,13 @@ export class ForestEffect implements JBEffect {
 		const promises: Promise<number>[] = [];
 
 		for (const wintertree of this.trees) {
-			promises.push(new Promise((resolve) => {
-				wintertree.addEventListener('load', () => {
-					resolve(0);
-				});
-			}));
+			promises.push(
+				new Promise((resolve) => {
+					wintertree.addEventListener('load', () => {
+						resolve(0);
+					});
+				})
+			);
 		}
 
 		return Promise.all(promises);
@@ -45,7 +47,7 @@ export class ForestEffect implements JBEffect {
 			this.positions.push({
 				x: 25 + Math.trunc(Math.random() * x - 50),
 				scale: Math.random() * 0.5 + 0.5
-			})
+			});
 		}
 	}
 
@@ -57,16 +59,20 @@ export class ForestEffect implements JBEffect {
 			new ResizeObserver(() => {
 				resolve(0);
 			}).observe(context.canvas);
-		})
+		});
 
 		for (let i = 0; i < this.trees.length; i++) {
 			//draw all trees being covered in snow
 			for (const position of this.positions) {
 				context.save();
-				context.translate(position.x*position.scale, 0);
+				context.translate(position.x * position.scale, 0);
 				context.scale(position.scale, position.scale);
 
-				context?.drawImage(this.trees[Math.min(this.trees.length-1, Math.max(0, i+(Math.round(Math.random()))))], position.x, context.canvas.height - 50);
+				context?.drawImage(
+					this.trees[Math.min(this.trees.length - 1, Math.max(0, i + Math.round(Math.random())))],
+					position.x,
+					context.canvas.height - 50
+				);
 				context.restore();
 			}
 			await asyncDelay(1000);

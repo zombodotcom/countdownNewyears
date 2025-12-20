@@ -1,4 +1,10 @@
-import { type JBEffect, JB_TRAIN_SPEED, JB_EFFECT_WAGON_HEIGHT, JB_EFFECT_WAGON_LENGTH, JB_EFFECT_LOCO_LENGTH } from '$lib/effect';
+import {
+	type JBEffect,
+	JB_TRAIN_SPEED,
+	JB_EFFECT_WAGON_HEIGHT,
+	JB_EFFECT_WAGON_LENGTH,
+	JB_EFFECT_LOCO_LENGTH
+} from '$lib/effect';
 
 export class PKPEffect implements JBEffect {
 	loco: HTMLImageElement;
@@ -66,7 +72,11 @@ export class PKPEffect implements JBEffect {
 
 				//loco in front
 				if (!returning) {
-					context?.drawImage(this.loco as HTMLImageElement, this.x, context.canvas.height - JB_EFFECT_WAGON_HEIGHT);
+					context?.drawImage(
+						this.loco as HTMLImageElement,
+						this.x,
+						context.canvas.height - JB_EFFECT_WAGON_HEIGHT
+					);
 				}
 
 				for (let w = 0; w < this.wagons.length; w++) {
@@ -97,7 +107,11 @@ export class PKPEffect implements JBEffect {
 
 				//loco in front when going back
 				if (returning) {
-					context?.drawImage(this.loco as HTMLImageElement, this.x - ((this.wagons.length) * JB_EFFECT_WAGON_LENGTH) - JB_EFFECT_LOCO_LENGTH, context.canvas.height - JB_EFFECT_WAGON_HEIGHT);
+					context?.drawImage(
+						this.loco as HTMLImageElement,
+						this.x - this.wagons.length * JB_EFFECT_WAGON_LENGTH - JB_EFFECT_LOCO_LENGTH,
+						context.canvas.height - JB_EFFECT_WAGON_HEIGHT
+					);
 				}
 
 				if (!returning) this.x += JB_TRAIN_SPEED;
@@ -105,7 +119,9 @@ export class PKPEffect implements JBEffect {
 
 				//once all pass
 				if (
-					(!returning && this.x - (this.wagons.length) * JB_EFFECT_WAGON_LENGTH - JB_EFFECT_LOCO_LENGTH > context.canvas.width) ||
+					(!returning &&
+						this.x - this.wagons.length * JB_EFFECT_WAGON_LENGTH - JB_EFFECT_LOCO_LENGTH >
+							context.canvas.width) ||
 					(returning && this.x + JB_EFFECT_WAGON_LENGTH < 0)
 				) {
 					clearInterval(i);
