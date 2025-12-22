@@ -31,8 +31,8 @@
 		context.canvas.width = sizeX;
 		context.canvas.height = sizeY;
 
-		minSize = Math.min(sizeX, sizeY);
-		maxSize = Math.max(sizeX, sizeY);
+		minSize = Math.max(6, Math.min(sizeX, sizeY));
+		maxSize = Math.max(6, Math.max(sizeX, sizeY));
 		minSizeAxis = sizeX < sizeY ? 'x' : 'y';
 		context.strokeStyle = `#ffffff`;
 		context.fillStyle = '#ffffff';
@@ -47,8 +47,8 @@
 				context.canvas.width = sizeX;
 				context.canvas.height = sizeY;
 
-				minSize = Math.min(sizeX, sizeY);
-				maxSize = Math.max(sizeX, sizeY);
+				minSize = Math.max(6, Math.min(sizeX, sizeY));
+				maxSize = Math.max(6, Math.max(sizeX, sizeY));
 				minSizeAxis = sizeX < sizeY ? 'x' : 'y';
 				context.strokeStyle = `#ffffff`;
 				context.fillStyle = '#ffffff';

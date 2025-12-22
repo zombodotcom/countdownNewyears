@@ -12,7 +12,7 @@ const config = {
 			directives: {
 				'default-src': ['none'],
 				'font-src': ['self', 'fonts.gstatic.com'],
-				'script-src': ['self', '*.cloudflare.com', '*.vercel.com', '*.vercel-scripts.com'],
+				'script-src': ['self', '*.cloudflare.com'],
 				'object-src': ['self'],
 				'img-src': ['self'],
 				//sveltekit announcer issue + we use this
@@ -29,10 +29,11 @@ const config = {
 			mode: 'auto',
 		},
 		adapter: adapter({
-			config: "wrangler.jsonc"
+			config: "wrangler.jsonc",
+			fallback: 'plaintext'
 		}),
 		csrf: {
-			trustedOrigins: ['*.martinbykov.eu', 'http://localhost:5173']
+			trustedOrigins: ['festies.martinbykov.eu', 'http://localhost:5173']
 		}
 	}
 };

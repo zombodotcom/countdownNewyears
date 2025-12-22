@@ -52,10 +52,10 @@
 	});
 </script>
 
-<span
-	class="flex max-h-6 min-h-6 w-full max-w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:overflow-hidden **:text-nowrap"
+<div
+	class="flex max-h-6 min-h-6 w-full max-w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:text-nowrap"
 >
-	<span class="overflow-none! flex flex-row gap-0">
+	<div class="flex w-fit flex-row gap-0 overflow-hidden! **:overflow-hidden!">
 		<span class={!reverse && countdown.days > 0 ? '' : 'text-neutral-500'}>
 			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:
 		</span><span
@@ -69,12 +69,13 @@
 		</span><span>
 			{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}
 		</span>
-	</span>
-
-	<span class="{auxCity.length > 0 ? '' : 'overflow-hidden! text-ellipsis'} text-xl font-medium">
-		{mainCity}
-	</span>
-	<span class="overflow-hidden! text-ellipsis">
-		{auxCity}
-	</span>
-</span>
+	</div>
+	<div class="flex grow flex-row gap-2">
+		<div class="text-xl font-medium min-w-fit">
+			{mainCity}
+		</div>
+		<div class="overflow-hidden! text-ellipsis grow">
+			{auxCity}
+		</div>
+	</div>
+</div>

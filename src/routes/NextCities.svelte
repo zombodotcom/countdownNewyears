@@ -15,14 +15,13 @@
 	);
 </script>
 
-<div
-	class="flex w-full grow flex-col gap-4 overflow-scroll! rounded-4xl bg-black/20 p-5 **:overflow-scroll"
->
+<!-- TODO -->
+<div class="flex w-full grow flex-col gap-4 rounded-4xl bg-black/20 p-5">
 	<h2 class="w-full shrink-0 text-center text-2xl font-medium">
 		{m.followingCities({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex min-h-0 grow flex-col flex-nowrap gap-0">
+		<div class="flex min-h-fit grow flex-col flex-nowrap gap-0 max-h-full h-full overflow-scroll!">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} />
 			{/each}

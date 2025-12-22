@@ -17,9 +17,7 @@
 	);
 </script>
 
-<div
-	class="flex w-full grow flex-col gap-4 overflow-scroll! rounded-4xl bg-black/20 p-5 **:overflow-scroll"
->
+<div class="flex w-full grow flex-col gap-4 rounded-4xl bg-black/20 p-5 h-full">
 	<h2
 		class="w-full text-center {locale == 'de' || locale == 'cs'
 			? 'text-xl'
@@ -28,7 +26,7 @@
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex min-h-0 grow flex-col flex-nowrap gap-0">
+		<div class="flex min-h-0 grow flex-col flex-nowrap gap-0 max-h-full h-full overflow-scroll!">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} reverse={true} />
 			{/each}
