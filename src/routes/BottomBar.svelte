@@ -5,7 +5,7 @@
 	import { fly } from 'svelte/transition';
 	import IconButton from './items/IconButton.svelte';
 	import type { LanguageType } from '$lib/types';
-	import { PROGRAM_VERSION } from "$lib";
+	import { PROGRAM_VERSION } from '$lib';
 
 	let {
 		settingsModal = $bindable(false),

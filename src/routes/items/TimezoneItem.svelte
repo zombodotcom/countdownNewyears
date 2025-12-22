@@ -70,7 +70,7 @@
 			{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}
 		</span>
 	</div>
-	<div class="flex grow flex-row gap-2 items-center">
+	<div class="flex grow flex-row items-center gap-2">
 		<div class="min-w-fit text-xl font-medium">
 			{mainCity}
 		</div>
