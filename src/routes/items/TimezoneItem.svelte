@@ -71,10 +71,10 @@
 		</span>
 	</div>
 	<div class="flex grow flex-row gap-2">
-		<div class="text-xl font-medium min-w-fit">
+		<div class="min-w-fit text-xl font-medium">
 			{mainCity}
 		</div>
-		<div class="overflow-hidden! text-ellipsis grow">
+		<div class="grow overflow-hidden! text-ellipsis">
 			{auxCity}
 		</div>
 	</div>

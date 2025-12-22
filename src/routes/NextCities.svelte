@@ -21,7 +21,7 @@
 		{m.followingCities({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex min-h-fit grow flex-col flex-nowrap gap-0 max-h-full h-full overflow-scroll!">
+		<div class="flex h-full max-h-full min-h-fit grow flex-col flex-nowrap gap-0 overflow-scroll!">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} />
 			{/each}
