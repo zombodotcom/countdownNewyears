@@ -1,5 +1,6 @@
 import { locales } from '$lib/paraglide/runtime.js';
 import type { LanguageType } from '$lib/types.js';
+import { DEFAULT_PLAYLIST } from "$lib";
 
 export const load = async (event) => {
 	if (event.cookies.get('set') != 'true') {
@@ -7,7 +8,7 @@ export const load = async (event) => {
 		event.cookies.set('languages', JSON.stringify(locales), { path: '/' });
 		event.cookies.set(
 			'playlist',
-			'https://www.youtube.com/embed/videoseries?loop=1&si=9tV7jJed9H4lPkHr&amp;list=PL5d1YE_8Im7Nh_4krlRdBNBsGJFioTzl5',
+			DEFAULT_PLAYLIST,
 			{ path: '/' }
 		);
 		event.cookies.set('millisecond', 'false', { path: '/' });

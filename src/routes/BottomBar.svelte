@@ -5,6 +5,7 @@
 	import { fly } from 'svelte/transition';
 	import IconButton from './items/IconButton.svelte';
 	import type { LanguageType } from '$lib/types';
+	import { PROGRAM_VERSION } from "$lib";
 
 	let {
 		settingsModal = $bindable(false),
@@ -50,7 +51,7 @@
 		<span class="flex grow flex-row gap-2" id="bottom">
 			<p class="font-bold max-lg:text-xl lg:text-lg">
 				{m.nameShort({}, { locale: currentLocale as LanguageType })}
-				1.0.1
+				{PROGRAM_VERSION}
 			</p>
 
 			<p class="text-lg max-lg:hidden">

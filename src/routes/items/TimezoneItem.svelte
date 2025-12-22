@@ -55,7 +55,7 @@
 <div
 	class="flex max-h-6 min-h-6 w-full max-w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:text-nowrap"
 >
-	<div class="flex w-fit flex-row gap-0 overflow-hidden! **:overflow-hidden!">
+	<div class="flex w-fit flex-row gap-0 overflow-hidden!">
 		<span class={!reverse && countdown.days > 0 ? '' : 'text-neutral-500'}>
 			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:
 		</span><span
@@ -70,7 +70,7 @@
 			{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}
 		</span>
 	</div>
-	<div class="flex grow flex-row gap-2">
+	<div class="flex grow flex-row gap-2 items-center">
 		<div class="min-w-fit text-xl font-medium">
 			{mainCity}
 		</div>

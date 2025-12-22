@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { dateToString } from '$lib';
+	import { dateToString, DEFAULT_PLAYLIST } from '$lib';
 	import { m } from '$lib/paraglide/messages';
 	import { locales } from '$lib/paraglide/runtime';
 	import Modal from '../Modal.svelte';
@@ -85,7 +85,7 @@
 							name="playlist"
 							class="rounded-lg bg-white p-2 text-gray-700"
 							placeholder="Enter link here..."
-							value={data.playlist}
+							value={data.playlist.length == 0 ? DEFAULT_PLAYLIST : data.playlist}
 							required
 						/>
 					{/if}
