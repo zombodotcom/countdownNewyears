@@ -9,7 +9,7 @@ export const load = async (event) => {
 		event.cookies.set('playlist', DEFAULT_PLAYLIST, { path: '/' });
 		event.cookies.set('millisecond', 'false', { path: '/' });
 		event.cookies.set('journey', 'true', { path: '/' });
-		event.cookies.set('snow', String(Math.trunc(HARD_SNOWFLAKE_LIMIT/2)), { path: '/' });
+		event.cookies.set('snow', String(Math.trunc(HARD_SNOWFLAKE_LIMIT / 2)), { path: '/' });
 		event.cookies.set('set', PROGRAM_VERSION, { path: '/' });
 		event.cookies.set(
 			'time',
@@ -25,6 +25,6 @@ export const load = async (event) => {
 		millisecond: (event.cookies.get('millisecond') as string) == 'true',
 		journey: (event.cookies.get('journey') as string) == 'true',
 		countdown: new Date(event.cookies.get('time') as string),
-		snow: parseInt(event.cookies.get('snow') as string),
+		snow: parseInt(event.cookies.get('snow') as string)
 	};
 };

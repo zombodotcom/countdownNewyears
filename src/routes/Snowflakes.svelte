@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { HARD_SNOWFLAKE_LIMIT } from "$lib";
+	import { HARD_SNOWFLAKE_LIMIT } from '$lib';
 	import { onDestroy, onMount } from 'svelte';
 
 	let {
 		snowLimit
 	}: {
-		snowLimit: number
+		snowLimit: number;
 	} = $props();
 
 	let canvas: HTMLCanvasElement | undefined = $state();

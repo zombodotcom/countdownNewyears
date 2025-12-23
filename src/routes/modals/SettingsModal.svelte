@@ -119,14 +119,20 @@
 					{/each}
 
 					<h2 class="text-lg">Snow amount</h2>
-					<div class="flex flex-row gap-2 w-full">
-						<input name="snow" type="range" min="0" step="50" max="{HARD_SNOWFLAKE_LIMIT}" bind:value={snowAmount} />
+					<div class="flex w-full flex-row gap-2">
+						<input
+							name="snow"
+							type="range"
+							min="0"
+							step="50"
+							max={HARD_SNOWFLAKE_LIMIT}
+							bind:value={snowAmount}
+						/>
 						<span>{snowAmount}</span>
 					</div>
 				</div>
 			</div>
 			<Button text="Set settings" emoji="check-double" type="submit" />
-
 		</form>
 		<Button
 			text="Close"

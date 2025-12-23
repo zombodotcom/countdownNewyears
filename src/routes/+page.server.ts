@@ -1,6 +1,6 @@
 import { locales } from '$lib/paraglide/runtime.js';
 import { fail } from '@sveltejs/kit';
-import { HARD_SNOWFLAKE_LIMIT } from "$lib";
+import { HARD_SNOWFLAKE_LIMIT } from '$lib';
 
 export const load = async (event) => {
 	return await event.parent();
@@ -13,7 +13,8 @@ export const actions = {
 		const customTime = formData.get('hastime')?.toString() === 'on';
 
 		if (
-			!formData.has('bg') || !formData.has('snow') ||
+			!formData.has('bg') ||
+			!formData.has('snow') ||
 			(!formData.has('time') && customTime) ||
 			(!formData.has('playlist') && formData.get('hasplaylist')?.toString() === 'on')
 		) {
@@ -49,6 +50,15 @@ export const actions = {
 		}
 
 		event.cookies.set('time', time, { path: '/' });
-		event.cookies.set('snow', String(Math.min(HARD_SNOWFLAKE_LIMIT, Math.max(0, parseInt(formData.get("snow")?.toString() as string)))), { path: '/' });
+		event.cookies.set(
+			'snow',
+			String(
+				Math.min(
+					HARD_SNOWFLAKE_LIMIT,
+					Math.max(0, parseInt(formData.get('snow')?.toString() as string))
+				)
+			),
+			{ path: '/' }
+		);
 	}
 };
