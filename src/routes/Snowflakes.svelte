@@ -101,7 +101,7 @@
 				snowflakes.set(snowflakeId, o);
 				snowflakeId++;
 			},
-			HARD_SNOWFLAKE_LIMIT - calculatedSnowLimit + 25
+			((calculatedSnowLimit)/5) + 25
 		);
 
 		interval2 = setInterval(() => {
