@@ -119,7 +119,7 @@
 					{/each}
 
 					<h2 class="text-lg">Snow amount</h2>
-					<div class="flex w-full flex-row gap-2 {snowAmount == 0 ? "opacity-50" : ""}">
+					<div class="flex w-full flex-row gap-2 {snowAmount == 0 ? 'opacity-50' : ''}">
 						<input
 							name="snow"
 							type="range"
@@ -128,28 +128,18 @@
 							max={HARD_SNOWFLAKE_LIMIT}
 							bind:value={snowAmount}
 						/>
-						<span>{Number(snowAmount/HARD_SNOWFLAKE_LIMIT*100).toFixed(1)}%</span>
+						<span>{Number((snowAmount / HARD_SNOWFLAKE_LIMIT) * 100).toFixed(1)}%</span>
 					</div>
 					{#if snowAmount == 0}
-						<span class="opacity-70">
-							No snow!
-						</span>
+						<span class="opacity-70"> No snow! </span>
 					{:else if snowAmount < 500}
-						<span class="opacity-70">
-							A bit of snow...
-						</span>
+						<span class="opacity-70"> A bit of snow... </span>
 					{:else if snowAmount < 1300}
-						<span class="opacity-70">
-							A normal amount of snow.
-						</span>
+						<span class="opacity-70"> A normal amount of snow. </span>
 					{:else if snowAmount < 1900}
-						<span class="opacity-70">
-							Perhaps a tad too much snow.
-						</span>
+						<span class="opacity-70"> Perhaps a tad too much snow. </span>
 					{:else}
-						<span class="opacity-70">
-							Blizzard!
-						</span>
+						<span class="opacity-70"> Blizzard! </span>
 					{/if}
 				</div>
 			</div>

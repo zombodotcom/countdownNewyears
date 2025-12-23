@@ -39,7 +39,7 @@
 
 	onMount(async () => {
 		if (!browser) return;
-		if(calculatedSnowLimit === 0) return;
+		if (calculatedSnowLimit === 0) return;
 
 		snowflakeImage = new Image();
 		snowflakeImage.src = '/snowflake-line.png';
@@ -79,27 +79,30 @@
 			}
 		}).observe(canvas);
 
-		interval = setInterval(() => {
-			if (snowflakes.size >= calculatedSnowLimit) return;
+		interval = setInterval(
+			() => {
+				if (snowflakes.size >= calculatedSnowLimit) return;
 
-			//horizontal spawn or vertical?
-			let val = Math.random() < sizeY / sizeX;
-			let x = val ? -12 : Math.trunc(Math.random() * sizeX);
-			let y = val ? Math.trunc(Math.random() * sizeY) : -12;
+				//horizontal spawn or vertical?
+				let val = Math.random() < sizeY / sizeX;
+				let x = val ? -12 : Math.trunc(Math.random() * sizeX);
+				let y = val ? Math.trunc(Math.random() * sizeY) : -12;
 
-			const o = {
-				id: snowflakeId,
-				x: x,
-				xSpeed: 1 + Math.random() * 2,
-				y: y,
-				rotation: Math.trunc(Math.random() * 360),
-				rotationSpeed: (1 - Math.round(Math.random()) * 2) * 3,
-				opacity: 0.3 + Math.random() / 3
-			};
+				const o = {
+					id: snowflakeId,
+					x: x,
+					xSpeed: 1 + Math.random() * 2,
+					y: y,
+					rotation: Math.trunc(Math.random() * 360),
+					rotationSpeed: (1 - Math.round(Math.random()) * 2) * 3,
+					opacity: 0.3 + Math.random() / 3
+				};
 
-			snowflakes.set(snowflakeId, o);
-			snowflakeId++;
-		}, (HARD_SNOWFLAKE_LIMIT-calculatedSnowLimit)+25);
+				snowflakes.set(snowflakeId, o);
+				snowflakeId++;
+			},
+			HARD_SNOWFLAKE_LIMIT - calculatedSnowLimit + 25
+		);
 
 		interval2 = setInterval(() => {
 			context?.clearRect(0, 0, sizeX, sizeY);
