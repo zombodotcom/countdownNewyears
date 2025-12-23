@@ -27,10 +27,11 @@
 		</VersionItem>
 
 		<VersionItem version="1.0.2" date="23.12.2025">
-			<li>Removed extra scrollbars</li>
+			<li>Fixed graphical issue with scrollbars</li>
 			<li>Changelog modal improvements</li>
-			<li>Added option for dynamic snow amount</li>
-			<li>Added default playlist in form (bugfix)</li>
+			<li>Added snow amount setting</li>
+			<li>Added default playlist in form</li>
+			<li>Fixed some values not being set after updates</li>
 		</VersionItem>
 
 		<Button

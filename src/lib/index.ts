@@ -799,3 +799,5 @@ export const PROGRAM_VERSION = '1.0.2';
 //own festive mix
 export const DEFAULT_PLAYLIST =
 	'https://www.youtube.com/embed/videoseries?loop=1&si=9tV7jJed9H4lPkHr&amp;list=PL5d1YE_8Im7Nh_4krlRdBNBsGJFioTzl5';
+
+export const HARD_SNOWFLAKE_LIMIT = 2000;

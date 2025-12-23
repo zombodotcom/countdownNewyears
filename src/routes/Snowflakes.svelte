@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { HARD_SNOWFLAKE_LIMIT } from "$lib";
 	import { onDestroy, onMount } from 'svelte';
 
-	const SNOWFLAKE_LIMIT = 1000;
+	let {
+		snowLimit
+	}: {
+		snowLimit: number
+	} = $props();
 
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let context: CanvasRenderingContext2D | undefined = $state();
@@ -69,7 +74,7 @@
 		}).observe(canvas);
 
 		interval = setInterval(() => {
-			if (snowflakes.size >= SNOWFLAKE_LIMIT) return;
+			if (snowflakes.size >= Math.min(HARD_SNOWFLAKE_LIMIT, snowLimit)) return;
 
 			//horizontal spawn or vertical?
 			let val = Math.random() < sizeY / sizeX;

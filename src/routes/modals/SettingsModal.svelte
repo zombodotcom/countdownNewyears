@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { dateToString, DEFAULT_PLAYLIST } from '$lib';
+	import { dateToString, DEFAULT_PLAYLIST, HARD_SNOWFLAKE_LIMIT } from '$lib';
 	import { m } from '$lib/paraglide/messages';
 	import { locales } from '$lib/paraglide/runtime';
 	import Modal from '../Modal.svelte';
@@ -10,6 +10,7 @@
 
 	let hasDifferentTime = $state(false);
 	let hasPlaylist = $state(data.playlist.length > 0);
+	let snowAmount = $state(data.snow);
 </script>
 
 <Modal bind:showModal={settingsModal}>
@@ -99,7 +100,7 @@
 					<h2 class="text-lg">Bottom bar Settings</h2>
 					<span class="flex w-full flex-row gap-2">
 						<input type="checkbox" class="checkbox" name="journey" checked={data.journey} />
-						<label for="journey">Events on bottom bar enabled</label>
+						<label for="journey">Events on bottom bar</label>
 					</span>
 				</div>
 
@@ -116,9 +117,16 @@
 							<label for={'lang-' + locale}>{m.languageName({}, { locale })}</label>
 						</span>
 					{/each}
+
+					<h2 class="text-lg">Snow amount</h2>
+					<div class="flex flex-row gap-2 w-full">
+						<input name="snow" type="range" min="0" step="50" max="{HARD_SNOWFLAKE_LIMIT}" bind:value={snowAmount} />
+						<span>{snowAmount}</span>
+					</div>
 				</div>
 			</div>
 			<Button text="Set settings" emoji="check-double" type="submit" />
+
 		</form>
 		<Button
 			text="Close"

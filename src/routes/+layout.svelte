@@ -17,7 +17,7 @@
 
 <div class="relative m-0 flex h-full w-full grow flex-col p-0 text-white">
 	<div class="absolute z-1 h-full w-full" style="background-color: {data.background}"></div>
-	<Snowflakes />
+	<Snowflakes snowLimit={data.snow} />
 	<div class="z-10 flex w-full grow flex-col">
 		{@render children?.()}
 	</div>
