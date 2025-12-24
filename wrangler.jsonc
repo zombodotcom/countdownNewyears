@@ -16,5 +16,13 @@
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare",
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "CONCURRENCY",
+			"database_name": "festies",
+			"database_id": "9aea50c7-fd4c-49c3-a836-b850e5409853",
+			"migrations_dir": "drizzle/migrations",
+		}
+	]
 }

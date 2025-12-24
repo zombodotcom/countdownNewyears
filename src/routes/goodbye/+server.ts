@@ -1,5 +1,4 @@
-/*
-import { containsId, removeOld } from '$lib/server/concurrency/index.js';
+import { containsId, removeOld } from '$lib/server/concurrency';
 import { error, json } from '@sveltejs/kit';
 
 //supports navigator.sendBeacon
@@ -17,5 +16,3 @@ export const POST = async (event) => {
 
 	return json({});
 };
-
-*/

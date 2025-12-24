@@ -4,6 +4,9 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { isLimited } from '$lib/server/rate';
 import { error } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
+import * as d1 from 'drizzle-orm/d1';
+import * as schema from "$lib/server/db/schema";
+import * as libsql from 'drizzle-orm/libsql';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -38,14 +41,18 @@ const handleRateLimit: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
+let db: undefined | libsql.LibSQLDatabase<typeof schema> = undefined;
 const handleMap: Handle = async ({ event, resolve }) => {
 	if(env.DEV == 'true') {
-		console.log("Using local map");
 		event.locals.dev = true;
+		if(!db) {
+			db = libsql.drizzle(env.DATABASE_URL ?? "file:local.db", { schema });
+		}	
+		event.locals.dblocal = db;
 	}
 	else {
-		console.log("Using KV binding map");
 		event.locals.dev = false;
+		event.locals.dbprod = d1.drizzle(event.platform?.env.CONCURRENCY as D1Database, { schema })
 	}
 
 	return resolve(event);	

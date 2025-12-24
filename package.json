@@ -16,10 +16,13 @@
 		"prettier": "npx prettier --write src/",
 		"sveltekit": "npx svelte-kit sync && npx paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide && npx svelte-check --tsconfig ./../tsconfig.json --workspace src/",
 		"cloc": "npx cloc src/ --not-match-d=\"lib/paraglide\"",
-		"i18n": "npx paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide"
+		"i18n": "npx paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide",
+		"db:push": "drizzle-kit push",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
-		"@cloudflare/types": "^7.0.0",
 		"@cloudflare/workers-types": "^4.20251224.0",
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.36.0",
@@ -30,6 +33,7 @@
 		"@tailwindcss/typography": "^0.5.18",
 		"@tailwindcss/vite": "^4.1.13",
 		"@types/node": "^22.19.3",
+		"drizzle-kit": "^0.31.8",
 		"eslint": "^9.36.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.12.4",
@@ -48,7 +52,9 @@
 		"wrangler": "^4.53.0"
 	},
 	"dependencies": {
+		"@libsql/client": "^0.15.15",
 		"cloc": "^2.6.0-cloc",
+		"drizzle-orm": "^0.45.1",
 		"remixicon": "^4.7.0"
 	}
 }

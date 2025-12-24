@@ -70,12 +70,10 @@
 
 		<div class="grow"></div>
 
-		<!--
-			<div class="max-lg:text-xl lg:text-lg">
-				{usersAmount}
-				{writeUsersOnline(usersAmount, currentLocale)}
-			</div>
-		-->
+		<div class="max-lg:text-xl lg:text-lg">
+			{usersAmount}
+			{writeUsersOnline(usersAmount, currentLocale)}
+		</div>
 
 		<IconButton
 			onclick={() => {

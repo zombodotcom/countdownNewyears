@@ -31,3 +31,6 @@ project.inlang/project_id
 **/*.*~
 **/*.autosave.kra
 **/*.pdn
+
+*.db
+drizzle/meta/

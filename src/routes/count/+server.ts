@@ -1,6 +1,5 @@
-/*
 import { asyncDelay } from '$lib';
-import { getActive } from '$lib/server/concurrency/index.js';
+import { getActive } from '$lib/server/concurrency';
 import { produce } from 'sveltekit-sse';
 
 export const POST = async (event) => {
@@ -8,7 +7,7 @@ export const POST = async (event) => {
 		async (payload) => {
 			while (true) {
 				payload.emit('users', String(await getActive(event)));
-				await asyncDelay(500);
+				await asyncDelay(2500);
 			}
 		},
 		{
@@ -16,4 +15,3 @@ export const POST = async (event) => {
 		}
 	);
 };
-*/

@@ -1,5 +1,4 @@
-/*
-import { containsId, updateId } from '$lib/server/concurrency/index.js';
+import { containsId, updateId } from '$lib/server/concurrency';
 import { json } from '@sveltejs/kit';
 
 export const POST = async (event) => {
@@ -16,4 +15,3 @@ export const POST = async (event) => {
 
 	return json({});
 };
-*/
