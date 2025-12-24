@@ -13,7 +13,7 @@ export const containsId = async (event: RequestEvent, key: string) => {
 
 export const updateId = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) event.locals.localmap.set(key, Date.now());
-	else await event.locals.prodmap.put(key, String(Date.now()));
+	else await event.locals.prodmap.put(key, String(Date.now()), { expirationTtl: LAST_BEAT_AGE_FOR_ACTIVE });
 };
 
 export const removeOld = async (event: RequestEvent, key: string) => {
@@ -42,15 +42,6 @@ export const getActive = async (event: RequestEvent) => {
 			keys.push(...list.keys);
 		}
 		while (!list.list_complete);
-		let removed = 0;
-		for (let i = 0; i < keys.length; i++) {
-			const key = keys[i].name;
-			const value = parseInt(await event.locals.prodmap.get(key) as string);
-			if (now - value > LAST_BEAT_AGE_FOR_ACTIVE) {
-				await event.locals.prodmap.delete(key);
-				removed++;
-			}
-		}
-		return list.keys.length - removed;
+		return keys.length;
 	}
 };
