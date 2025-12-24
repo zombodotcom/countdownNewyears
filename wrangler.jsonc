@@ -16,11 +16,5 @@
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare",
-	},
-	"kv_namespaces": [
-		{
-			"binding": "CONCURRENCY",
-			"id": "ac7c1025022d49d1b0c305497bb2c441"
-		}
-	]
+	}
 }

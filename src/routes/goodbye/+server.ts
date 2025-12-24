@@ -1,7 +1,9 @@
+/*
 import { containsId, removeOld } from '$lib/server/concurrency/index.js';
 import { error, json } from '@sveltejs/kit';
 
 //supports navigator.sendBeacon
+//keep session in map (1000 write to different keys/day)
 
 export const POST = async (event) => {
 	const sessionId = event.cookies.get('sessionid');
@@ -10,9 +12,10 @@ export const POST = async (event) => {
 	}
 
 	await removeOld(event, sessionId);
-	event.cookies.delete('sessionid', { path: '/' });
 
 	console.log('User left');
 
 	return json({});
 };
+
+*/

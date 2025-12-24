@@ -4,8 +4,6 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { isLimited } from '$lib/server/rate';
 import { error } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { localConcurrencyMap } from '$lib/server/concurrency';
-import type { KVNamespace } from '@cloudflare/workers-types';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -43,12 +41,10 @@ const handleRateLimit: Handle = async ({ event, resolve }) => {
 const handleMap: Handle = async ({ event, resolve }) => {
 	if(env.DEV == 'true') {
 		console.log("Using local map");
-		event.locals.localmap = localConcurrencyMap;
 		event.locals.dev = true;
 	}
 	else {
 		console.log("Using KV binding map");
-		event.locals.prodmap = (event.platform?.env.CONCURRENCY as KVNamespace<string>);
 		event.locals.dev = false;
 	}
 
