@@ -5,8 +5,6 @@
 	import { fly } from 'svelte/transition';
 	import IconButton from './items/IconButton.svelte';
 	import type { LanguageType } from '$lib/types';
-	import { PROGRAM_VERSION, writeUsersOnline } from '$lib';
-	import { source } from 'sveltekit-sse';
 
 	let {
 		settingsModal = $bindable(false),
@@ -19,14 +17,6 @@
 	} = $props();
 
 	let ready = $state(false);
-
-	let usersAmount = $state(0);
-	source('/count')
-		.select('users')
-		.subscribe((value) => {
-			usersAmount = parseInt(value);
-			if (isNaN(usersAmount)) usersAmount = 0;
-		});
 
 	const clickHandler = (e: MouseEvent) => {
 		if (document.getElementById('bottom')?.contains(document.elementFromPoint(e.pageX, e.pageY))) {
@@ -58,22 +48,9 @@
 		transition:fly={{ duration: 250, opacity: 0, x: 0, y: 100 }}
 	>
 		<span class="flex grow flex-row gap-2" id="bottom">
-			<p class="font-bold max-lg:text-xl lg:text-lg">
-				{m.nameShort({}, { locale: currentLocale as LanguageType })}
-				{PROGRAM_VERSION}
-			</p>
-
-			<p class="text-lg max-lg:hidden">
-				{m.nameLong({}, { locale: currentLocale as LanguageType })}
-			</p>
 		</span>
 
 		<div class="grow"></div>
-
-		<div class="max-lg:text-xl lg:text-lg">
-			{usersAmount}
-			{writeUsersOnline(usersAmount, currentLocale)}
-		</div>
 
 		<IconButton
 			onclick={() => {

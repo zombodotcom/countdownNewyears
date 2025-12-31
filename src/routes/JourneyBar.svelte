@@ -98,7 +98,7 @@
 		clearTimeout(eventInterval);
 	});
 
-	let { locale, journey } = $props();
+	let { locale, journey, now } = $props();
 </script>
 
 <div
@@ -106,7 +106,7 @@
 >
 	{#key eventValue}
 		{#if eventValue == -1}
-			<JourneyBarMessage {locale} />
+			<JourneyBarMessage {locale} {now} />
 		{/if}
 	{/key}
 

@@ -51,28 +51,24 @@
 </script>
 
 <div
-	class="flex max-h-6 min-h-6 w-full max-w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:text-nowrap"
+	class="flex w-full items-center justify-between py-1 border-b border-white/5 last:border-0"
 >
-	<div class="flex w-fit flex-row gap-0 overflow-hidden!">
-		<span class={!reverse && countdown.days == 0 ? 'text-neutral-500' : ''}>
-			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:
-		</span>
-		<span class={!reverse && countdown.hours == 0 && countdown.days == 0 ? 'text-neutral-500' : ''}>
-			{Math.abs(countdown.hours).toFixed().padStart(2, '0')}:
-		</span>
-		<span>
-			{Math.abs(countdown.minutes).toFixed().padStart(2, '0')}:
-		</span>
-		<span>
-			{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}
-		</span>
-	</div>
-	<div class="flex grow flex-row items-center gap-2">
-		<div class="min-w-fit text-xl font-medium">
+	<div class="flex flex-col">
+		<div class="text-xl font-bold text-white">
 			{mainCity}
 		</div>
-		<div class="grow overflow-hidden! text-ellipsis">
-			{auxCity}
-		</div>
+		{#if auxCity}
+			<div class="text-sm text-neutral-500 italic">
+				{auxCity}
+			</div>
+		{/if}
+	</div>
+	<div class="flex font-mono text-lg {reverse ? 'text-amber-400' : 'text-neutral-400'}">
+		{#if countdown.days > 0}
+			<span>{Math.abs(countdown.days).toFixed().padStart(2, '0')}d </span>
+		{/if}
+		<span>{Math.abs(countdown.hours).toFixed().padStart(2, '0')}:</span>
+		<span>{Math.abs(countdown.minutes).toFixed().padStart(2, '0')}:</span>
+		<span>{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}</span>
 	</div>
 </div>

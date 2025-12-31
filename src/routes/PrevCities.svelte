@@ -15,22 +15,18 @@
 	);
 </script>
 
-<div class="flex h-full w-full grow flex-col gap-4 rounded-4xl bg-black/20 p-5 shadow-lg">
-	<h2
-		class="w-full text-center {locale == 'de' || locale == 'cs'
-			? 'text-xl'
-			: 'text-2xl'} leading-8 font-medium"
-	>
+<div class="flex h-full w-full flex-col gap-2">
+	<h2 class="w-full text-center text-xl font-bold uppercase tracking-widest text-amber-500 border-b border-amber-500/20 pb-2 mb-2">
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex h-full max-h-full min-h-0 grow flex-col flex-nowrap gap-0 overflow-scroll!">
+		<div class="flex h-full flex-col gap-1 overflow-y-auto no-scrollbar">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} reverse={true} />
 			{/each}
 		</div>
 	{:else}
-		<div class="flex w-full grow flex-col items-center justify-center text-center">
+		<div class="flex w-full grow flex-col items-center justify-center text-center text-neutral-500">
 			{m.noCitiesHaveGoneIntoTheNewYearYet({}, { locale: locale as LanguageType })}
 		</div>
 	{/if}

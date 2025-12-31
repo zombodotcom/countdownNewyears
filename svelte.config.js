@@ -12,13 +12,14 @@ const config = {
 			directives: {
 				'default-src': ['none'],
 				'font-src': ['self', 'fonts.gstatic.com'],
-				'script-src': ['self', '*.cloudflare.com'],
+				'script-src': ['self', '*.cloudflare.com', 'unsafe-inline'],
 				'object-src': ['self'],
-				'img-src': ['self'],
+				'worker-src': ['self', 'blob:'],
+				'img-src': ['self', 'data:', 'unpkg.com', '*.unpkg.com'],
 				//sveltekit announcer issue + we use this
 				'style-src': ['self', 'fonts.googleapis.com', 'martinbykov.eu', 'unsafe-inline'],
 				'frame-ancestors': ['none'],
-				'connect-src': ['self'],
+				'connect-src': ['self', 'unpkg.com', '*.unpkg.com'],
 				'frame-src': ['*.cloudflare.com', 'www.youtube-nocookie.com', 'youtube-nocookie.com', 'youtube.com', 'www.youtube.com', 'consent.youtube.com'],
 				'media-src': ['self']
 			},

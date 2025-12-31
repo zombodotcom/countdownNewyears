@@ -8,7 +8,7 @@
 
 	let { settingsModal = $bindable(false), data } = $props();
 
-	let hasDifferentTime = $state(
+	let hasDifferentTime = $derived(
 		data.countdown.getTime() + new Date().getTimezoneOffset() * 60 * 1000 !=
 			new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0).getTime()
 	);

@@ -12,7 +12,15 @@ export const containsId = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
-	return (await db.select().from(schema.sessions).where(eq(schema.sessions.uuid, key))).length > 0;
+	try {
+		return (await db.select().from(schema.sessions).where(eq(schema.sessions.uuid, key))).length > 0;
+	} catch (e) {
+		// Database table doesn't exist in dev - return false
+		if (event.locals.dev) {
+			return false;
+		}
+		throw e;
+	}
 };
 
 export const updateId = async (event: RequestEvent, key: string) => {
@@ -20,18 +28,26 @@ export const updateId = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
-	await db
-		.insert(schema.sessions)
-		.values({
-			uuid: key,
-			time: String(Date.now())
-		})
-		.onConflictDoUpdate({
-			set: {
+	try {
+		await db
+			.insert(schema.sessions)
+			.values({
+				uuid: key,
 				time: String(Date.now())
-			},
-			target: schema.sessions.uuid
-		});
+			})
+			.onConflictDoUpdate({
+				set: {
+					time: String(Date.now())
+				},
+				target: schema.sessions.uuid
+			});
+	} catch (e) {
+		// Database table doesn't exist in dev - ignore
+		if (event.locals.dev) {
+			return;
+		}
+		throw e;
+	}
 };
 
 export const removeOld = async (event: RequestEvent, key: string) => {
@@ -39,7 +55,15 @@ export const removeOld = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
-	await db.delete(schema.sessions).where(eq(schema.sessions.uuid, key));
+	try {
+		await db.delete(schema.sessions).where(eq(schema.sessions.uuid, key));
+	} catch (e) {
+		// Database table doesn't exist in dev - ignore
+		if (event.locals.dev) {
+			return;
+		}
+		throw e;
+	}
 };
 
 export const getActive = async (event: RequestEvent) => {
@@ -49,20 +73,28 @@ export const getActive = async (event: RequestEvent) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
-	await db
-		.delete(schema.sessions)
-		.where(lte(schema.sessions.time, String(now - LAST_BEAT_AGE_FOR_ACTIVE)));
+	try {
+		await db
+			.delete(schema.sessions)
+			.where(lte(schema.sessions.time, String(now - LAST_BEAT_AGE_FOR_ACTIVE)));
 
-	//shitty workaround
-	if (event.locals.dev) {
-		return (
-			await (db as LibSQLDatabase<typeof schema>).select({ count: count() }).from(schema.sessions)
-		)[0].count;
-	} else {
-		return (
-			await (db as DrizzleD1Database<typeof schema>)
-				.select({ count: count() })
-				.from(schema.sessions)
-		)[0].count;
+		//shitty workaround
+		if (event.locals.dev) {
+			return (
+				await (db as LibSQLDatabase<typeof schema>).select({ count: count() }).from(schema.sessions)
+			)[0].count;
+		} else {
+			return (
+				await (db as DrizzleD1Database<typeof schema>)
+					.select({ count: count() })
+					.from(schema.sessions)
+			)[0].count;
+		}
+	} catch (e) {
+		// Database table doesn't exist in dev - return 0
+		if (event.locals.dev) {
+			return 0;
+		}
+		throw e;
 	}
 };

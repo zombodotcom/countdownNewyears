@@ -53,8 +53,11 @@
 	},
 	"dependencies": {
 		"@libsql/client": "^0.15.15",
+		"@types/three": "^0.182.0",
 		"cloc": "^2.6.0-cloc",
 		"drizzle-orm": "^0.45.1",
-		"remixicon": "^4.7.0"
+		"globe.gl": "^2.45.0",
+		"remixicon": "^4.7.0",
+		"three": "^0.182.0"
 	}
 }

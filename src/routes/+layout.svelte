@@ -5,33 +5,9 @@
 	import { m } from '$lib/paraglide/messages';
 	import Snowflakes from './Snowflakes.svelte';
 	import { browser } from '$app/environment';
-	import { BEAT_FREQUENCY } from '$lib';
 
 	let { children, data } = $props();
 
-	if (browser) {
-		let interval: NodeJS.Timeout | undefined = $state(undefined);
-
-		const beatInterval = () => {
-			navigator.sendBeacon('/analytics');
-		};
-
-		const setBeatInterval = () => {
-			beatInterval();
-			interval = setInterval(beatInterval, BEAT_FREQUENCY);
-		};
-
-		addEventListener('load', setBeatInterval);
-		addEventListener('visibilitychange', () => {
-			if (document.hidden) {
-				//premature leave, otherwise the heartbeat system will catch it
-				clearInterval(interval);
-				navigator.sendBeacon('/goodbye');
-			} else {
-				setBeatInterval();
-			}
-		});
-	}
 </script>
 
 <svelte:head>
