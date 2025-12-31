@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 import { json } from '@sveltejs/kit';
 
 export const POST = async (event) => {
-	if(env.DEV == "true") return json({});
+	if (env.DEV == 'true') return json({});
 
 	return produce(
 		async (payload) => {

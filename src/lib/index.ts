@@ -817,4 +817,4 @@ export const getOffsetTime = (timezoneOffset: number, target: Date, now: Date) =
 
 export const countdownValue = (timezoneOffset: number, target: Date, now: Date) => {
 	return getOffsetTime(timezoneOffset, target, now) - now.getTime();
-}
+};

@@ -8,9 +8,7 @@
 
 	let timezones = $state(
 		timezoneList.filter((v) => {
-			return (
-				countdownValue(v.hour, target, now) > 0
-			);
+			return countdownValue(v.hour, target, now) > 0;
 		})
 	);
 </script>

@@ -10,12 +10,7 @@
 		reverse = false
 	}: { timezone: TimezoneType; target: Date; now: Date; reverse?: boolean | undefined } = $props();
 
-	let countdown = $derived(
-		makeCountdown(
-			new Date(getOffsetTime(timezone.hour, target, now)),
-			now
-		)
-	);
+	let countdown = $derived(makeCountdown(new Date(getOffsetTime(timezone.hour, target, now)), now));
 
 	let mainInterval: NodeJS.Timeout | undefined = $state(undefined);
 	let auxInterval: NodeJS.Timeout | undefined = $state(undefined);

@@ -9,7 +9,9 @@
 	let { settingsModal = $bindable(false), data } = $props();
 
 	let hasDifferentTime = $state(false);
-	let localizedCountdown = $derived(new Date(data.countdown.getTime() - (new Date().getTimezoneOffset()*60*1000)));	
+	let localizedCountdown = $derived(
+		new Date(data.countdown.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+	);
 	let hasPlaylist = $derived(data.playlist.length > 0);
 	let snowAmount = $derived(data.snow);
 </script>

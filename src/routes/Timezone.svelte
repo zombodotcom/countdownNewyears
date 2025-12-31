@@ -3,7 +3,13 @@
 	import type { LanguageType } from '$lib/types';
 	import { onDestroy, onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { timezoneList, timezonePointList, makeCountdown, countdownValue, getOffsetTime } from '$lib';
+	import {
+		timezoneList,
+		timezonePointList,
+		makeCountdown,
+		countdownValue,
+		getOffsetTime
+	} from '$lib';
 
 	let { locale, target, now } = $props();
 
