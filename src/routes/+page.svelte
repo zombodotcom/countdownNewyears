@@ -55,8 +55,8 @@
 		<!-- UI Overlays -->
 		<div class="pointer-events-none relative z-10 flex h-full w-full flex-col">
 			<!-- Top: Clock - Smaller and less intrusive, positioned at top -->
-			<div class="pointer-events-auto absolute top-2 left-1/2 -translate-x-1/2 z-20">
-				<div class="w-fit scale-50 origin-top">
+			<div class="pointer-events-auto absolute top-2 left-1/2 z-20 -translate-x-1/2">
+				<div class="w-fit origin-top scale-50">
 					<Countdown {now} {target} locale={currentLocale} {isDone} />
 				</div>
 			</div>

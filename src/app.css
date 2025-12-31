@@ -11,8 +11,9 @@
 	:root {
 		@apply font-suse font-light;
 	}
-	
-	html, body {
+
+	html,
+	body {
 		margin: 0;
 		padding: 0;
 		overflow: hidden;
@@ -21,7 +22,7 @@
 		width: 100%;
 		width: 100dvw; /* Dynamic viewport width */
 	}
-	
+
 	/* Fix fullscreen blue bar issue */
 	:fullscreen,
 	:-webkit-full-screen,
