@@ -218,7 +218,7 @@ export const timezoneList: TimezoneType[] = [
 			'Dar es Salaam'
 		]
 	),
-	makeTimezone(3.14, ['Π'], ['τ>π']),
+	makeTimezone(3.14, ['Athens'], ['Thessaloniki']),
 	makeTimezone(3.5, ['Tehran'], ['Mashhad']),
 	makeTimezone(
 		4,

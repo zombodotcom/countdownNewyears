@@ -33,7 +33,7 @@
 </script>
 
 {#key data.countdown}
-	<div class="relative h-screen w-screen overflow-hidden bg-[#000011] text-white">
+	<div class="relative h-[100dvh] w-[100dvw] overflow-hidden bg-[#000011] text-white">
 		<!-- Background: 3D Earth Globe -->
 		<div class="fixed inset-0 z-0">
 			<Earth3D locale={currentLocale} {target} {now} debug={debugMode} />
@@ -54,9 +54,9 @@
 
 		<!-- UI Overlays -->
 		<div class="pointer-events-none relative z-10 flex h-full w-full flex-col">
-			<!-- Top: Clock -->
-			<div class="pointer-events-auto flex w-full flex-col items-center justify-center pt-8">
-				<div class="w-fit">
+			<!-- Top: Clock - Smaller and less intrusive, positioned at top -->
+			<div class="pointer-events-auto absolute top-2 left-1/2 -translate-x-1/2 z-20">
+				<div class="w-fit scale-50 origin-top">
 					<Countdown {now} {target} locale={currentLocale} {isDone} />
 				</div>
 			</div>

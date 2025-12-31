@@ -584,6 +584,8 @@
 		// Initialize globe instance
 		if (debug) console.log('Earth3D - Globe library loaded, creating instance...');
 
+		// Note: globe.gl 2.45.0 does not support night side / nightImageUrl
+		// This is a limitation of the library version
 		const globeInstance = Globe()(container)
 			.globeImageUrl('/Blue_Marble_2002.png')
 			.bumpImageUrl('/earth-topology.png')
@@ -602,27 +604,14 @@
 			.arcStroke(3)
 			.enablePointerInteraction(false);
 
-		// Try to set night side image - globe.gl may support this in the chain
-		// Note: This is a safe check that won't break if the method doesn't exist
-		try {
-			if (typeof (globeInstance as any).nightImageUrl === 'function') {
-				(globeInstance as any).nightImageUrl('/earth-night.jpg');
-				if (debug) console.log('Night side image set via nightImageUrl');
-			}
-		} catch (e: any) {
-			// Silently fail - night side may not be supported in this version
-			if (debug) console.log('Night side not available:', e?.message);
-		}
-
 		// Store globe instance
 		globe = globeInstance;
 
-		// Get scene and set dark background
+		// Get scene - let globe.gl handle the background image
 		const scene = globeInstance.scene();
 		if (debug) console.log('Earth3D - Scene retrieved:', !!scene);
-
-		// Set dark space background color for better night sky visibility
-		scene.background = new THREE.Color(0x000011); // Dark blue-black space color
+		
+		// Don't override the background - globe.gl's backgroundImageUrl handles it better
 
 		// #region agent log
 		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
@@ -647,19 +636,14 @@
 
 		// Night side is set above - it creates the dark zone on the side facing away from the sun
 
-		// Custom lighting with day/night cycle
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+		// Custom lighting - keep it simple to not interfere with globe.gl
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 		scene.add(ambientLight);
 
-		// Directional light representing the sun - position it to create day/night terminator
-		const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
-		// Position sun based on current time to show realistic day/night
-		const sunAngle = (Date.now() / 1000 / 60 / 60 / 24) * Math.PI * 2; // Rotate sun over 24 hours
-		sunLight.position.set(Math.cos(sunAngle) * 5, Math.sin(sunAngle) * 2, Math.sin(sunAngle) * 5);
+		// Directional light for better Earth visibility
+		const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+		sunLight.position.set(5, 3, 5);
 		scene.add(sunLight);
-
-		// Note: Direct material modification breaks globe.gl's shader system
-		// Night side functionality requires globe.gl's built-in support or custom shader implementation
 
 		// Initialize firework system
 		if (debug) {
