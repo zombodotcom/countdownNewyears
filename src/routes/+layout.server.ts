@@ -11,11 +11,9 @@ export const load = async (event) => {
 		event.cookies.set('journey', 'true', { path: '/' });
 		event.cookies.set('snow', String(Math.trunc(HARD_SNOWFLAKE_LIMIT / 2)), { path: '/' });
 		event.cookies.set('set', PROGRAM_VERSION, { path: '/' });
-		event.cookies.set(
-			'time',
-			Date.UTC(new Date().getUTCFullYear() + 1, 0, 1, 0, 0, 0, 0),
-			{ path: '/' }
-		);
+		event.cookies.set('time', Date.UTC(new Date().getUTCFullYear() + 1, 0, 1, 0, 0, 0, 0), {
+			path: '/'
+		});
 	}
 
 	return {
