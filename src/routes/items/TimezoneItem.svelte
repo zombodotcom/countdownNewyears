@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TimezoneType } from '$lib/types';
-	import { makeCountdown } from '$lib';
+	import { countdownValue, getOffsetTime, makeCountdown } from '$lib';
 	import { onDestroy, onMount } from 'svelte';
 
 	let {
@@ -12,7 +12,7 @@
 
 	let countdown = $derived(
 		makeCountdown(
-			new Date(target.getTime() - (timezone.hour + now.getTimezoneOffset() / 60) * 3600000),
+			new Date(getOffsetTime(timezone.hour, target, now)),
 			now
 		)
 	);

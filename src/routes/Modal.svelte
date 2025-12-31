@@ -35,7 +35,7 @@
 					class="
 				{cssClass
 						? cssClass
-						: 'bg-gray-500!'} mt-5 mb-5 rounded-lg p-5 text-left max-lg:w-9/10 max-lg:max-w-9/10 lg:max-w-1/3
+						: 'bg-gray-500!'} mt-5 mb-5 rounded-lg p-5 text-left max-xl:w-9/10 max-xl:max-w-9/10 xl:max-w-1/3
 			"
 				>
 					{@render children?.()}

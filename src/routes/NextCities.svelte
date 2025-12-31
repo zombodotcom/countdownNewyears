@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages';
 	import type { LanguageType } from '$lib/types';
-	import { timezoneList } from '$lib';
+	import { countdownValue, timezoneList } from '$lib';
 	import TimezoneItem from './items/TimezoneItem.svelte';
 
 	let { locale, now, target } = $props();
@@ -9,7 +9,7 @@
 	let timezones = $state(
 		timezoneList.filter((v) => {
 			return (
-				target.getTime() - (v.hour + now.getTimezoneOffset() / 60) * 3600000 - now.getTime() > 0
+				countdownValue(v.hour, target, now) > 0
 			);
 		})
 	);

@@ -40,6 +40,10 @@
 			<li>Graphical improvements</li>
 		</VersionItem>
 
+		<VersionItem version="1.0.4" date="31.12.2025">
+			<li>Fixed critical bugs</li>
+		</VersionItem>
+
 		<Button
 			text="Close"
 			emoji="close-circle"

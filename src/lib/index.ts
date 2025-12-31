@@ -802,7 +802,7 @@ export const asyncDelay = (time: number) => {
 	);
 };
 
-export const PROGRAM_VERSION = '1.0.3';
+export const PROGRAM_VERSION = '1.0.4';
 //own festive mix
 export const DEFAULT_PLAYLIST =
 	'https://www.youtube.com/embed/videoseries?loop=1&si=9tV7jJed9H4lPkHr&amp;list=PL5d1YE_8Im7Nh_4krlRdBNBsGJFioTzl5';
@@ -810,3 +810,11 @@ export const DEFAULT_PLAYLIST =
 export const HARD_SNOWFLAKE_LIMIT = 2000;
 
 export const BEAT_FREQUENCY = 180000;
+
+export const getOffsetTime = (timezoneOffset: number, target: Date, now: Date) => {
+	return target.getTime() - (timezoneOffset + now.getTimezoneOffset() / 60) * (1000 * 60 * 60);
+};
+
+export const countdownValue = (timezoneOffset: number, target: Date, now: Date) => {
+	return getOffsetTime(timezoneOffset, target, now) - now.getTime();
+}
