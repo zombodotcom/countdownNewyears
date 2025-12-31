@@ -59,11 +59,7 @@
 		<span class={!reverse && countdown.days == 0 ? 'text-neutral-500' : ''}>
 			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:
 		</span>
-		<span
-			class={!reverse && (countdown.hours == 0 && countdown.days == 0)
-				? 'text-neutral-500'
-				: ''}
-		>
+		<span class={!reverse && countdown.hours == 0 && countdown.days == 0 ? 'text-neutral-500' : ''}>
 			{Math.abs(countdown.hours).toFixed().padStart(2, '0')}:
 		</span>
 		<span>
