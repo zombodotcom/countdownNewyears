@@ -56,17 +56,20 @@
 	class="flex max-h-6 min-h-6 w-full max-w-full min-w-0! flex-row items-center gap-2 overflow-hidden! **:text-nowrap"
 >
 	<div class="flex w-fit flex-row gap-0 overflow-hidden!">
-		<span class={!reverse && countdown.days > 0 ? '' : 'text-neutral-500'}>
+		<span class={!reverse && countdown.days == 0 ? 'text-neutral-500' : ''}>
 			{Math.abs(countdown.days).toFixed().padStart(2, '0')}:
-		</span><span
-			class={!reverse && (countdown.hours > 0 || (countdown.hours == 0 && countdown.days > 0))
-				? ''
-				: 'text-neutral-500'}
+		</span>
+		<span
+			class={!reverse && (countdown.hours == 0 && countdown.days == 0)
+				? 'text-neutral-500'
+				: ''}
 		>
 			{Math.abs(countdown.hours).toFixed().padStart(2, '0')}:
-		</span><span>
+		</span>
+		<span>
 			{Math.abs(countdown.minutes).toFixed().padStart(2, '0')}:
-		</span><span>
+		</span>
+		<span>
 			{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}
 		</span>
 	</div>

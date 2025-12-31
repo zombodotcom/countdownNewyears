@@ -3,7 +3,7 @@ import { paraglideMiddleware } from '$lib/paraglide/server';
 import { sequence } from '@sveltejs/kit/hooks';
 import { env } from '$env/dynamic/private';
 import * as d1 from 'drizzle-orm/d1';
-import * as schema from "$lib/server/db/schema";
+import * as schema from '$lib/server/db/schema';
 import * as libsql from 'drizzle-orm/libsql';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
@@ -34,19 +34,18 @@ const handleSecurity: Handle = async ({ event, resolve }) => {
 
 let db: undefined | libsql.LibSQLDatabase<typeof schema> = undefined;
 const handleMap: Handle = async ({ event, resolve }) => {
-	if(env.DEV == 'true') {
+	if (env.DEV == 'true') {
 		event.locals.dev = true;
-		if(!db) {
-			db = libsql.drizzle(env.DATABASE_URL ?? "file:local.db", { schema });
-		}	
+		if (!db) {
+			db = libsql.drizzle(env.DATABASE_URL ?? 'file:local.db', { schema });
+		}
 		event.locals.dblocal = db;
-	}
-	else {
+	} else {
 		event.locals.dev = false;
-		event.locals.dbprod = d1.drizzle(event.platform?.env.CONCURRENCY as D1Database, { schema })
+		event.locals.dbprod = d1.drizzle(event.platform?.env.CONCURRENCY as D1Database, { schema });
 	}
 
-	return resolve(event);	
-}
+	return resolve(event);
+};
 
 export const handle: Handle = sequence(handleMap, handleParaglide, handleSecurity);

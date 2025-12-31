@@ -10,7 +10,7 @@ export const POST = async (event) => {
 	}
 
 	await removeOld(event, sessionId);
-	event.cookies.delete("sessionid", { path: '/' });
+	event.cookies.delete('sessionid', { path: '/' });
 
 	console.log('User left');
 
