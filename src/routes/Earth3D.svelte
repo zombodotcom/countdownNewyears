@@ -610,7 +610,7 @@
 		// Get scene - let globe.gl handle the background image
 		const scene = globeInstance.scene();
 		if (debug) console.log('Earth3D - Scene retrieved:', !!scene);
-		
+
 		// Don't override the background - globe.gl's backgroundImageUrl handles it better
 
 		// #region agent log
