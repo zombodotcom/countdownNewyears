@@ -251,10 +251,10 @@
 			});
 
 			// Force texture to be used
-				if (this.texture) {
-					material.map = this.texture;
-					material.needsUpdate = true;
-				}
+			if (this.texture) {
+				material.map = this.texture;
+				material.needsUpdate = true;
+			}
 
 			const points = new THREE.Points(geometry, material);
 
@@ -269,8 +269,7 @@
 					methodUsed = 'customObjects';
 					addedSuccessfully = true;
 				}
-			} catch (e: any) {
-			}
+			} catch (e: any) {}
 
 			// Method 2: Try globe's addObject method
 			if (!addedSuccessfully) {
@@ -280,8 +279,7 @@
 						methodUsed = 'addObject';
 						addedSuccessfully = true;
 					}
-				} catch (e: any) {
-				}
+				} catch (e: any) {}
 			}
 
 			// Method 3: Try globe's objects method
@@ -292,8 +290,7 @@
 						methodUsed = 'objects';
 						addedSuccessfully = true;
 					}
-				} catch (e: any) {
-				}
+				} catch (e: any) {}
 			}
 
 			// Method 4: Try globe's customLayer method
@@ -304,8 +301,7 @@
 						methodUsed = 'customLayer';
 						addedSuccessfully = true;
 					}
-				} catch (e: any) {
-				}
+				} catch (e: any) {}
 			}
 
 			// Method 5: Add directly to globe scene
@@ -315,8 +311,7 @@
 					globeScene.add(points);
 					methodUsed = 'globeScene';
 					addedSuccessfully = true;
-				} catch (e: any) {
-				}
+				} catch (e: any) {}
 			}
 
 			// Method 6: Fallback to our scene
@@ -324,8 +319,6 @@
 				this.scene.add(points);
 				methodUsed = 'fallbackScene';
 			}
-
-
 
 			this.bursts.push({
 				points,
@@ -529,24 +522,23 @@
 			}
 		});
 
-
 		// Create a line showing where it's currently midnight (New Year's line)
 		// Find the city that's closest to midnight (within 5 minutes) and use its longitude
 		let midnightLongitude: number;
 		let closestCity: { name: string; lng: number; timeToMidnight: number } | null = null;
 		let minTimeDiff = Infinity;
-		
+
 		// Check all cities to find the one closest to midnight
 		for (const [cityName, [lat, lng]] of Object.entries(cityCoords)) {
-			const cityTimezone = timezoneList.find(tz => 
-				tz.cities.includes(cityName) || tz.otherCities.includes(cityName)
+			const cityTimezone = timezoneList.find(
+				(tz) => tz.cities.includes(cityName) || tz.otherCities.includes(cityName)
 			);
 			if (!cityTimezone) continue;
-			
+
 			const cityTarget = new Date(getOffsetTime(cityTimezone.hour, target, now));
 			const cityCountdown = makeCountdown(cityTarget, now);
 			const timeDiff = Math.abs(cityCountdown.total);
-			
+
 			// Find city within 5 minutes of midnight
 			if (timeDiff < 300000 && timeDiff < minTimeDiff) {
 				minTimeDiff = timeDiff;
@@ -557,40 +549,45 @@
 				};
 			}
 		}
-		
+
 		if (closestCity) {
 			// Use the longitude of the city closest to midnight
 			midnightLongitude = closestCity.lng;
 			if (debug && Math.random() < 0.1) {
 				const mins = (closestCity.timeToMidnight / 60000).toFixed(1);
-				console.log(`📍 Midnight line at ${midnightLongitude.toFixed(1)}°E (${closestCity.name}, ${mins}m)`);
+				console.log(
+					`📍 Midnight line at ${midnightLongitude.toFixed(1)}°E (${closestCity.name}, ${mins}m)`
+				);
 			}
 		} else {
 			// Fallback: UTC-based calculation
 			const currentUTC = new Date();
-			const utcHours = currentUTC.getUTCHours() + currentUTC.getUTCMinutes() / 60 + currentUTC.getUTCSeconds() / 3600;
-			midnightLongitude = -180 + (utcHours * 15);
-			
+			const utcHours =
+				currentUTC.getUTCHours() +
+				currentUTC.getUTCMinutes() / 60 +
+				currentUTC.getUTCSeconds() / 3600;
+			midnightLongitude = -180 + utcHours * 15;
+
 			// Normalize to -180 to 180 range
 			while (midnightLongitude > 180) midnightLongitude -= 360;
 			while (midnightLongitude < -180) midnightLongitude += 360;
-			
+
 			if (debug && Math.random() < 0.1) {
 				console.log(`📍 Midnight line at ${midnightLongitude.toFixed(1)}°E (UTC fallback)`);
 			}
 		}
-		
+
 		// Normalize to -180 to 180 range
 		while (midnightLongitude > 180) midnightLongitude -= 360;
 		while (midnightLongitude < -180) midnightLongitude += 360;
-		
+
 		// Create arcs to form a line from North to South pole along the midnight meridian
 		// Use fewer segments to reduce lag
 		const arcCount = 12; // Reduced from 30 to reduce lag
 		for (let i = 0; i < arcCount; i++) {
-			const lat1 = -90 + (i * 180 / arcCount);
-			const lat2 = -90 + ((i + 1) * 180 / arcCount);
-			
+			const lat1 = -90 + (i * 180) / arcCount;
+			const lat2 = -90 + ((i + 1) * 180) / arcCount;
+
 			// Create a bright gold/red gradient line showing the New Year's line
 			newArcs.push({
 				startLat: lat1,
@@ -604,7 +601,6 @@
 
 		pointsData = newPoints;
 		arcsData = newArcs;
-
 
 		if (globe) {
 			globe.pointsData(pointsData).arcsData(arcsData);
@@ -652,7 +648,6 @@
 
 		// Don't override the background - globe.gl's backgroundImageUrl handles it better
 
-
 		// Night side is set above - it creates the dark zone on the side facing away from the sun
 
 		// Custom lighting - keep it simple to not interfere with globe.gl
@@ -692,7 +687,7 @@
 
 			// Spawn fireworks from currently celebrating cities (cities that have passed midnight)
 			// Increased spawn frequency to ensure cities past the line show fireworks
-			if (fireworkSystem && Math.random() > 0.90) {
+			if (fireworkSystem && Math.random() > 0.9) {
 				// Use celebrating cities that have passed midnight (size >= 0.5 means celebrating)
 				const celebrating = pointsData.filter((p) => p.size >= 0.5);
 				if (celebrating.length > 0) {
@@ -716,8 +711,7 @@
 							);
 						} else {
 						}
-					} catch (e: any) {
-					}
+					} catch (e: any) {}
 				}
 			}
 
@@ -727,7 +721,6 @@
 			requestAnimationFrame(rotate);
 		}
 		requestAnimationFrame(rotate);
-
 
 		// Periodic updates
 		updateGlobeData();
