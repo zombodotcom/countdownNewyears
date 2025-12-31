@@ -160,17 +160,26 @@
 				})
 			}).catch(() => {});
 			// #endregion
-			const particleCount = 200; // More particles for better explosion
+			const particleCount = 150; // Balanced particle count - not too overwhelming
 			const geometry = new THREE.BufferGeometry();
 			const positions = new Float32Array(particleCount * 3);
 			const velocities = new Float32Array(particleCount * 3);
 			const colors = new Float32Array(particleCount * 3);
 			const sizes = new Float32Array(particleCount);
+			const lifetimes = new Float32Array(particleCount); // Individual particle lifetimes
 
 			const threeColor = new THREE.Color(color);
+			// Create color variations for more interesting explosions
+			const colorVariations = [
+				new THREE.Color(color),
+				new THREE.Color(color).lerp(new THREE.Color(0xffffff), 0.3),
+				new THREE.Color(color).lerp(new THREE.Color(0xffaa00), 0.2),
+			];
 
 			// Use position directly (already calculated with correct radius)
 			const surfacePosition = position.clone();
+			// Calculate normal vector (pointing outward from Earth center)
+			const normal = surfacePosition.clone().normalize();
 
 			for (let i = 0; i < particleCount; i++) {
 				// Start particles at the surface position
@@ -178,22 +187,73 @@
 				positions[i * 3 + 1] = surfacePosition.y;
 				positions[i * 3 + 2] = surfacePosition.z;
 
-				// Simple upward explosion with random spread
-				const theta = Math.random() * Math.PI * 2; // Random angle around
-				const phi = Math.random() * Math.PI * 0.5; // Mostly upward (0 to π/2)
-				const speed = 0.1 + Math.random() * 0.15;
+				// Create more varied explosion patterns
+				const pattern = Math.random();
+				let theta, phi, speed;
+				
+				if (pattern < 0.3) {
+					// Upward burst pattern
+					theta = Math.random() * Math.PI * 2;
+					phi = Math.random() * Math.PI * 0.4; // More upward
+					speed = 0.15 + Math.random() * 0.2;
+				} else if (pattern < 0.6) {
+					// Spherical explosion
+					theta = Math.random() * Math.PI * 2;
+					phi = Math.acos(2 * Math.random() - 1); // Uniform sphere distribution
+					speed = 0.12 + Math.random() * 0.18;
+				} else if (pattern < 0.8) {
+					// Ring pattern
+					theta = Math.random() * Math.PI * 2;
+					phi = Math.PI / 2 + (Math.random() - 0.5) * 0.3; // Horizontal ring
+					speed = 0.1 + Math.random() * 0.15;
+				} else {
+					// Star pattern (multiple directions)
+					const starArms = 8;
+					const arm = Math.floor(Math.random() * starArms);
+					theta = (arm / starArms) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+					phi = Math.PI / 2 + (Math.random() - 0.5) * 0.4;
+					speed = 0.18 + Math.random() * 0.22;
+				}
 
-				velocities[i * 3] = Math.sin(phi) * Math.cos(theta) * speed;
-				velocities[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * speed;
-				velocities[i * 3 + 2] = Math.cos(phi) * speed;
+				// Calculate velocity in spherical coordinates, then transform to world space
+				const localVel = new THREE.Vector3(
+					Math.sin(phi) * Math.cos(theta) * speed,
+					Math.sin(phi) * Math.sin(theta) * speed,
+					Math.cos(phi) * speed
+				);
+				
+				// Transform to align with Earth's surface normal
+				const up = new THREE.Vector3(0, 1, 0);
+				const right = new THREE.Vector3().crossVectors(up, normal).normalize();
+				const forward = new THREE.Vector3().crossVectors(normal, right).normalize();
+				
+				const worldVel = new THREE.Vector3()
+					.addScaledVector(normal, localVel.z)
+					.addScaledVector(right, localVel.x)
+					.addScaledVector(forward, localVel.y);
 
-				colors[i * 3] = threeColor.r;
-				colors[i * 3 + 1] = threeColor.g;
-				colors[i * 3 + 2] = threeColor.b;
+				velocities[i * 3] = worldVel.x;
+				velocities[i * 3 + 1] = worldVel.y;
+				velocities[i * 3 + 2] = worldVel.z;
 
-				// Vary particle sizes
-				sizes[i] = 0.5 + Math.random() * 0.5;
+				// Vary colors for more interesting explosions
+				const colorVar = colorVariations[Math.floor(Math.random() * colorVariations.length)];
+				colors[i * 3] = colorVar.r;
+				colors[i * 3 + 1] = colorVar.g;
+				colors[i * 3 + 2] = colorVar.b;
+
+				// Vary particle sizes more dramatically
+				sizes[i] = 0.8 + Math.random() * 1.2;
+				
+				// Individual particle lifetimes for staggered fading
+				lifetimes[i] = 40 + Math.random() * 60;
 			}
+
+			geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+			geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+			geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+			geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+			geometry.setAttribute('lifetime', new THREE.BufferAttribute(lifetimes, 1));
 
 			geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 			geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
@@ -201,7 +261,7 @@
 			geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
 			const material = new THREE.PointsMaterial({
-				size: 3.0,
+				size: 3.5, // Slightly larger but not overwhelming
 				sizeAttenuation: true,
 				map: this.texture,
 				vertexColors: true,
@@ -333,7 +393,9 @@
 			this.bursts.push({
 				points,
 				age: 0,
-				maxAge: 60 + Math.random() * 40 // Longer lifetime
+				maxAge: 50 + Math.random() * 40, // Balanced lifetime
+				initialPosition: surfacePosition.clone(),
+				hasSecondaryBurst: false
 			});
 		}
 
@@ -360,28 +422,79 @@
 
 				const positions = burst.points.geometry.attributes.position.array;
 				const velocities = burst.points.geometry.attributes.velocity.array;
+				const sizes = burst.points.geometry.attributes.size?.array;
+				const lifetimes = burst.points.geometry.attributes.lifetime?.array;
+
+				// Calculate Earth's center for gravity
+				const earthCenter = new THREE.Vector3(0, 0, 0);
 
 				for (let j = 0; j < positions.length / 3; j++) {
-					positions[j * 3] += velocities[j * 3];
-					positions[j * 3 + 1] += velocities[j * 3 + 1];
-					positions[j * 3 + 2] += velocities[j * 3 + 2];
+					const idx = j * 3;
+					const pos = new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]);
+					
+					// Update position
+					positions[idx] += velocities[idx];
+					positions[idx + 1] += velocities[idx + 1];
+					positions[idx + 2] += velocities[idx + 2];
 
-					// Slower friction for longer trails
-					velocities[j * 3] *= 0.98;
-					velocities[j * 3 + 1] *= 0.98;
-					velocities[j * 3 + 2] *= 0.98;
+					// Improved physics: gravity pulling toward Earth center
+					const toCenter = earthCenter.clone().sub(pos).normalize();
+					const gravityStrength = 0.0005;
+					velocities[idx] += toCenter.x * gravityStrength;
+					velocities[idx + 1] += toCenter.y * gravityStrength;
+					velocities[idx + 2] += toCenter.z * gravityStrength;
 
-					// Slight gravity for realistic fall
-					velocities[j * 3 + 1] -= 0.0003;
+					// Air resistance (friction) - varies by particle
+					const friction = 0.97 + Math.random() * 0.02; // Slight variation
+					velocities[idx] *= friction;
+					velocities[idx + 1] *= friction;
+					velocities[idx + 2] *= friction;
+
+					// Individual particle lifetime and fading
+					if (lifetimes) {
+						const particleAge = burst.age;
+						const particleLifetime = lifetimes[j];
+						const particleFade = Math.max(0, 1.0 - particleAge / particleLifetime);
+						
+						// Particles fade individually for more realistic effect
+						if (sizes) {
+							sizes[j] = (0.8 + Math.random() * 1.2) * particleFade;
+						}
+					}
 				}
 
 				burst.points.geometry.attributes.position.needsUpdate = true;
-				// Fade out smoothly
+				if (sizes) {
+					burst.points.geometry.attributes.size.needsUpdate = true;
+				}
+
+				// Create secondary burst effect at mid-life for some fireworks
+				if (!burst.hasSecondaryBurst && burst.age > 15 && burst.age < 25 && Math.random() > 0.7) {
+					// Create a smaller secondary burst (less frequent)
+					if (Math.random() > 0.5) { // Only 50% chance for secondary burst
+						const secondaryPos = new THREE.Vector3(
+							positions[Math.floor(positions.length / 6) * 3],
+							positions[Math.floor(positions.length / 6) * 3 + 1],
+							positions[Math.floor(positions.length / 6) * 3 + 2]
+						);
+						const secondaryColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f', '#ffd700'];
+						this.createBurst(secondaryPos, secondaryColors[Math.floor(Math.random() * secondaryColors.length)]);
+					}
+					burst.hasSecondaryBurst = true;
+				}
+
+				// Fade out smoothly with exponential curve
 				const fadeProgress = burst.age / burst.maxAge;
-				burst.points.material.opacity = Math.max(0, 1.0 - fadeProgress);
+				burst.points.material.opacity = Math.max(0, Math.pow(1.0 - fadeProgress, 2));
 
 				if (burst.age >= burst.maxAge) {
-					this.scene.remove(burst.points);
+					// Remove from scene
+					try {
+						const globeScene = this.globeInstance.scene();
+						globeScene.remove(burst.points);
+					} catch (e) {
+						this.scene.remove(burst.points);
+					}
 					burst.points.geometry.dispose();
 					burst.points.material.dispose();
 					this.bursts.splice(i, 1);
@@ -734,8 +847,8 @@
 				0
 			);
 
-			// Spawn fireworks from currently celebrating cities - more frequent
-			if (fireworkSystem && Math.random() > 0.85) {
+			// Spawn fireworks from currently celebrating cities - less frequent to avoid overwhelming
+			if (fireworkSystem && Math.random() > 0.92) {
 				const celebrating = pointsData.filter((p) => p.size >= 0.5); // Celebrating cities have size 0.5
 				if (celebrating.length > 0) {
 					const city = celebrating[Math.floor(Math.random() * celebrating.length)];
