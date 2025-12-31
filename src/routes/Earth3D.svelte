@@ -173,7 +173,7 @@
 			const colorVariations = [
 				new THREE.Color(color),
 				new THREE.Color(color).lerp(new THREE.Color(0xffffff), 0.3),
-				new THREE.Color(color).lerp(new THREE.Color(0xffaa00), 0.2),
+				new THREE.Color(color).lerp(new THREE.Color(0xffaa00), 0.2)
 			];
 
 			// Use position directly (already calculated with correct radius)
@@ -190,7 +190,7 @@
 				// Create more varied explosion patterns
 				const pattern = Math.random();
 				let theta, phi, speed;
-				
+
 				if (pattern < 0.3) {
 					// Upward burst pattern
 					theta = Math.random() * Math.PI * 2;
@@ -221,12 +221,12 @@
 					Math.sin(phi) * Math.sin(theta) * speed,
 					Math.cos(phi) * speed
 				);
-				
+
 				// Transform to align with Earth's surface normal
 				const up = new THREE.Vector3(0, 1, 0);
 				const right = new THREE.Vector3().crossVectors(up, normal).normalize();
 				const forward = new THREE.Vector3().crossVectors(normal, right).normalize();
-				
+
 				const worldVel = new THREE.Vector3()
 					.addScaledVector(normal, localVel.z)
 					.addScaledVector(right, localVel.x)
@@ -244,7 +244,7 @@
 
 				// Vary particle sizes more dramatically
 				sizes[i] = 0.8 + Math.random() * 1.2;
-				
+
 				// Individual particle lifetimes for staggered fading
 				lifetimes[i] = 40 + Math.random() * 60;
 			}
@@ -431,7 +431,7 @@
 				for (let j = 0; j < positions.length / 3; j++) {
 					const idx = j * 3;
 					const pos = new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]);
-					
+
 					// Update position
 					positions[idx] += velocities[idx];
 					positions[idx + 1] += velocities[idx + 1];
@@ -455,7 +455,7 @@
 						const particleAge = burst.age;
 						const particleLifetime = lifetimes[j];
 						const particleFade = Math.max(0, 1.0 - particleAge / particleLifetime);
-						
+
 						// Particles fade individually for more realistic effect
 						if (sizes) {
 							sizes[j] = (0.8 + Math.random() * 1.2) * particleFade;
@@ -471,14 +471,18 @@
 				// Create secondary burst effect at mid-life for some fireworks
 				if (!burst.hasSecondaryBurst && burst.age > 15 && burst.age < 25 && Math.random() > 0.7) {
 					// Create a smaller secondary burst (less frequent)
-					if (Math.random() > 0.5) { // Only 50% chance for secondary burst
+					if (Math.random() > 0.5) {
+						// Only 50% chance for secondary burst
 						const secondaryPos = new THREE.Vector3(
 							positions[Math.floor(positions.length / 6) * 3],
 							positions[Math.floor(positions.length / 6) * 3 + 1],
 							positions[Math.floor(positions.length / 6) * 3 + 2]
 						);
 						const secondaryColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f', '#ffd700'];
-						this.createBurst(secondaryPos, secondaryColors[Math.floor(Math.random() * secondaryColors.length)]);
+						this.createBurst(
+							secondaryPos,
+							secondaryColors[Math.floor(Math.random() * secondaryColors.length)]
+						);
 					}
 					burst.hasSecondaryBurst = true;
 				}
