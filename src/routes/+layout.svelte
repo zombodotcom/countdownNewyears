@@ -7,7 +7,6 @@
 	import { browser } from '$app/environment';
 
 	let { children, data } = $props();
-
 </script>
 
 <svelte:head>

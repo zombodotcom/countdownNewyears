@@ -240,13 +240,7 @@
 					context.globalAlpha = particle.life;
 					context.fillStyle = particle.color;
 					context.beginPath();
-					context.arc(
-						firework.x + particle.x,
-						firework.y + particle.y,
-						3,
-						0,
-						Math.PI * 2
-					);
+					context.arc(firework.x + particle.x, firework.y + particle.y, 3, 0, Math.PI * 2);
 					context.fill();
 					context.restore();
 				}
@@ -301,7 +295,6 @@
 	});
 </script>
 
-<canvas id={value} class="absolute z-8 h-screen w-screen pointer-events-none">
+<canvas id={value} class="pointer-events-none absolute z-8 h-screen w-screen">
 	Canvas element not supported!
 </canvas>
-

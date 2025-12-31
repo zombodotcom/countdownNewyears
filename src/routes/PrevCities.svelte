@@ -16,11 +16,13 @@
 </script>
 
 <div class="flex h-full w-full flex-col gap-2">
-	<h2 class="w-full text-center text-xl font-bold uppercase tracking-widest text-amber-500 border-b border-amber-500/20 pb-2 mb-2">
+	<h2
+		class="mb-2 w-full border-b border-amber-500/20 pb-2 text-center text-xl font-bold tracking-widest text-amber-500 uppercase"
+	>
 		{m.citiesAlreadyInTheNewYear({}, { locale: locale as LanguageType })}
 	</h2>
 	{#if timezones.length > 0}
-		<div class="flex h-full flex-col gap-1 overflow-y-auto no-scrollbar">
+		<div class="no-scrollbar flex h-full flex-col gap-1 overflow-y-auto">
 			{#each timezones as timezone, i (i)}
 				<TimezoneItem {timezone} {target} {now} reverse={true} />
 			{/each}

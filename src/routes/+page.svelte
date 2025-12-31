@@ -40,10 +40,12 @@
 		</div>
 
 		<!-- Debug Toggle -->
-		<div class="fixed bottom-2 right-2 z-50 pointer-events-auto opacity-30 hover:opacity-70 transition-opacity">
+		<div
+			class="pointer-events-auto fixed right-2 bottom-2 z-50 opacity-30 transition-opacity hover:opacity-70"
+		>
 			<button
-				onclick={() => debugMode = !debugMode}
-				class="px-1.5 py-0.5 bg-gray-900 bg-opacity-60 rounded text-white text-xs hover:bg-opacity-80 transition-all"
+				onclick={() => (debugMode = !debugMode)}
+				class="bg-opacity-60 hover:bg-opacity-80 rounded bg-gray-900 px-1.5 py-0.5 text-xs text-white transition-all"
 				title="Toggle debug console logs"
 			>
 				{debugMode ? '🔊' : '🔇'}
@@ -51,23 +53,23 @@
 		</div>
 
 		<!-- UI Overlays -->
-		<div class="relative z-10 flex h-full w-full flex-col pointer-events-none">
+		<div class="pointer-events-none relative z-10 flex h-full w-full flex-col">
 			<!-- Top: Clock -->
-			<div class="flex w-full flex-col items-center justify-center pt-8 pointer-events-auto">
+			<div class="pointer-events-auto flex w-full flex-col items-center justify-center pt-8">
 				<div class="w-fit">
-					<Countdown {now} {target} locale={currentLocale} isDone={isDone} />
+					<Countdown {now} {target} locale={currentLocale} {isDone} />
 				</div>
 			</div>
 
 			<!-- Middle: City Lists -->
-			<div class="flex grow flex-row justify-between px-12 items-center overflow-hidden">
+			<div class="flex grow flex-row items-center justify-between overflow-hidden px-12">
 				<!-- Left: Prev Cities -->
-				<div class="w-72 h-[60vh] floating-panel rounded-3xl p-6 pointer-events-auto">
+				<div class="floating-panel pointer-events-auto h-[60vh] w-72 rounded-3xl p-6">
 					<PrevCities {target} {now} locale={currentLocale} />
 				</div>
 
 				<!-- Right: Next Cities -->
-				<div class="w-72 h-[60vh] floating-panel rounded-3xl p-6 pointer-events-auto">
+				<div class="floating-panel pointer-events-auto h-[60vh] w-72 rounded-3xl p-6">
 					<NextCities {target} {now} locale={currentLocale} />
 				</div>
 			</div>

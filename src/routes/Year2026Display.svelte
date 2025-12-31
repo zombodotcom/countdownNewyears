@@ -8,7 +8,7 @@
 
 {#if is2026 && isDone}
 	<div
-		class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
+		class="pointer-events-none absolute inset-0 z-50 flex items-center justify-center"
 		transition:fade={{ duration: 500 }}
 	>
 		<div
@@ -16,7 +16,7 @@
 			transition:scale={{ duration: 800, start: 0.5 }}
 		>
 			<div
-				class="font-bold text-center drop-shadow-[0_0_20px_rgba(255,215,0,0.8)] animate-pulse
+				class="animate-pulse text-center font-bold drop-shadow-[0_0_20px_rgba(255,215,0,0.8)]
 					max-lg:text-6xl max-lg:leading-tight
 					lg:text-8xl lg:leading-tight
 					xl:text-9xl xl:leading-tight
@@ -41,4 +41,3 @@
 		</div>
 	</div>
 {/if}
-
