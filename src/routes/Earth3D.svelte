@@ -12,7 +12,7 @@
 
 	let container: HTMLDivElement | undefined = $state();
 	let globe: any = $state();
-	
+
 	interface CityPoint {
 		lat: number;
 		lng: number;
@@ -44,9 +44,9 @@
 
 		const centerX = 64;
 		const centerY = 64;
-		
+
 		ctx.clearRect(0, 0, 128, 128);
-		
+
 		// Parse color to RGB
 		const tempDiv = document.createElement('div');
 		tempDiv.style.color = color;
@@ -56,26 +56,26 @@
 		const rgbMatch = rgb.match(/\d+/g);
 		if (!rgbMatch) return null;
 		const [r, g, b] = rgbMatch.map(Number);
-		
+
 		// Outer glow
 		const outerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 64);
 		outerGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 1)`);
 		outerGradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, 0.9)`);
 		outerGradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.5)`);
 		outerGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-		
+
 		ctx.fillStyle = outerGradient;
 		ctx.fillRect(0, 0, 128, 128);
-		
+
 		// Bright center core
 		const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 20);
 		coreGradient.addColorStop(0, `rgba(255, 255, 255, 1)`);
 		coreGradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, 1)`);
 		coreGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-		
+
 		ctx.fillStyle = coreGradient;
 		ctx.fillRect(0, 0, 128, 128);
-		
+
 		return canvas.toDataURL();
 	};
 
@@ -90,10 +90,10 @@
 		// Create bright glowing star shape with better contrast
 		const centerX = 128;
 		const centerY = 128;
-		
+
 		// Clear canvas
 		ctx.clearRect(0, 0, 256, 256);
-		
+
 		// Outer glow - larger and brighter
 		const outerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 128);
 		outerGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
@@ -101,10 +101,10 @@
 		outerGradient.addColorStop(0.4, 'rgba(255, 255, 200, 0.8)');
 		outerGradient.addColorStop(0.7, 'rgba(255, 255, 150, 0.4)');
 		outerGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-		
+
 		ctx.fillStyle = outerGradient;
 		ctx.fillRect(0, 0, 256, 256);
-		
+
 		// Bright center core - larger
 		const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 40);
 		coreGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
@@ -128,7 +128,7 @@
 		bursts: any[] = [];
 		texture: THREE.Texture | null;
 		globeInstance: any;
-		
+
 		constructor(scene: THREE.Scene, globeInstance: any) {
 			this.scene = scene;
 			this.globeInstance = globeInstance;
@@ -137,7 +137,28 @@
 
 		createBurst(position: THREE.Vector3, color: string) {
 			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:84',message:'createBurst called',data:{x:position.x,y:position.y,z:position.z,positionLength:position.length(),color,hasScene:!!this.scene,hasTexture:!!this.texture,burstsCount:this.bursts.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					location: 'Earth3D.svelte:84',
+					message: 'createBurst called',
+					data: {
+						x: position.x,
+						y: position.y,
+						z: position.z,
+						positionLength: position.length(),
+						color,
+						hasScene: !!this.scene,
+						hasTexture: !!this.texture,
+						burstsCount: this.bursts.length
+					},
+					timestamp: Date.now(),
+					sessionId: 'debug-session',
+					runId: 'run1',
+					hypothesisId: 'C'
+				})
+			}).catch(() => {});
 			// #endregion
 			const particleCount = 200; // More particles for better explosion
 			const geometry = new THREE.BufferGeometry();
@@ -150,7 +171,6 @@
 
 			// Use position directly (already calculated with correct radius)
 			const surfacePosition = position.clone();
-
 
 			for (let i = 0; i < particleCount; i++) {
 				// Start particles at the surface position
@@ -283,12 +303,31 @@
 				});
 			}
 
-			if (debug) console.log('Firework particles creation complete:', {
-				position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
-				addedSuccessfully
-			});
+			if (debug)
+				console.log('Firework particles creation complete:', {
+					position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
+					addedSuccessfully
+				});
 			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:112',message:'Particles added to scene',data:{particleCount,particleSize:material.size,hasTexture:!!material.map,sceneChildren:this.scene.children.length,burstsCount:this.bursts.length+1},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					location: 'Earth3D.svelte:112',
+					message: 'Particles added to scene',
+					data: {
+						particleCount,
+						particleSize: material.size,
+						hasTexture: !!material.map,
+						sceneChildren: this.scene.children.length,
+						burstsCount: this.bursts.length + 1
+					},
+					timestamp: Date.now(),
+					sessionId: 'debug-session',
+					runId: 'run1',
+					hypothesisId: 'D'
+				})
+			}).catch(() => {});
 			// #endregion
 
 			this.bursts.push({
@@ -300,7 +339,20 @@
 
 		update() {
 			// #region agent log
-			if (this.bursts.length > 0) fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:121',message:'FireworkSystem.update called',data:{burstsCount:this.bursts.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+			if (this.bursts.length > 0)
+				fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						location: 'Earth3D.svelte:121',
+						message: 'FireworkSystem.update called',
+						data: { burstsCount: this.bursts.length },
+						timestamp: Date.now(),
+						sessionId: 'debug-session',
+						runId: 'run1',
+						hypothesisId: 'F'
+					})
+				}).catch(() => {});
 			// #endregion
 			for (let i = this.bursts.length - 1; i >= 0; i--) {
 				const burst = this.bursts[i];
@@ -313,12 +365,12 @@
 					positions[j * 3] += velocities[j * 3];
 					positions[j * 3 + 1] += velocities[j * 3 + 1];
 					positions[j * 3 + 2] += velocities[j * 3 + 2];
-					
+
 					// Slower friction for longer trails
 					velocities[j * 3] *= 0.98;
 					velocities[j * 3 + 1] *= 0.98;
 					velocities[j * 3 + 2] *= 0.98;
-					
+
 					// Slight gravity for realistic fall
 					velocities[j * 3 + 1] -= 0.0003;
 				}
@@ -343,13 +395,30 @@
 	// Calculate data for cities based on countdown status
 	const updateGlobeData = () => {
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:173',message:'updateGlobeData called',data:{hasNow:!!now,hasTarget:!!target,nowTime:now?.getTime(),targetTime:target?.getTime()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:173',
+				message: 'updateGlobeData called',
+				data: {
+					hasNow: !!now,
+					hasTarget: !!target,
+					nowTime: now?.getTime(),
+					targetTime: target?.getTime()
+				},
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'B'
+			})
+		}).catch(() => {});
 		// #endregion
 		if (!now || !target) return;
 
 		const newPoints: CityPoint[] = [];
 		const newArcs: Arc[] = [];
-		
+
 		// Track cities by status
 		const celebratingCities: { name: string; lat: number; lng: number }[] = [];
 		const upcomingCities: { name: string; lat: number; lng: number; hours: number }[] = [];
@@ -368,7 +437,7 @@
 					break;
 				}
 			}
-			
+
 			// If city not in any timezone, skip it (or show as neutral)
 			if (!cityTimezone) {
 				// Show all cities even if not in timezone list
@@ -383,7 +452,7 @@
 				});
 				return;
 			}
-			
+
 			totalProcessed++;
 			const countdown = makeCountdown(new Date(getOffsetTime(cityTimezone.hour, target, now)), now);
 			const isCelebrating = countdown.total < 0;
@@ -396,11 +465,11 @@
 				// Use city name hash to create unique offset for each city
 				let cityHash = 0;
 				for (let i = 0; i < cityName.length; i++) {
-					cityHash = ((cityHash << 5) - cityHash) + cityName.charCodeAt(i);
+					cityHash = (cityHash << 5) - cityHash + cityName.charCodeAt(i);
 					cityHash = cityHash & cityHash; // Convert to 32bit integer
 				}
 				const offset = Math.abs(cityHash) % 360; // Unique offset per city (0-360)
-				const hue = ((time / 20) + offset) % 360; // Each city cycles at different phase
+				const hue = (time / 20 + offset) % 360; // Each city cycles at different phase
 				const saturation = 100;
 				const lightness = 65; // Bright and vibrant
 				const rainbowColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -412,12 +481,12 @@
 					label: `🎉 ${cityName} - HAPPY NEW YEAR!`,
 					altitude: 0
 				});
-				
+
 				celebratingCities.push({ name: cityName, lat, lng });
 			} else if (isClose) {
 				closeCount++;
 				// Bright yellow for cities close to midnight
-				const minutesLeft = countdown.minutes + (countdown.hours * 60);
+				const minutesLeft = countdown.minutes + countdown.hours * 60;
 				newPoints.push({
 					lat,
 					lng,
@@ -426,7 +495,7 @@
 					label: `⏰ ${cityName} - ${minutesLeft}m`,
 					altitude: 0
 				});
-				
+
 				upcomingCities.push({ name: cityName, lat, lng, hours: countdown.hours });
 			} else {
 				otherCount++;
@@ -443,7 +512,25 @@
 		});
 
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:230',message:'Cities processed',data:{totalProcessed,celebratingCount,closeCount,otherCount,newPointsLength:newPoints.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:230',
+				message: 'Cities processed',
+				data: {
+					totalProcessed,
+					celebratingCount,
+					closeCount,
+					otherCount,
+					newPointsLength: newPoints.length
+				},
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'B'
+			})
+		}).catch(() => {});
 		// #endregion
 
 		// Disable arc visualization - it creates a giant ring
@@ -453,21 +540,31 @@
 		arcsData = newArcs;
 
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:252',message:'pointsData updated',data:{pointsDataLength:pointsData.length,hasGlobe:!!globe,firstPoint:pointsData[0]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:252',
+				message: 'pointsData updated',
+				data: { pointsDataLength: pointsData.length, hasGlobe: !!globe, firstPoint: pointsData[0] },
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'E'
+			})
+		}).catch(() => {});
 		// #endregion
 
 		if (globe) {
 			if (debug) {
 				console.log(`Earth3D - Setting ${pointsData.length} city markers`, {
 					sample: pointsData[0],
-					celebrating: pointsData.filter(p => p.size >= 0.5).length,
-					close: pointsData.filter(p => p.size >= 0.4 && p.size < 0.5).length,
-					normal: pointsData.filter(p => p.size < 0.4).length
+					celebrating: pointsData.filter((p) => p.size >= 0.5).length,
+					close: pointsData.filter((p) => p.size >= 0.4 && p.size < 0.5).length,
+					normal: pointsData.filter((p) => p.size < 0.4).length
 				});
 			}
-			globe
-				.pointsData(pointsData)
-				.arcsData(arcsData);
+			globe.pointsData(pointsData).arcsData(arcsData);
 			if (debug) console.log(`Earth3D - Updated ${pointsData.length} city markers`);
 		} else {
 			if (debug) console.warn('Earth3D - Globe instance not available for updating points');
@@ -479,14 +576,14 @@
 
 	onMount(async () => {
 		if (!browser || !container) return;
-		if (debug) console.log("Earth3D - Initializing Background Globe...");
+		if (debug) console.log('Earth3D - Initializing Background Globe...');
 
 		// Dynamically import globe.gl
 		const Globe = (await import('globe.gl')).default;
 
 		// Initialize globe instance
-		if (debug) console.log("Earth3D - Globe library loaded, creating instance...");
-		
+		if (debug) console.log('Earth3D - Globe library loaded, creating instance...');
+
 		const globeInstance = Globe()(container)
 			.globeImageUrl('/Blue_Marble_2002.png')
 			.bumpImageUrl('/earth-topology.png')
@@ -504,7 +601,7 @@
 			.arcColor('color')
 			.arcStroke(3)
 			.enablePointerInteraction(false);
-		
+
 		// Try to set night side image - globe.gl may support this in the chain
 		// Note: This is a safe check that won't break if the method doesn't exist
 		try {
@@ -516,57 +613,97 @@
 			// Silently fail - night side may not be supported in this version
 			if (debug) console.log('Night side not available:', e?.message);
 		}
-		
+
 		// Store globe instance
 		globe = globeInstance;
 
 		// Get scene and set dark background
 		const scene = globeInstance.scene();
-		if (debug) console.log("Earth3D - Scene retrieved:", !!scene);
-		
+		if (debug) console.log('Earth3D - Scene retrieved:', !!scene);
+
 		// Set dark space background color for better night sky visibility
 		scene.background = new THREE.Color(0x000011); // Dark blue-black space color
-		
+
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:324',message:'Globe initialized',data:{hasBackgroundImage:true,backgroundImageUrl:'/night-sky.png',sceneBackgroundSet:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:324',
+				message: 'Globe initialized',
+				data: {
+					hasBackgroundImage: true,
+					backgroundImageUrl: '/night-sky.png',
+					sceneBackgroundSet: true
+				},
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'G'
+			})
+		}).catch(() => {});
 		// #endregion
-		if (debug) console.log("Earth3D - Background image set:", '/night-sky.png');
+		if (debug) console.log('Earth3D - Background image set:', '/night-sky.png');
 
 		// Night side is set above - it creates the dark zone on the side facing away from the sun
 
 		// Custom lighting with day/night cycle
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 		scene.add(ambientLight);
-		
+
 		// Directional light representing the sun - position it to create day/night terminator
 		const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
 		// Position sun based on current time to show realistic day/night
 		const sunAngle = (Date.now() / 1000 / 60 / 60 / 24) * Math.PI * 2; // Rotate sun over 24 hours
-		sunLight.position.set(
-			Math.cos(sunAngle) * 5,
-			Math.sin(sunAngle) * 2,
-			Math.sin(sunAngle) * 5
-		);
+		sunLight.position.set(Math.cos(sunAngle) * 5, Math.sin(sunAngle) * 2, Math.sin(sunAngle) * 5);
 		scene.add(sunLight);
-		
+
 		// Note: Direct material modification breaks globe.gl's shader system
 		// Night side functionality requires globe.gl's built-in support or custom shader implementation
 
 		// Initialize firework system
 		if (debug) {
-			console.log("Earth3D - Initializing FireworkSystem...");
-			console.log("Scene info:", {
+			console.log('Earth3D - Initializing FireworkSystem...');
+			console.log('Scene info:', {
 				hasScene: !!scene,
 				childrenCount: scene.children.length,
-				children: scene.children.map((c: any) => ({type: c.type, position: c.position}))
+				children: scene.children.map((c: any) => ({ type: c.type, position: c.position }))
 			});
 		}
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:315',message:'Initializing FireworkSystem',data:{hasScene:!!scene,sceneType:scene?.constructor?.name,childrenCount:scene.children.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:315',
+				message: 'Initializing FireworkSystem',
+				data: {
+					hasScene: !!scene,
+					sceneType: scene?.constructor?.name,
+					childrenCount: scene.children.length
+				},
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'A'
+			})
+		}).catch(() => {});
 		// #endregion
 		fireworkSystem = new FireworkSystem(scene, globeInstance);
 		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:318',message:'FireworkSystem created',data:{hasFireworkSystem:!!fireworkSystem,hasTexture:!!fireworkSystem?.texture},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				location: 'Earth3D.svelte:318',
+				message: 'FireworkSystem created',
+				data: { hasFireworkSystem: !!fireworkSystem, hasTexture: !!fireworkSystem?.texture },
+				timestamp: Date.now(),
+				sessionId: 'debug-session',
+				runId: 'run1',
+				hypothesisId: 'A'
+			})
+		}).catch(() => {});
 		// #endregion
 
 		// Set initial view
@@ -578,23 +715,44 @@
 		function rotate(time: number) {
 			frameCount++;
 			// #region agent log
-			if (frameCount % 60 === 0) fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:322',message:'Animation loop running',data:{frameCount,hasGlobeInstance:!!globeInstance,hasFireworkSystem:!!fireworkSystem,pointsDataLength:pointsData.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+			if (frameCount % 60 === 0)
+				fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						location: 'Earth3D.svelte:322',
+						message: 'Animation loop running',
+						data: {
+							frameCount,
+							hasGlobeInstance: !!globeInstance,
+							hasFireworkSystem: !!fireworkSystem,
+							pointsDataLength: pointsData.length
+						},
+						timestamp: Date.now(),
+						sessionId: 'debug-session',
+						runId: 'run1',
+						hypothesisId: 'F'
+					})
+				}).catch(() => {});
 			// #endregion
 			if (!globeInstance) return;
 			const deltaTime = time - lastTime;
 			lastTime = time;
-			
+
 			const pov = globeInstance.pointOfView();
 			const rotationSpeed = 0.05;
-			globeInstance.pointOfView({ 
-				lat: pov.lat, 
-				lng: pov.lng + (rotationSpeed * (deltaTime / 16.6 || 1)), 
-				altitude: pov.altitude 
-			}, 0);
-			
+			globeInstance.pointOfView(
+				{
+					lat: pov.lat,
+					lng: pov.lng + rotationSpeed * (deltaTime / 16.6 || 1),
+					altitude: pov.altitude
+				},
+				0
+			);
+
 			// Spawn fireworks from currently celebrating cities - more frequent
 			if (fireworkSystem && Math.random() > 0.85) {
-				const celebrating = pointsData.filter(p => p.size >= 0.5); // Celebrating cities have size 0.5
+				const celebrating = pointsData.filter((p) => p.size >= 0.5); // Celebrating cities have size 0.5
 				if (celebrating.length > 0) {
 					const city = celebrating[Math.floor(Math.random() * celebrating.length)];
 
@@ -610,7 +768,10 @@
 								position = new THREE.Vector3(coords.x, coords.y, coords.z).multiplyScalar(1.01);
 							}
 							const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f'];
-							fireworkSystem.createBurst(position, colors[Math.floor(Math.random() * colors.length)]);
+							fireworkSystem.createBurst(
+								position,
+								colors[Math.floor(Math.random() * colors.length)]
+							);
 							if (debug) console.log('Firework spawned at', city.label);
 						} else {
 							if (debug) console.log('getCoords returned invalid data for', city.label, coords);
@@ -620,7 +781,7 @@
 					}
 				}
 			}
-			
+
 			if (fireworkSystem) {
 				fireworkSystem.update();
 			}
@@ -628,12 +789,11 @@
 		}
 		requestAnimationFrame(rotate);
 
-		if (debug) console.log("Earth3D - Setup complete.");
+		if (debug) console.log('Earth3D - Setup complete.');
 
 		// Periodic updates
 		updateGlobeData();
 		updateInterval = setInterval(updateGlobeData, 100); // Update every 100ms for smooth rainbow cycling
-
 
 		// Resize handler
 		handleResize = () => {
@@ -656,7 +816,4 @@
 	});
 </script>
 
-<div
-	bind:this={container}
-	class="absolute inset-0 h-full w-full overflow-hidden"
-></div>
+<div bind:this={container} class="absolute inset-0 h-full w-full overflow-hidden"></div>

@@ -47,8 +47,7 @@
     "
 		transition:fly={{ duration: 250, opacity: 0, x: 0, y: 100 }}
 	>
-		<span class="flex grow flex-row gap-2" id="bottom">
-		</span>
+		<span class="flex grow flex-row gap-2" id="bottom"> </span>
 
 		<div class="grow"></div>
 

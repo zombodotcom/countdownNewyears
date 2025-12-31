@@ -18,7 +18,9 @@ export const containsId = async (event: RequestEvent, key: string) => {
 	}
 
 	try {
-		return (await db.select().from(schema.sessions).where(eq(schema.sessions.uuid, key))).length > 0;
+		return (
+			(await db.select().from(schema.sessions).where(eq(schema.sessions.uuid, key))).length > 0
+		);
 	} catch (e) {
 		// Database table doesn't exist in dev - return false
 		if (event.locals.dev) {

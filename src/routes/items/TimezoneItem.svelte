@@ -50,9 +50,7 @@
 	});
 </script>
 
-<div
-	class="flex w-full items-center justify-between py-1 border-b border-white/5 last:border-0"
->
+<div class="flex w-full items-center justify-between border-b border-white/5 py-1 last:border-0">
 	<div class="flex flex-col">
 		<div class="text-xl font-bold text-white">
 			{mainCity}
