@@ -8,7 +8,7 @@
 	import type { LanguageType } from '$lib/types';
 	import { cityCoords } from '$lib/cityCoords';
 
-	let { locale, target, now } = $props();
+	let { locale, target, now, debug = false } = $props();
 
 	let container: HTMLDivElement | undefined = $state();
 	let globe: any = $state();
@@ -34,17 +34,112 @@
 	let pointsData: CityPoint[] = $state([]);
 	let arcsData: Arc[] = $state([]);
 
+	// Create a glowing point texture for city markers
+	const createPointTexture = (color: string = '#ffffff') => {
+		const canvas = document.createElement('canvas');
+		canvas.width = 128;
+		canvas.height = 128;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return null;
+
+		const centerX = 64;
+		const centerY = 64;
+		
+		ctx.clearRect(0, 0, 128, 128);
+		
+		// Parse color to RGB
+		const tempDiv = document.createElement('div');
+		tempDiv.style.color = color;
+		document.body.appendChild(tempDiv);
+		const rgb = window.getComputedStyle(tempDiv).color;
+		document.body.removeChild(tempDiv);
+		const rgbMatch = rgb.match(/\d+/g);
+		if (!rgbMatch) return null;
+		const [r, g, b] = rgbMatch.map(Number);
+		
+		// Outer glow
+		const outerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 64);
+		outerGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 1)`);
+		outerGradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, 0.9)`);
+		outerGradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.5)`);
+		outerGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+		
+		ctx.fillStyle = outerGradient;
+		ctx.fillRect(0, 0, 128, 128);
+		
+		// Bright center core
+		const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 20);
+		coreGradient.addColorStop(0, `rgba(255, 255, 255, 1)`);
+		coreGradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, 1)`);
+		coreGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+		
+		ctx.fillStyle = coreGradient;
+		ctx.fillRect(0, 0, 128, 128);
+		
+		return canvas.toDataURL();
+	};
+
+	// Create a glowing star particle texture
+	const createParticleTexture = () => {
+		const canvas = document.createElement('canvas');
+		canvas.width = 256;
+		canvas.height = 256;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return null;
+
+		// Create bright glowing star shape with better contrast
+		const centerX = 128;
+		const centerY = 128;
+		
+		// Clear canvas
+		ctx.clearRect(0, 0, 256, 256);
+		
+		// Outer glow - larger and brighter
+		const outerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 128);
+		outerGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+		outerGradient.addColorStop(0.2, 'rgba(255, 255, 255, 1)');
+		outerGradient.addColorStop(0.4, 'rgba(255, 255, 200, 0.8)');
+		outerGradient.addColorStop(0.7, 'rgba(255, 255, 150, 0.4)');
+		outerGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+		
+		ctx.fillStyle = outerGradient;
+		ctx.fillRect(0, 0, 256, 256);
+		
+		// Bright center core - larger
+		const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 40);
+		coreGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+		coreGradient.addColorStop(0.5, 'rgba(255, 255, 255, 1)');
+		coreGradient.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
+		ctx.fillStyle = coreGradient;
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, 40, 0, Math.PI * 2);
+		ctx.fill();
+
+		const texture = new THREE.CanvasTexture(canvas);
+		texture.needsUpdate = true;
+		texture.minFilter = THREE.LinearFilter;
+		texture.magFilter = THREE.LinearFilter;
+		return texture;
+	};
+
 	// Particle Firework System
 	class FireworkSystem {
 		scene: THREE.Scene;
 		bursts: any[] = [];
+		texture: THREE.Texture | null;
+		globeInstance: any;
 		
-		constructor(scene: THREE.Scene) {
+		constructor(scene: THREE.Scene, globeInstance: any) {
 			this.scene = scene;
+			this.globeInstance = globeInstance;
+			this.texture = createParticleTexture();
 		}
 
 		createBurst(position: THREE.Vector3, color: string) {
-			const particleCount = 100;
+			// #region agent log
+			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:84',message:'createBurst called',data:{x:position.x,y:position.y,z:position.z,positionLength:position.length(),color,hasScene:!!this.scene,hasTexture:!!this.texture,burstsCount:this.bursts.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+			// #endregion
+			const particleCount = 200; // More particles for better explosion
 			const geometry = new THREE.BufferGeometry();
 			const positions = new Float32Array(particleCount * 3);
 			const velocities = new Float32Array(particleCount * 3);
@@ -53,14 +148,20 @@
 
 			const threeColor = new THREE.Color(color);
 
-			for (let i = 0; i < particleCount; i++) {
-				positions[i * 3] = position.x;
-				positions[i * 3 + 1] = position.y;
-				positions[i * 3 + 2] = position.z;
+			// Use position directly (already calculated with correct radius)
+			const surfacePosition = position.clone();
 
-				const theta = Math.random() * Math.PI * 2;
-				const phi = Math.random() * Math.PI;
-				const speed = 0.01 + Math.random() * 0.02;
+
+			for (let i = 0; i < particleCount; i++) {
+				// Start particles at the surface position
+				positions[i * 3] = surfacePosition.x;
+				positions[i * 3 + 1] = surfacePosition.y;
+				positions[i * 3 + 2] = surfacePosition.z;
+
+				// Simple upward explosion with random spread
+				const theta = Math.random() * Math.PI * 2; // Random angle around
+				const phi = Math.random() * Math.PI * 0.5; // Mostly upward (0 to π/2)
+				const speed = 0.1 + Math.random() * 0.15;
 
 				velocities[i * 3] = Math.sin(phi) * Math.cos(theta) * speed;
 				velocities[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * speed;
@@ -70,7 +171,8 @@
 				colors[i * 3 + 1] = threeColor.g;
 				colors[i * 3 + 2] = threeColor.b;
 
-				sizes[i] = 2.0 + Math.random() * 3.0;
+				// Vary particle sizes
+				sizes[i] = 0.5 + Math.random() * 0.5;
 			}
 
 			geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -79,25 +181,127 @@
 			geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
 			const material = new THREE.PointsMaterial({
-				size: 0.01,
+				size: 3.0,
+				sizeAttenuation: true,
+				map: this.texture,
 				vertexColors: true,
 				transparent: true,
 				opacity: 1,
 				blending: THREE.AdditiveBlending,
-				sizeAttenuation: true
+				depthWrite: false, // Don't write to depth buffer to avoid z-fighting
+				depthTest: true, // Enable depth test so fireworks behind Earth are occluded
+				alphaTest: 0.01,
+				side: THREE.DoubleSide
 			});
 
+			// Force texture to be used
+			if (this.texture) {
+				material.map = this.texture;
+				material.needsUpdate = true;
+				if (debug) console.log('Texture assigned to material:', !!material.map);
+			}
+
 			const points = new THREE.Points(geometry, material);
-			this.scene.add(points);
+
+			// Try different methods to add particles to the globe
+			let addedSuccessfully = false;
+			let methodUsed = '';
+
+			// Method 1: Try globe's customObjects method
+			try {
+				if (typeof (this.globeInstance as any).customObjects === 'function') {
+					(this.globeInstance as any).customObjects([points]);
+					methodUsed = 'customObjects';
+					addedSuccessfully = true;
+				}
+			} catch (e: any) {
+				if (debug) console.log('customObjects method failed:', e?.message);
+			}
+
+			// Method 2: Try globe's addObject method
+			if (!addedSuccessfully) {
+				try {
+					if (typeof (this.globeInstance as any).addObject === 'function') {
+						(this.globeInstance as any).addObject(points);
+						methodUsed = 'addObject';
+						addedSuccessfully = true;
+					}
+				} catch (e: any) {
+					if (debug) console.log('addObject method failed:', e?.message);
+				}
+			}
+
+			// Method 3: Try globe's objects method
+			if (!addedSuccessfully) {
+				try {
+					if (typeof (this.globeInstance as any).objects === 'function') {
+						(this.globeInstance as any).objects([points]);
+						methodUsed = 'objects';
+						addedSuccessfully = true;
+					}
+				} catch (e: any) {
+					if (debug) console.log('objects method failed:', e?.message);
+				}
+			}
+
+			// Method 4: Try globe's customLayer method
+			if (!addedSuccessfully) {
+				try {
+					if (typeof (this.globeInstance as any).customLayer === 'function') {
+						(this.globeInstance as any).customLayer(points);
+						methodUsed = 'customLayer';
+						addedSuccessfully = true;
+					}
+				} catch (e: any) {
+					if (debug) console.log('customLayer method failed:', e?.message);
+				}
+			}
+
+			// Method 5: Add directly to globe scene
+			if (!addedSuccessfully) {
+				try {
+					const globeScene = this.globeInstance.scene();
+					globeScene.add(points);
+					methodUsed = 'globeScene';
+					addedSuccessfully = true;
+				} catch (e: any) {
+					if (debug) console.log('globe scene add failed:', e?.message);
+				}
+			}
+
+			// Method 6: Fallback to our scene
+			if (!addedSuccessfully) {
+				this.scene.add(points);
+				methodUsed = 'fallbackScene';
+			}
+
+			if (debug) {
+				console.log('Firework particles creation complete:', {
+					method: methodUsed,
+					position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
+					addedSuccessfully
+				});
+			}
+
+			if (debug) console.log('Firework particles creation complete:', {
+				position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
+				addedSuccessfully
+			});
+			// #region agent log
+			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:112',message:'Particles added to scene',data:{particleCount,particleSize:material.size,hasTexture:!!material.map,sceneChildren:this.scene.children.length,burstsCount:this.bursts.length+1},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+			// #endregion
 
 			this.bursts.push({
 				points,
 				age: 0,
-				maxAge: 60 + Math.random() * 40
+				maxAge: 60 + Math.random() * 40 // Longer lifetime
 			});
 		}
 
 		update() {
+			// #region agent log
+			if (this.bursts.length > 0) fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:121',message:'FireworkSystem.update called',data:{burstsCount:this.bursts.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+			// #endregion
 			for (let i = this.bursts.length - 1; i >= 0; i--) {
 				const burst = this.bursts[i];
 				burst.age++;
@@ -110,17 +314,19 @@
 					positions[j * 3 + 1] += velocities[j * 3 + 1];
 					positions[j * 3 + 2] += velocities[j * 3 + 2];
 					
-					// Add slight gravity
-					velocities[j * 3 + 1] -= 0.0001;
-					
-					// Slow down
+					// Slower friction for longer trails
 					velocities[j * 3] *= 0.98;
 					velocities[j * 3 + 1] *= 0.98;
 					velocities[j * 3 + 2] *= 0.98;
+					
+					// Slight gravity for realistic fall
+					velocities[j * 3 + 1] -= 0.0003;
 				}
 
 				burst.points.geometry.attributes.position.needsUpdate = true;
-				burst.points.material.opacity = 1.0 - (burst.age / burst.maxAge);
+				// Fade out smoothly
+				const fadeProgress = burst.age / burst.maxAge;
+				burst.points.material.opacity = Math.max(0, 1.0 - fadeProgress);
 
 				if (burst.age >= burst.maxAge) {
 					this.scene.remove(burst.points);
@@ -134,20 +340,11 @@
 
 	let fireworkSystem: FireworkSystem | undefined;
 
-	// Convert lat/lng to Vector3 for fireworks
-	const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector3 => {
-		const phi = (90 - lat) * (Math.PI / 180);
-		const theta = (lng + 180) * (Math.PI / 180);
-
-		const x = -(radius * Math.sin(phi) * Math.cos(theta));
-		const z = radius * Math.sin(phi) * Math.sin(theta);
-		const y = radius * Math.cos(phi);
-
-		return new THREE.Vector3(x, y, z);
-	};
-
 	// Calculate data for cities based on countdown status
 	const updateGlobeData = () => {
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:173',message:'updateGlobeData called',data:{hasNow:!!now,hasTarget:!!target,nowTime:now?.getTime(),targetTime:target?.getTime()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+		// #endregion
 		if (!now || !target) return;
 
 		const newPoints: CityPoint[] = [];
@@ -156,93 +353,124 @@
 		// Track cities by status
 		const celebratingCities: { name: string; lat: number; lng: number }[] = [];
 		const upcomingCities: { name: string; lat: number; lng: number; hours: number }[] = [];
+		let totalProcessed = 0;
+		let celebratingCount = 0;
+		let closeCount = 0;
+		let otherCount = 0;
 
-		timezoneList.forEach((timezone: TimezoneType) => {
-			const countdown = makeCountdown(new Date(getOffsetTime(timezone.hour, target, now)), now);
-			const isCelebrating = countdown.total < 0;
-			const isClose = countdown.hours === 0 && countdown.days === 0 && countdown.total > 0;
-
-			// Get first major city from timezone
-			const cityName = timezone.cities[0] || timezone.otherCities[0];
-			if (!cityName || !cityCoords[cityName]) return;
-
-			const [lat, lng] = cityCoords[cityName];
-
-			if (isCelebrating) {
-				// Gold glowing markers for celebrating cities
+		// Show ALL cities from cityCoords, not just one per timezone
+		Object.entries(cityCoords).forEach(([cityName, [lat, lng]]) => {
+			// Find which timezone this city belongs to
+			let cityTimezone: TimezoneType | undefined;
+			for (const tz of timezoneList) {
+				if (tz.cities.includes(cityName) || tz.otherCities.includes(cityName)) {
+					cityTimezone = tz;
+					break;
+				}
+			}
+			
+			// If city not in any timezone, skip it (or show as neutral)
+			if (!cityTimezone) {
+				// Show all cities even if not in timezone list
+				otherCount++;
 				newPoints.push({
 					lat,
 					lng,
-					size: 1.2,
-					color: '#ffd700',
+					size: 0.25, // Larger size for visibility
+					color: '#88ccff', // Bright cyan-blue
+					label: cityName,
+					altitude: 0
+				});
+				return;
+			}
+			
+			totalProcessed++;
+			const countdown = makeCountdown(new Date(getOffsetTime(cityTimezone.hour, target, now)), now);
+			const isCelebrating = countdown.total < 0;
+			const isClose = countdown.hours === 0 && countdown.days === 0 && countdown.total > 0;
+
+			if (isCelebrating) {
+				celebratingCount++;
+				// Rainbow cycling color for celebrating cities - each city has its own offset
+				const time = now.getTime();
+				// Use city name hash to create unique offset for each city
+				let cityHash = 0;
+				for (let i = 0; i < cityName.length; i++) {
+					cityHash = ((cityHash << 5) - cityHash) + cityName.charCodeAt(i);
+					cityHash = cityHash & cityHash; // Convert to 32bit integer
+				}
+				const offset = Math.abs(cityHash) % 360; // Unique offset per city (0-360)
+				const hue = ((time / 20) + offset) % 360; // Each city cycles at different phase
+				const saturation = 100;
+				const lightness = 65; // Bright and vibrant
+				const rainbowColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+				newPoints.push({
+					lat,
+					lng,
+					size: 0.5, // Much larger size for visibility
+					color: rainbowColor, // Rainbow cycling color - unique per city
 					label: `🎉 ${cityName} - HAPPY NEW YEAR!`,
-					altitude: 0.03
+					altitude: 0
 				});
 				
 				celebratingCities.push({ name: cityName, lat, lng });
-				
-				// Spawn new fireworks bursts occasionally
-				if (fireworkSystem && Math.random() > 0.8) {
-					const position = latLngToVector3(lat, lng, 1.05);
-					const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f'];
-					fireworkSystem.createBurst(position, colors[Math.floor(Math.random() * colors.length)]);
-				}
 			} else if (isClose) {
-				// Yellow pulsing for cities close to midnight
+				closeCount++;
+				// Bright yellow for cities close to midnight
 				const minutesLeft = countdown.minutes + (countdown.hours * 60);
 				newPoints.push({
 					lat,
 					lng,
-					size: 0.7,
-					color: '#ffff00',
-					label: `⏰ ${cityName} - ${minutesLeft} minutes to go!`,
-					altitude: 0.02
+					size: 0.4, // Larger size for visibility
+					color: '#ffff00', // Bright yellow
+					label: `⏰ ${cityName} - ${minutesLeft}m`,
+					altitude: 0
 				});
 				
 				upcomingCities.push({ name: cityName, lat, lng, hours: countdown.hours });
 			} else {
-				// White for other cities
+				otherCount++;
+				// Bright white/cyan for other cities - more visible
 				newPoints.push({
 					lat,
 					lng,
-					size: 0.4,
-					color: '#ffffff',
+					size: 0.3, // Larger size for visibility
+					color: '#88ccff', // Bright cyan-blue for better contrast
 					label: cityName,
-					altitude: 0.01
+					altitude: 0
 				});
 			}
 		});
 
-		// Create New Year wave arc (following midnight line)
-		if (celebratingCities.length > 0 && upcomingCities.length > 0) {
-			// Sort celebrating and upcoming cities by longitude
-			celebratingCities.sort((a, b) => a.lng - b.lng);
-			upcomingCities.sort((a, b) => a.lng - b.lng);
-			
-			// Create arcs from celebrating to upcoming cities near the boundary
-			const boundary = celebratingCities[celebratingCities.length - 1];
-			const nextCity = upcomingCities[0];
-			
-			if (boundary && nextCity) {
-				newArcs.push({
-					startLat: -60,
-					startLng: nextCity.lng,
-					endLat: 60,
-					endLng: nextCity.lng,
-					color: ['#ffd700', '#ff6b6b', '#4ecdc4'],
-					stroke: 2
-				});
-			}
-		}
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:230',message:'Cities processed',data:{totalProcessed,celebratingCount,closeCount,otherCount,newPointsLength:newPoints.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+		// #endregion
+
+		// Disable arc visualization - it creates a giant ring
+		// Arcs removed to prevent visual clutter
 
 		pointsData = newPoints;
 		arcsData = newArcs;
 
-		// Update globe with new data
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:252',message:'pointsData updated',data:{pointsDataLength:pointsData.length,hasGlobe:!!globe,firstPoint:pointsData[0]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+		// #endregion
+
 		if (globe) {
+			if (debug) {
+				console.log(`Earth3D - Setting ${pointsData.length} city markers`, {
+					sample: pointsData[0],
+					celebrating: pointsData.filter(p => p.size >= 0.5).length,
+					close: pointsData.filter(p => p.size >= 0.4 && p.size < 0.5).length,
+					normal: pointsData.filter(p => p.size < 0.4).length
+				});
+			}
 			globe
 				.pointsData(pointsData)
 				.arcsData(arcsData);
+			if (debug) console.log(`Earth3D - Updated ${pointsData.length} city markers`);
+		} else {
+			if (debug) console.warn('Earth3D - Globe instance not available for updating points');
 		}
 	};
 
@@ -251,96 +479,169 @@
 
 	onMount(async () => {
 		if (!browser || !container) return;
+		if (debug) console.log("Earth3D - Initializing Background Globe...");
 
-		// Dynamically import globe.gl only in browser to avoid SSR issues
+		// Dynamically import globe.gl
 		const Globe = (await import('globe.gl')).default;
 
-		// Initialize globe
-		// @ts-ignore - Globe.gl types can be tricky with dynamic imports
+		// Initialize globe instance
+		if (debug) console.log("Earth3D - Globe library loaded, creating instance...");
+		
 		const globeInstance = Globe()(container)
-			.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-			.bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-			.backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+			.globeImageUrl('/Blue_Marble_2002.png')
+			.bumpImageUrl('/earth-topology.png')
+			.backgroundImageUrl('/night-sky.png')
 			.showAtmosphere(true)
 			.atmosphereColor('#3a9bdc')
-			.atmosphereAltitude(0.25)
-			.width(window.innerWidth)
-			.height(window.innerHeight)
-			
-			// Point markers configuration
+			.atmosphereAltitude(0.15)
 			.pointsData([])
 			.pointAltitude('altitude')
 			.pointRadius('size')
 			.pointColor('color')
 			.pointLabel('label')
-			.pointsMerge(true)
-			
-			// Arcs configuration
+			.pointsMerge(false)
 			.arcsData([])
 			.arcColor('color')
-			.arcStroke('stroke')
-			.arcDashLength(0.9)
-			.arcDashGap(0.1)
-			.arcDashAnimateTime(1500)
-			.arcAltitudeAutoScale(0.5)
 			.arcStroke(3)
-			
-			// Controls
 			.enablePointerInteraction(false);
-
-		// Store in $state variable AFTER setup to avoid Svelte proxy issues
+		
+		// Try to set night side image - globe.gl may support this in the chain
+		// Note: This is a safe check that won't break if the method doesn't exist
+		try {
+			if (typeof (globeInstance as any).nightImageUrl === 'function') {
+				(globeInstance as any).nightImageUrl('/earth-night.jpg');
+				if (debug) console.log('Night side image set via nightImageUrl');
+			}
+		} catch (e: any) {
+			// Silently fail - night side may not be supported in this version
+			if (debug) console.log('Night side not available:', e?.message);
+		}
+		
+		// Store globe instance
 		globe = globeInstance;
 
-		// Custom lighting
+		// Get scene and set dark background
 		const scene = globeInstance.scene();
+		if (debug) console.log("Earth3D - Scene retrieved:", !!scene);
+		
+		// Set dark space background color for better night sky visibility
+		scene.background = new THREE.Color(0x000011); // Dark blue-black space color
+		
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:324',message:'Globe initialized',data:{hasBackgroundImage:true,backgroundImageUrl:'/night-sky.png',sceneBackgroundSet:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+		// #endregion
+		if (debug) console.log("Earth3D - Background image set:", '/night-sky.png');
+
+		// Night side is set above - it creates the dark zone on the side facing away from the sun
+
+		// Custom lighting with day/night cycle
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 		scene.add(ambientLight);
 		
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-		directionalLight.position.set(5, 3, 5);
-		scene.add(directionalLight);
+		// Directional light representing the sun - position it to create day/night terminator
+		const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+		// Position sun based on current time to show realistic day/night
+		const sunAngle = (Date.now() / 1000 / 60 / 60 / 24) * Math.PI * 2; // Rotate sun over 24 hours
+		sunLight.position.set(
+			Math.cos(sunAngle) * 5,
+			Math.sin(sunAngle) * 2,
+			Math.sin(sunAngle) * 5
+		);
+		scene.add(sunLight);
+		
+		// Note: Direct material modification breaks globe.gl's shader system
+		// Night side functionality requires globe.gl's built-in support or custom shader implementation
 
 		// Initialize firework system
-		fireworkSystem = new FireworkSystem(scene);
+		if (debug) {
+			console.log("Earth3D - Initializing FireworkSystem...");
+			console.log("Scene info:", {
+				hasScene: !!scene,
+				childrenCount: scene.children.length,
+				children: scene.children.map((c: any) => ({type: c.type, position: c.position}))
+			});
+		}
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:315',message:'Initializing FireworkSystem',data:{hasScene:!!scene,sceneType:scene?.constructor?.name,childrenCount:scene.children.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+		// #endregion
+		fireworkSystem = new FireworkSystem(scene, globeInstance);
+		// #region agent log
+		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:318',message:'FireworkSystem created',data:{hasFireworkSystem:!!fireworkSystem,hasTexture:!!fireworkSystem?.texture},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+		// #endregion
 
-		// Set initial view - altitude 2.5 is better for visibility
+		// Set initial view
 		globeInstance.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
 
-		// Auto-rotate
-		let autoRotate = true;
-		let lastTime = 0;
-		(function rotate(time: number) {
-			if (autoRotate && globeInstance) {
-				const deltaTime = time - lastTime;
-				lastTime = time;
-				
-				const pov = globeInstance.pointOfView();
-				// Smooth rotation using deltaTime for consistency
-				const rotationSpeed = 0.05; // Adjust speed as needed
-				globeInstance.pointOfView({ 
-					lat: pov.lat, 
-					lng: pov.lng + (rotationSpeed * (deltaTime / 16.6)), 
-					altitude: pov.altitude 
-				}, 0);
-				
-				if (fireworkSystem) {
-					fireworkSystem.update();
+		// Auto-rotate loop
+		let lastTime = performance.now();
+		let frameCount = 0;
+		function rotate(time: number) {
+			frameCount++;
+			// #region agent log
+			if (frameCount % 60 === 0) fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Earth3D.svelte:322',message:'Animation loop running',data:{frameCount,hasGlobeInstance:!!globeInstance,hasFireworkSystem:!!fireworkSystem,pointsDataLength:pointsData.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+			// #endregion
+			if (!globeInstance) return;
+			const deltaTime = time - lastTime;
+			lastTime = time;
+			
+			const pov = globeInstance.pointOfView();
+			const rotationSpeed = 0.05;
+			globeInstance.pointOfView({ 
+				lat: pov.lat, 
+				lng: pov.lng + (rotationSpeed * (deltaTime / 16.6 || 1)), 
+				altitude: pov.altitude 
+			}, 0);
+			
+			// Spawn fireworks from currently celebrating cities - more frequent
+			if (fireworkSystem && Math.random() > 0.85) {
+				const celebrating = pointsData.filter(p => p.size >= 0.5); // Celebrating cities have size 0.5
+				if (celebrating.length > 0) {
+					const city = celebrating[Math.floor(Math.random() * celebrating.length)];
+
+					// Use globe.gl's built-in coordinate conversion method
+					// This ensures fireworks use the exact same coordinate system as the rendered points
+					try {
+						const coords = (globeInstance as any).getCoords(city.lat, city.lng);
+						if (coords && (coords.x !== undefined || Array.isArray(coords))) {
+							let position: THREE.Vector3;
+							if (Array.isArray(coords)) {
+								position = new THREE.Vector3(coords[0], coords[1], coords[2]).multiplyScalar(1.01);
+							} else {
+								position = new THREE.Vector3(coords.x, coords.y, coords.z).multiplyScalar(1.01);
+							}
+							const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f'];
+							fireworkSystem.createBurst(position, colors[Math.floor(Math.random() * colors.length)]);
+							if (debug) console.log('Firework spawned at', city.label);
+						} else {
+							if (debug) console.log('getCoords returned invalid data for', city.label, coords);
+						}
+					} catch (e: any) {
+						if (debug) console.log('Firework spawn error:', e?.message, 'for city', city.label);
+					}
 				}
 			}
+			
+			if (fireworkSystem) {
+				fireworkSystem.update();
+			}
 			requestAnimationFrame(rotate);
-		})(0);
+		}
+		requestAnimationFrame(rotate);
 
-		// Initial data update
+		if (debug) console.log("Earth3D - Setup complete.");
+
+		// Periodic updates
 		updateGlobeData();
+		updateInterval = setInterval(updateGlobeData, 100); // Update every 100ms for smooth rainbow cycling
 
-		// Update data every second
-		updateInterval = setInterval(updateGlobeData, 1000);
 
-		// Handle resize
+		// Resize handler
 		handleResize = () => {
-			if (globe && container) {
-				globe.width(container.clientWidth);
-				globe.height(container.clientHeight);
+			if (globe && browser && container) {
+				// Globe automatically resizes with container, but we can trigger a render update
+				if (typeof (globe as any).resize === 'function') {
+					(globe as any).resize();
+				}
 			}
 		};
 		window.addEventListener('resize', handleResize);
@@ -357,5 +658,5 @@
 
 <div
 	bind:this={container}
-	class="h-full w-full overflow-hidden"
+	class="absolute inset-0 h-full w-full overflow-hidden"
 ></div>

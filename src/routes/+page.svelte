@@ -8,6 +8,7 @@
 	let { data } = $props();
 
 	let currentLocale = $state('en');
+	let debugMode = $state(false);
 
 	let interval: NodeJS.Timeout | undefined = $state(undefined);
 	let now = $state(new Date());
@@ -35,7 +36,18 @@
 	<div class="relative h-screen w-screen overflow-hidden bg-[#000011] text-white">
 		<!-- Background: 3D Earth Globe -->
 		<div class="fixed inset-0 z-0">
-			<Earth3D locale={currentLocale} {target} {now} />
+			<Earth3D locale={currentLocale} {target} {now} debug={debugMode} />
+		</div>
+
+		<!-- Debug Toggle -->
+		<div class="fixed bottom-2 right-2 z-50 pointer-events-auto opacity-30 hover:opacity-70 transition-opacity">
+			<button
+				onclick={() => debugMode = !debugMode}
+				class="px-1.5 py-0.5 bg-gray-900 bg-opacity-60 rounded text-white text-xs hover:bg-opacity-80 transition-all"
+				title="Toggle debug console logs"
+			>
+				{debugMode ? '🔊' : '🔇'}
+			</button>
 		</div>
 
 		<!-- UI Overlays -->
@@ -50,12 +62,12 @@
 			<!-- Middle: City Lists -->
 			<div class="flex grow flex-row justify-between px-12 items-center overflow-hidden">
 				<!-- Left: Prev Cities -->
-				<div class="w-80 h-[65vh] floating-panel rounded-3xl p-6 pointer-events-auto">
+				<div class="w-72 h-[60vh] floating-panel rounded-3xl p-6 pointer-events-auto">
 					<PrevCities {target} {now} locale={currentLocale} />
 				</div>
 
 				<!-- Right: Next Cities -->
-				<div class="w-80 h-[65vh] floating-panel rounded-3xl p-6 pointer-events-auto">
+				<div class="w-72 h-[60vh] floating-panel rounded-3xl p-6 pointer-events-auto">
 					<NextCities {target} {now} locale={currentLocale} />
 				</div>
 			</div>

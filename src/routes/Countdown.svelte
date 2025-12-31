@@ -87,43 +87,43 @@
 
 	<div
 		class="flex flex-row items-baseline justify-center gap-4 font-black transition-all duration-300
-		text-[5rem] leading-none xl:text-[7rem] 2xl:text-[9rem]
+		text-[4rem] leading-none xl:text-[5.5rem] 2xl:text-[7rem]
 		{isFinalSeconds ? 'text-yellow-400 drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]' : ''}
 		{isDone ? 'text-amber-400 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)]' : ''}"
 	>
 		<div class="flex flex-col items-center">
 			<span>{Math.abs(countdown.days).toFixed().padStart(2, '0')}</span>
-			<span class="text-lg xl:text-xl font-light uppercase tracking-widest text-neutral-500">
+			<span class="text-base xl:text-lg font-light uppercase tracking-widest text-neutral-500">
 				{writeDays(countdown.days, locale)}
 			</span>
 		</div>
 		<span class="text-neutral-700">:</span>
 		<div class="flex flex-col items-center">
 			<span>{Math.abs(countdown.hours).toFixed().padStart(2, '0')}</span>
-			<span class="text-lg xl:text-xl font-light uppercase tracking-widest text-neutral-500">
+			<span class="text-base xl:text-lg font-light uppercase tracking-widest text-neutral-500">
 				{writeHours(countdown.hours, locale)}
 			</span>
 		</div>
 		<span class="text-neutral-700">:</span>
 		<div class="flex flex-col items-center">
 			<span>{Math.abs(countdown.minutes).toFixed().padStart(2, '0')}</span>
-			<span class="text-lg xl:text-xl font-light uppercase tracking-widest text-neutral-500">
+			<span class="text-base xl:text-lg font-light uppercase tracking-widest text-neutral-500">
 				{writeMinutes(countdown.minutes, locale)}
 			</span>
 		</div>
 		<span class="text-neutral-700">:</span>
 		<div class="flex flex-col items-center">
 			<span>{Math.abs(countdown.seconds).toFixed().padStart(2, '0')}</span>
-			<span class="text-lg xl:text-xl font-light uppercase tracking-widest text-neutral-500">
+			<span class="text-base xl:text-lg font-light uppercase tracking-widest text-neutral-500">
 				{writeSeconds(countdown.seconds, locale)}
 			</span>
 		</div>
 		
 		<div class="flex flex-col items-start ms-4">
-			<span class="text-[2rem] xl:text-[3rem] 2xl:text-[4rem] text-neutral-600">
+			<span class="text-[1.5rem] xl:text-[2.5rem] 2xl:text-[3.5rem] text-neutral-600">
 				:{Math.abs(countdown.milliseconds).toFixed().padStart(3, '0')}
 			</span>
-			<span class="text-base xl:text-lg font-light uppercase tracking-widest text-neutral-700">
+			<span class="text-xs xl:text-sm font-light uppercase tracking-widest text-neutral-700">
 				{writeMilliseconds(countdown.milliseconds, locale)}
 			</span>
 		</div>
