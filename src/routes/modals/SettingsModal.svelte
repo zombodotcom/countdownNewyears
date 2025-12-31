@@ -20,7 +20,7 @@
 	<div class="flex w-full flex-col gap-2">
 		<form
 			class="flex grow flex-col gap-2"
-			use:enhance={async (event) => {
+			use:enhance={(event) => {
 				return async ({ update }) => {
 					await update({ reset: false, invalidateAll: true });
 				};

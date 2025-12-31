@@ -30,6 +30,8 @@
 	let now = $state(new Date());
 	let target = $derived(new Date(data.countdown.getTime()));
 
+	$inspect(data);
+
 	const updateLocale = () => {
 		if (data.languages.length == 0) {
 			currentLocale = 'en';
