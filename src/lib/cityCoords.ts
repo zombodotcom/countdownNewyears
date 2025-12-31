@@ -89,6 +89,7 @@ export const cityCoords: Record<string, [number, number]> = {
 	Doha: [25.2854, 51.531],
 	'Kuwait City': [29.3759, 47.9774],
 	Tehran: [35.6892, 51.389],
+	Mashhad: [36.2605, 59.6168],
 	Baghdad: [33.3152, 44.3661],
 	Damascus: [33.5138, 36.2765],
 	Amman: [31.9454, 35.9284],

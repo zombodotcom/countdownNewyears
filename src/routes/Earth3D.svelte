@@ -136,30 +136,6 @@
 		}
 
 		createBurst(position: THREE.Vector3, color: string) {
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					location: 'Earth3D.svelte:84',
-					message: 'createBurst called',
-					data: {
-						x: position.x,
-						y: position.y,
-						z: position.z,
-						positionLength: position.length(),
-						color,
-						hasScene: !!this.scene,
-						hasTexture: !!this.texture,
-						burstsCount: this.bursts.length
-					},
-					timestamp: Date.now(),
-					sessionId: 'debug-session',
-					runId: 'run1',
-					hypothesisId: 'C'
-				})
-			}).catch(() => {});
-			// #endregion
 			const particleCount = 150; // Balanced particle count - not too overwhelming
 			const geometry = new THREE.BufferGeometry();
 			const positions = new Float32Array(particleCount * 3);
@@ -275,11 +251,10 @@
 			});
 
 			// Force texture to be used
-			if (this.texture) {
-				material.map = this.texture;
-				material.needsUpdate = true;
-				if (debug) console.log('Texture assigned to material:', !!material.map);
-			}
+				if (this.texture) {
+					material.map = this.texture;
+					material.needsUpdate = true;
+				}
 
 			const points = new THREE.Points(geometry, material);
 
@@ -295,7 +270,6 @@
 					addedSuccessfully = true;
 				}
 			} catch (e: any) {
-				if (debug) console.log('customObjects method failed:', e?.message);
 			}
 
 			// Method 2: Try globe's addObject method
@@ -307,7 +281,6 @@
 						addedSuccessfully = true;
 					}
 				} catch (e: any) {
-					if (debug) console.log('addObject method failed:', e?.message);
 				}
 			}
 
@@ -320,7 +293,6 @@
 						addedSuccessfully = true;
 					}
 				} catch (e: any) {
-					if (debug) console.log('objects method failed:', e?.message);
 				}
 			}
 
@@ -333,7 +305,6 @@
 						addedSuccessfully = true;
 					}
 				} catch (e: any) {
-					if (debug) console.log('customLayer method failed:', e?.message);
 				}
 			}
 
@@ -345,7 +316,6 @@
 					methodUsed = 'globeScene';
 					addedSuccessfully = true;
 				} catch (e: any) {
-					if (debug) console.log('globe scene add failed:', e?.message);
 				}
 			}
 
@@ -355,40 +325,7 @@
 				methodUsed = 'fallbackScene';
 			}
 
-			if (debug) {
-				console.log('Firework particles creation complete:', {
-					method: methodUsed,
-					position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
-					addedSuccessfully
-				});
-			}
 
-			if (debug)
-				console.log('Firework particles creation complete:', {
-					position: `(${surfacePosition.x.toFixed(3)}, ${surfacePosition.y.toFixed(3)}, ${surfacePosition.z.toFixed(3)})`,
-					addedSuccessfully
-				});
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					location: 'Earth3D.svelte:112',
-					message: 'Particles added to scene',
-					data: {
-						particleCount,
-						particleSize: material.size,
-						hasTexture: !!material.map,
-						sceneChildren: this.scene.children.length,
-						burstsCount: this.bursts.length + 1
-					},
-					timestamp: Date.now(),
-					sessionId: 'debug-session',
-					runId: 'run1',
-					hypothesisId: 'D'
-				})
-			}).catch(() => {});
-			// #endregion
 
 			this.bursts.push({
 				points,
@@ -400,22 +337,6 @@
 		}
 
 		update() {
-			// #region agent log
-			if (this.bursts.length > 0)
-				fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						location: 'Earth3D.svelte:121',
-						message: 'FireworkSystem.update called',
-						data: { burstsCount: this.bursts.length },
-						timestamp: Date.now(),
-						sessionId: 'debug-session',
-						runId: 'run1',
-						hypothesisId: 'F'
-					})
-				}).catch(() => {});
-			// #endregion
 			for (let i = this.bursts.length - 1; i >= 0; i--) {
 				const burst = this.bursts[i];
 				burst.age++;
@@ -507,26 +428,6 @@
 
 	// Calculate data for cities based on countdown status
 	const updateGlobeData = () => {
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:173',
-				message: 'updateGlobeData called',
-				data: {
-					hasNow: !!now,
-					hasTarget: !!target,
-					nowTime: now?.getTime(),
-					targetTime: target?.getTime()
-				},
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'B'
-			})
-		}).catch(() => {});
-		// #endregion
 		if (!now || !target) return;
 
 		const newPoints: CityPoint[] = [];
@@ -624,63 +525,86 @@
 			}
 		});
 
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:230',
-				message: 'Cities processed',
-				data: {
-					totalProcessed,
-					celebratingCount,
-					closeCount,
-					otherCount,
-					newPointsLength: newPoints.length
-				},
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'B'
-			})
-		}).catch(() => {});
-		// #endregion
 
-		// Disable arc visualization - it creates a giant ring
-		// Arcs removed to prevent visual clutter
+		// Create a line showing where it's currently midnight (New Year's line)
+		// Find the city that's closest to midnight (within 5 minutes) and use its longitude
+		let midnightLongitude: number;
+		let closestCity: { name: string; lng: number; timeToMidnight: number } | null = null;
+		let minTimeDiff = Infinity;
+		
+		// Check all cities to find the one closest to midnight
+		for (const [cityName, [lat, lng]] of Object.entries(cityCoords)) {
+			const cityTimezone = timezoneList.find(tz => 
+				tz.cities.includes(cityName) || tz.otherCities.includes(cityName)
+			);
+			if (!cityTimezone) continue;
+			
+			const cityTarget = new Date(getOffsetTime(cityTimezone.hour, target, now));
+			const cityCountdown = makeCountdown(cityTarget, now);
+			const timeDiff = Math.abs(cityCountdown.total);
+			
+			// Find city within 5 minutes of midnight
+			if (timeDiff < 300000 && timeDiff < minTimeDiff) {
+				minTimeDiff = timeDiff;
+				closestCity = {
+					name: cityName,
+					lng: lng,
+					timeToMidnight: cityCountdown.total
+				};
+			}
+		}
+		
+		if (closestCity) {
+			// Use the longitude of the city closest to midnight
+			midnightLongitude = closestCity.lng;
+			if (debug && Math.random() < 0.1) {
+				const mins = (closestCity.timeToMidnight / 60000).toFixed(1);
+				console.log(`📍 Midnight line at ${midnightLongitude.toFixed(1)}°E (${closestCity.name}, ${mins}m)`);
+			}
+		} else {
+			// Fallback: UTC-based calculation
+			const currentUTC = new Date();
+			const utcHours = currentUTC.getUTCHours() + currentUTC.getUTCMinutes() / 60 + currentUTC.getUTCSeconds() / 3600;
+			midnightLongitude = -180 + (utcHours * 15);
+			
+			// Normalize to -180 to 180 range
+			while (midnightLongitude > 180) midnightLongitude -= 360;
+			while (midnightLongitude < -180) midnightLongitude += 360;
+			
+			if (debug && Math.random() < 0.1) {
+				console.log(`📍 Midnight line at ${midnightLongitude.toFixed(1)}°E (UTC fallback)`);
+			}
+		}
+		
+		// Normalize to -180 to 180 range
+		while (midnightLongitude > 180) midnightLongitude -= 360;
+		while (midnightLongitude < -180) midnightLongitude += 360;
+		
+		// Create arcs to form a line from North to South pole along the midnight meridian
+		// Use fewer segments to reduce lag
+		const arcCount = 12; // Reduced from 30 to reduce lag
+		for (let i = 0; i < arcCount; i++) {
+			const lat1 = -90 + (i * 180 / arcCount);
+			const lat2 = -90 + ((i + 1) * 180 / arcCount);
+			
+			// Create a bright gold/red gradient line showing the New Year's line
+			newArcs.push({
+				startLat: lat1,
+				startLng: midnightLongitude,
+				endLat: lat2,
+				endLng: midnightLongitude,
+				color: ['#ffd700', '#ff6b6b'], // Gold to red gradient
+				stroke: 2.5
+			});
+		}
 
 		pointsData = newPoints;
 		arcsData = newArcs;
 
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:252',
-				message: 'pointsData updated',
-				data: { pointsDataLength: pointsData.length, hasGlobe: !!globe, firstPoint: pointsData[0] },
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'E'
-			})
-		}).catch(() => {});
-		// #endregion
 
 		if (globe) {
-			if (debug) {
-				console.log(`Earth3D - Setting ${pointsData.length} city markers`, {
-					sample: pointsData[0],
-					celebrating: pointsData.filter((p) => p.size >= 0.5).length,
-					close: pointsData.filter((p) => p.size >= 0.4 && p.size < 0.5).length,
-					normal: pointsData.filter((p) => p.size < 0.4).length
-				});
-			}
 			globe.pointsData(pointsData).arcsData(arcsData);
-			if (debug) console.log(`Earth3D - Updated ${pointsData.length} city markers`);
 		} else {
-			if (debug) console.warn('Earth3D - Globe instance not available for updating points');
 		}
 	};
 
@@ -689,13 +613,11 @@
 
 	onMount(async () => {
 		if (!browser || !container) return;
-		if (debug) console.log('Earth3D - Initializing Background Globe...');
 
 		// Dynamically import globe.gl
 		const Globe = (await import('globe.gl')).default;
 
 		// Initialize globe instance
-		if (debug) console.log('Earth3D - Globe library loaded, creating instance...');
 
 		// Note: globe.gl 2.45.0 does not support night side / nightImageUrl
 		// This is a limitation of the library version
@@ -714,7 +636,8 @@
 			.pointsMerge(false)
 			.arcsData([])
 			.arcColor('color')
-			.arcStroke(3)
+			.arcStroke((d: any) => d.stroke || 3)
+			.arcAltitude(0) // Keep arcs flat on surface - no curve up/down animation
 			.enablePointerInteraction(false);
 
 		// Store globe instance
@@ -722,30 +645,9 @@
 
 		// Get scene - let globe.gl handle the background image
 		const scene = globeInstance.scene();
-		if (debug) console.log('Earth3D - Scene retrieved:', !!scene);
 
 		// Don't override the background - globe.gl's backgroundImageUrl handles it better
 
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:324',
-				message: 'Globe initialized',
-				data: {
-					hasBackgroundImage: true,
-					backgroundImageUrl: '/night-sky.png',
-					sceneBackgroundSet: true
-				},
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'G'
-			})
-		}).catch(() => {});
-		// #endregion
-		if (debug) console.log('Earth3D - Background image set:', '/night-sky.png');
 
 		// Night side is set above - it creates the dark zone on the side facing away from the sun
 
@@ -759,49 +661,7 @@
 		scene.add(sunLight);
 
 		// Initialize firework system
-		if (debug) {
-			console.log('Earth3D - Initializing FireworkSystem...');
-			console.log('Scene info:', {
-				hasScene: !!scene,
-				childrenCount: scene.children.length,
-				children: scene.children.map((c: any) => ({ type: c.type, position: c.position }))
-			});
-		}
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:315',
-				message: 'Initializing FireworkSystem',
-				data: {
-					hasScene: !!scene,
-					sceneType: scene?.constructor?.name,
-					childrenCount: scene.children.length
-				},
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'A'
-			})
-		}).catch(() => {});
-		// #endregion
 		fireworkSystem = new FireworkSystem(scene, globeInstance);
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				location: 'Earth3D.svelte:318',
-				message: 'FireworkSystem created',
-				data: { hasFireworkSystem: !!fireworkSystem, hasTexture: !!fireworkSystem?.texture },
-				timestamp: Date.now(),
-				sessionId: 'debug-session',
-				runId: 'run1',
-				hypothesisId: 'A'
-			})
-		}).catch(() => {});
-		// #endregion
 
 		// Set initial view
 		globeInstance.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
@@ -811,27 +671,6 @@
 		let frameCount = 0;
 		function rotate(time: number) {
 			frameCount++;
-			// #region agent log
-			if (frameCount % 60 === 0)
-				fetch('http://127.0.0.1:7243/ingest/b7f2fdcf-2e77-49dd-859e-570f08f4c8c6', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						location: 'Earth3D.svelte:322',
-						message: 'Animation loop running',
-						data: {
-							frameCount,
-							hasGlobeInstance: !!globeInstance,
-							hasFireworkSystem: !!fireworkSystem,
-							pointsDataLength: pointsData.length
-						},
-						timestamp: Date.now(),
-						sessionId: 'debug-session',
-						runId: 'run1',
-						hypothesisId: 'F'
-					})
-				}).catch(() => {});
-			// #endregion
 			if (!globeInstance) return;
 			const deltaTime = time - lastTime;
 			lastTime = time;
@@ -847,9 +686,11 @@
 				0
 			);
 
-			// Spawn fireworks from currently celebrating cities - less frequent to avoid overwhelming
-			if (fireworkSystem && Math.random() > 0.92) {
-				const celebrating = pointsData.filter((p) => p.size >= 0.5); // Celebrating cities have size 0.5
+			// Spawn fireworks from currently celebrating cities (cities that have passed midnight)
+			// Increased spawn frequency to ensure cities past the line show fireworks
+			if (fireworkSystem && Math.random() > 0.90) {
+				// Use celebrating cities that have passed midnight (size >= 0.5 means celebrating)
+				const celebrating = pointsData.filter((p) => p.size >= 0.5);
 				if (celebrating.length > 0) {
 					const city = celebrating[Math.floor(Math.random() * celebrating.length)];
 
@@ -869,12 +710,9 @@
 								position,
 								colors[Math.floor(Math.random() * colors.length)]
 							);
-							if (debug) console.log('Firework spawned at', city.label);
 						} else {
-							if (debug) console.log('getCoords returned invalid data for', city.label, coords);
 						}
 					} catch (e: any) {
-						if (debug) console.log('Firework spawn error:', e?.message, 'for city', city.label);
 					}
 				}
 			}
@@ -886,11 +724,11 @@
 		}
 		requestAnimationFrame(rotate);
 
-		if (debug) console.log('Earth3D - Setup complete.');
 
 		// Periodic updates
 		updateGlobeData();
-		updateInterval = setInterval(updateGlobeData, 100); // Update every 100ms for smooth rainbow cycling
+		// Update less frequently to reduce lag - rainbow still smooth, midnight line updates every second
+		updateInterval = setInterval(updateGlobeData, 1000); // Update every 1 second
 
 		// Resize handler
 		handleResize = () => {

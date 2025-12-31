@@ -8,7 +8,7 @@
 	let { data } = $props();
 
 	let currentLocale = $state('en');
-	let debugMode = $state(false);
+	let debugMode = $state(true);
 
 	let interval: NodeJS.Timeout | undefined = $state(undefined);
 	let now = $state(new Date());
