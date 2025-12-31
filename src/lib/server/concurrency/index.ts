@@ -12,6 +12,11 @@ export const containsId = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
+	// If no database available (e.g., on Netlify without D1), return false
+	if (!db) {
+		return false;
+	}
+
 	try {
 		return (await db.select().from(schema.sessions).where(eq(schema.sessions.uuid, key))).length > 0;
 	} catch (e) {
@@ -27,6 +32,11 @@ export const updateId = async (event: RequestEvent, key: string) => {
 	let db;
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
+
+	// If no database available (e.g., on Netlify without D1), just return
+	if (!db) {
+		return;
+	}
 
 	try {
 		await db
@@ -55,6 +65,11 @@ export const removeOld = async (event: RequestEvent, key: string) => {
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
 
+	// If no database available (e.g., on Netlify without D1), just return
+	if (!db) {
+		return;
+	}
+
 	try {
 		await db.delete(schema.sessions).where(eq(schema.sessions.uuid, key));
 	} catch (e) {
@@ -72,6 +87,11 @@ export const getActive = async (event: RequestEvent) => {
 	let db;
 	if (event.locals.dev) db = event.locals.dblocal;
 	else db = event.locals.dbprod;
+
+	// If no database available (e.g., on Netlify without D1), return 0
+	if (!db) {
+		return 0;
+	}
 
 	try {
 		await db
