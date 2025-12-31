@@ -20,6 +20,5 @@ export const setCookies = async (event: RequestEvent) => {
 		event.cookies.set('time', String(Date.UTC(new Date().getUTCFullYear() + 1, 0, 1, 0, 0, 0, 0)), {
 			path: '/'
 		});
-		await invalidateAll();
 	}
 };
