@@ -12,7 +12,7 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<title>
-		{m.nameShort()}
+		New Year's Countdown Globe
 	</title>
 </svelte:head>
 

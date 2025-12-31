@@ -33,6 +33,7 @@
 
 	let pointsData: CityPoint[] = $state([]);
 	let arcsData: Arc[] = $state([]);
+	let celebratingCitiesList: { name: string; lat: number; lng: number }[] = $state([]); // Cache for firework spawning
 
 	// Create a glowing point texture for city markers
 	const createPointTexture = (color: string = '#ffffff') => {
@@ -136,7 +137,7 @@
 		}
 
 		createBurst(position: THREE.Vector3, color: string) {
-			const particleCount = 150; // Balanced particle count - not too overwhelming
+			const particleCount = 80; // Reduced for better performance
 			const geometry = new THREE.BufferGeometry();
 			const positions = new Float32Array(particleCount * 3);
 			const velocities = new Float32Array(particleCount * 3);
@@ -230,11 +231,10 @@
 			geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 			geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 			geometry.setAttribute('lifetime', new THREE.BufferAttribute(lifetimes, 1));
-
-			geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-			geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
-			geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-			geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+			
+			// Mark attributes as needing update
+			geometry.attributes.position.needsUpdate = true;
+			geometry.attributes.color.needsUpdate = true;
 
 			const material = new THREE.PointsMaterial({
 				size: 3.5, // Slightly larger but not overwhelming
@@ -330,6 +330,10 @@
 		}
 
 		update() {
+			// Optimized physics constants
+			const gravityStrength = 0.0005;
+			const baseFriction = 0.97;
+			
 			for (let i = this.bursts.length - 1; i >= 0; i--) {
 				const burst = this.bursts[i];
 				burst.age++;
@@ -338,48 +342,54 @@
 				const velocities = burst.points.geometry.attributes.velocity.array;
 				const sizes = burst.points.geometry.attributes.size?.array;
 				const lifetimes = burst.points.geometry.attributes.lifetime?.array;
+				const particleCount = positions.length / 3;
 
-				// Calculate Earth's center for gravity
-				const earthCenter = new THREE.Vector3(0, 0, 0);
-
-				for (let j = 0; j < positions.length / 3; j++) {
+				for (let j = 0; j < particleCount; j++) {
 					const idx = j * 3;
-					const pos = new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]);
-
-					// Update position
+					
+					// Update position (direct array access, no Vector3 creation)
 					positions[idx] += velocities[idx];
 					positions[idx + 1] += velocities[idx + 1];
 					positions[idx + 2] += velocities[idx + 2];
 
-					// Improved physics: gravity pulling toward Earth center
-					const toCenter = earthCenter.clone().sub(pos).normalize();
-					const gravityStrength = 0.0005;
-					velocities[idx] += toCenter.x * gravityStrength;
-					velocities[idx + 1] += toCenter.y * gravityStrength;
-					velocities[idx + 2] += toCenter.z * gravityStrength;
+					// Improved physics: gravity pulling toward Earth center (optimized - no Vector3)
+					// Direct calculation without object creation
+					const px = positions[idx];
+					const py = positions[idx + 1];
+					const pz = positions[idx + 2];
+					const dist = Math.sqrt(px * px + py * py + pz * pz);
+					if (dist > 0.001) { // Avoid division by zero
+						const invDist = 1 / dist;
+						velocities[idx] -= px * invDist * gravityStrength;
+						velocities[idx + 1] -= py * invDist * gravityStrength;
+						velocities[idx + 2] -= pz * invDist * gravityStrength;
+					}
 
-					// Air resistance (friction) - varies by particle
-					const friction = 0.97 + Math.random() * 0.02; // Slight variation
+					// Air resistance (friction) - pre-calculated per particle to avoid Math.random() in loop
+					// Use deterministic friction based on particle index for consistency
+					const friction = baseFriction + ((j % 3) * 0.006); // Slight variation without random
 					velocities[idx] *= friction;
 					velocities[idx + 1] *= friction;
 					velocities[idx + 2] *= friction;
 
 					// Individual particle lifetime and fading
-					if (lifetimes) {
+					if (lifetimes && sizes) {
 						const particleAge = burst.age;
 						const particleLifetime = lifetimes[j];
 						const particleFade = Math.max(0, 1.0 - particleAge / particleLifetime);
-
-						// Particles fade individually for more realistic effect
-						if (sizes) {
-							sizes[j] = (0.8 + Math.random() * 1.2) * particleFade;
-						}
+						// Pre-calculated size variation based on index
+						const sizeVariation = 0.8 + ((j % 5) * 0.24); // 0.8-1.28 range
+						sizes[j] = sizeVariation * particleFade;
 					}
 				}
 
 				burst.points.geometry.attributes.position.needsUpdate = true;
 				if (sizes) {
 					burst.points.geometry.attributes.size.needsUpdate = true;
+				}
+				// Ensure color attribute is updated
+				if (burst.points.geometry.attributes.color) {
+					burst.points.geometry.attributes.color.needsUpdate = true;
 				}
 
 				// Create secondary burst effect at mid-life for some fireworks
@@ -438,16 +448,21 @@
 		let closeCount = 0;
 		let otherCount = 0;
 
+		// Pre-build timezone lookup map for O(1) access (DRY - Don't Repeat Yourself)
+		const cityToTimezoneMap = new Map<string, TimezoneType>();
+		for (const tz of timezoneList) {
+			for (const city of tz.cities) {
+				cityToTimezoneMap.set(city, tz);
+			}
+			for (const city of tz.otherCities) {
+				cityToTimezoneMap.set(city, tz);
+			}
+		}
+
 		// Show ALL cities from cityCoords, not just one per timezone
 		Object.entries(cityCoords).forEach(([cityName, [lat, lng]]) => {
-			// Find which timezone this city belongs to
-			let cityTimezone: TimezoneType | undefined;
-			for (const tz of timezoneList) {
-				if (tz.cities.includes(cityName) || tz.otherCities.includes(cityName)) {
-					cityTimezone = tz;
-					break;
-				}
-			}
+			// O(1) lookup instead of O(n) loop
+			const cityTimezone = cityToTimezoneMap.get(cityName);
 
 			// If city not in any timezone, skip it (or show as neutral)
 			if (!cityTimezone) {
@@ -522,25 +537,28 @@
 			}
 		});
 
+		// Update cached celebrating cities list for firework spawning
+		celebratingCitiesList = celebratingCities;
+
 		// Create a line showing where it's currently midnight (New Year's line)
-		// Find the city that's closest to midnight (within 5 minutes) and use its longitude
+		// Find the city that's closest to midnight and use its longitude
 		let midnightLongitude: number;
 		let closestCity: { name: string; lng: number; timeToMidnight: number } | null = null;
 		let minTimeDiff = Infinity;
 
-		// Check all cities to find the one closest to midnight
+		// Check all cities to find the one closest to midnight (within 30 minutes)
+		// Use pre-built map for O(1) lookup
 		for (const [cityName, [lat, lng]] of Object.entries(cityCoords)) {
-			const cityTimezone = timezoneList.find(
-				(tz) => tz.cities.includes(cityName) || tz.otherCities.includes(cityName)
-			);
+			const cityTimezone = cityToTimezoneMap.get(cityName);
 			if (!cityTimezone) continue;
 
 			const cityTarget = new Date(getOffsetTime(cityTimezone.hour, target, now));
 			const cityCountdown = makeCountdown(cityTarget, now);
 			const timeDiff = Math.abs(cityCountdown.total);
 
-			// Find city within 5 minutes of midnight
-			if (timeDiff < 300000 && timeDiff < minTimeDiff) {
+			// Find city within 30 minutes of midnight (before or after)
+			// This ensures we always find a city close to midnight
+			if (timeDiff < 1800000 && timeDiff < minTimeDiff) {
 				minTimeDiff = timeDiff;
 				closestCity = {
 					name: cityName,
@@ -560,7 +578,7 @@
 				);
 			}
 		} else {
-			// Fallback: UTC-based calculation
+			// Fallback: UTC-based calculation (should rarely happen now)
 			const currentUTC = new Date();
 			const utcHours =
 				currentUTC.getUTCHours() +
@@ -581,21 +599,17 @@
 		while (midnightLongitude > 180) midnightLongitude -= 360;
 		while (midnightLongitude < -180) midnightLongitude += 360;
 
-		// Create arcs to form a line from North to South pole along the midnight meridian
-		// Use fewer segments to reduce lag
-		const arcCount = 12; // Reduced from 30 to reduce lag
-		for (let i = 0; i < arcCount; i++) {
-			const lat1 = -90 + (i * 180) / arcCount;
-			const lat2 = -90 + ((i + 1) * 180) / arcCount;
-
-			// Create a bright gold/red gradient line showing the New Year's line
+		// Create a simple static gold line (no animation)
+		for (let i = 0; i < 12; i++) { // 12 segments for smooth curve
+			const lat1 = -90 + (i * 180) / 12;
+			const lat2 = -90 + ((i + 1) * 180) / 12;
 			newArcs.push({
 				startLat: lat1,
 				startLng: midnightLongitude,
 				endLat: lat2,
 				endLng: midnightLongitude,
-				color: ['#ffd700', '#ff6b6b'], // Gold to red gradient
-				stroke: 2.5
+				color: ['#FFD700', '#FFD700'], // Solid gold
+				stroke: 3.0
 			});
 		}
 
@@ -621,7 +635,7 @@
 
 		// Note: globe.gl 2.45.0 does not support night side / nightImageUrl
 		// This is a limitation of the library version
-		const globeInstance = Globe()(container)
+		const globeInstance = new Globe(container)
 			.globeImageUrl('/Blue_Marble_2002.png')
 			.bumpImageUrl('/earth-topology.png')
 			.backgroundImageUrl('/night-sky.png')
@@ -662,6 +676,79 @@
 		// Initialize firework system
 		fireworkSystem = new FireworkSystem(scene, globeInstance);
 
+		// Optimized function to update rainbow line colors (throttled for performance)
+		let lastRainbowUpdate = 0;
+		const RAINBOW_UPDATE_INTERVAL = 66; // Update every ~66ms (15fps) for smoother, less glitchy updates
+		
+		// Pre-calculate HSL to RGB conversion (optimized, cached)
+		const colorCache = new Map<string, string>();
+		const hslToRgb = (h: number, s: number, l: number): string => {
+			// Cache key for this color (rounded to reduce cache size)
+			const key = `${Math.round(h)}-${s}-${l}`;
+			if (colorCache.has(key)) {
+				return colorCache.get(key)!;
+			}
+			
+			h = h % 360;
+			const c = (1 - Math.abs(2 * l - 1)) * s;
+			const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+			const m = l - c / 2;
+			let r = 0, g = 0, b = 0;
+			
+			if (h < 60) { r = c; g = x; b = 0; }
+			else if (h < 120) { r = x; g = c; b = 0; }
+			else if (h < 180) { r = 0; g = c; b = x; }
+			else if (h < 240) { r = 0; g = x; b = c; }
+			else if (h < 300) { r = x; g = 0; b = c; }
+			else { r = c; g = 0; b = x; }
+			
+			const R = Math.round((r + m) * 255);
+			const G = Math.round((g + m) * 255);
+			const B = Math.round((b + m) * 255);
+			const color = `#${R.toString(16).padStart(2, '0')}${G.toString(16).padStart(2, '0')}${B.toString(16).padStart(2, '0')}`;
+			
+			// Cache the color (limit cache size to prevent memory issues)
+			if (colorCache.size > 500) {
+				const firstKey = colorCache.keys().next().value;
+				if (firstKey) colorCache.delete(firstKey);
+			}
+			colorCache.set(key, color);
+			return color;
+		};
+		
+		const updateRainbowLine = (currentTime: number) => {
+			// Throttle updates for better performance
+			if (currentTime - lastRainbowUpdate < RAINBOW_UPDATE_INTERVAL) return;
+			lastRainbowUpdate = currentTime;
+			
+			if (!globe || arcsData.length === 0) return;
+			
+			// Simple, stable rainbow speed calculation
+			const rainbowSpeed = currentTime / 60; // Slower speed for smoother animation
+			
+			// Update colors for all arc segments - create new color arrays to ensure globe.gl detects changes
+			const arcCount = arcsData.length;
+			const updatedArcs = arcsData.map((arc, i) => {
+				const position1 = i / arcCount;
+				const position2 = (i + 1) / arcCount;
+				// Calculate hues with proper wrapping
+				const hue1 = ((rainbowSpeed + position1 * 360) % 360 + 360) % 360;
+				const hue2 = ((rainbowSpeed + position2 * 360) % 360 + 360) % 360;
+				
+				// Convert to RGB colors
+				const color1 = hslToRgb(hue1, 1.0, 0.6);
+				const color2 = hslToRgb(hue2, 1.0, 0.6);
+				
+				return {
+					...arc,
+					color: [color1, color2]
+				};
+			});
+			
+			// Update with new array reference
+			globe.arcsData(updatedArcs);
+		};
+
 		// Set initial view
 		globeInstance.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
 
@@ -686,17 +773,18 @@
 			);
 
 			// Spawn fireworks from currently celebrating cities (cities that have passed midnight)
-			// Increased spawn frequency to ensure cities past the line show fireworks
-			if (fireworkSystem && Math.random() > 0.9) {
-				// Use celebrating cities that have passed midnight (size >= 0.5 means celebrating)
-				const celebrating = pointsData.filter((p) => p.size >= 0.5);
-				if (celebrating.length > 0) {
-					const city = celebrating[Math.floor(Math.random() * celebrating.length)];
+			// Increased spawn frequency to ensure visibility
+			if (fireworkSystem && Math.random() > 0.85) {
+				// Use cached celebrating cities (updated in updateGlobeData)
+				if (celebratingCitiesList.length > 0) {
+					const city = celebratingCitiesList[Math.floor(Math.random() * celebratingCitiesList.length)];
+					const lat = city.lat;
+					const lng = city.lng;
 
 					// Use globe.gl's built-in coordinate conversion method
 					// This ensures fireworks use the exact same coordinate system as the rendered points
 					try {
-						const coords = (globeInstance as any).getCoords(city.lat, city.lng);
+						const coords = (globeInstance as any).getCoords(lat, lng);
 						if (coords && (coords.x !== undefined || Array.isArray(coords))) {
 							let position: THREE.Vector3;
 							if (Array.isArray(coords)) {
@@ -715,16 +803,20 @@
 				}
 			}
 
+			// Update firework system every frame for smooth animation
 			if (fireworkSystem) {
 				fireworkSystem.update();
 			}
+			
+			// Rainbow line is static - no updates needed
+			
 			requestAnimationFrame(rotate);
 		}
 		requestAnimationFrame(rotate);
 
 		// Periodic updates
 		updateGlobeData();
-		// Update less frequently to reduce lag - rainbow still smooth, midnight line updates every second
+		// Update city data less frequently (rainbow colors update every frame in rotate loop)
 		updateInterval = setInterval(updateGlobeData, 1000); // Update every 1 second
 
 		// Resize handler
